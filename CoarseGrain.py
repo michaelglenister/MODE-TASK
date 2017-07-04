@@ -1,20 +1,16 @@
 # Takes a protomer structure and coarse grains to select a set amount of C-Beta
-import os, sys
+import os
+import sys
 import argparse
-
 from datetime import datetime
+
+from utils import *
 
 import math
 
 
-def format_seconds(seconds):
-    m, s = divmod(seconds, 60)
-    h, m = divmod(m, 60)
-    return "%d:%02d:%02d" % (h, m, s)
-
-
 def main(args):
-    output = args.pdb[:args.pdb.index('.')] # paramter
+    output = args.pdb[:args.pdb.index('.')]  # paramter
     f = open(args.pdb, 'r')  # paramter
     lines = f.readlines()
     f.close()
@@ -176,7 +172,7 @@ def log(message):
 
 
 if __name__ == "__main__":
-        # parse cmd arguments
+    # parse cmd arguments
     parser = argparse.ArgumentParser()
 
     # standard arguments for logging
@@ -187,10 +183,12 @@ if __name__ == "__main__":
 
     # custom arguments
     # parser.add_argument("--output", help="")#output = "3VBSPent"
-    parser.add_argument("--pdb", help="input")  # 3VBSPent.pdb
-    parser.add_argument("--CG", help="course grain level", default=4, type=int)
-    parser.add_argument("--startingAtom", help="residue number of starting atoms", default=15, type=int)
-    parser.add_argument("--NumberProtomerAtoms", help="", default=842, type=int)
+    parser.add_argument("--pdb", help="PDB input")  # 3VBSPent.pdb
+    parser.add_argument("--CG", help="Course grain level", default=4, type=int)
+    parser.add_argument(
+        "--startingAtom", help="residue number of starting atoms", default=15, type=int)
+    parser.add_argument("--NumberProtomerAtoms",
+                        help="", default=842, type=int)
 
     args = parser.parse_args()
 
