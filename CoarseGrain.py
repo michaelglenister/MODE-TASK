@@ -1,11 +1,10 @@
 # Takes a protomer structure and coarse grains to select a set amount of C-Beta
-import os
-import sys
+import os, sys
 import argparse
 
-import math
-
 from datetime import datetime
+
+import math
 
 
 def format_seconds(seconds):
