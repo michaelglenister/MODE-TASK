@@ -76,8 +76,7 @@ if __name__ == "__main__":
 
     # custom arguments
     parser.add_argument("--full_capsid", help="input")  # '3VBSFull4_SCA.pdb'
-    # '3VBSProtomer3_SCA.pdb'
-        parser.add_argument("--protomer", help="input")
+    parser.add_argument("--protomer", help="input")  # '3VBSProtomer3_SCA.pdb'
 
     args = parser.parse_args()
 

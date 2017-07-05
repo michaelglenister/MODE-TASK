@@ -205,12 +205,11 @@ if __name__ == "__main__":
     # custom arguments
     parser.add_argument("--pdb_aligned", help="")  # '4n43_aligned.pdb'
     # '3VBSProtomer_aligned3_SCA.pdb'
-        parser.add_argument("--pdb_protomer_aligned", help="")
-        # '3VBSProtomer3_SCA.pdb'
-        parser.add_argument("--pdb_protomer", help="")
-        parser.add_argument("--protomer_vt", help="")  # 'Protomer3CG_VT.txt'
-        parser.add_argument("--output", help="Output file",
-                            default="ProtomerCGrained.txt")  # 'Protomer3CG_VT.txt'
+    parser.add_argument("--pdb_protomer_aligned", help="")
+    parser.add_argument("--pdb_protomer", help="")  # '3VBSProtomer3_SCA.pdb'
+    parser.add_argument("--protomer_vt", help="")  # 'Protomer3CG_VT.txt'
+    parser.add_argument("--output", help="Output file",
+                        default="ProtomerCGrained.txt")  # 'Protomer3CG_VT.txt'
 
     args = parser.parse_args()
 

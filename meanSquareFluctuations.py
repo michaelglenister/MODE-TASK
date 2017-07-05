@@ -159,13 +159,13 @@ if __name__ == "__main__":
     # custom arguments
     parser.add_argument("--pdb_protomer", help="Input")  # '3VBSProtomer.pdb'
     parser.add_argument("--TotalModes", help="", default=2526, type=int)
-        parser.add_argument("--FirstMode", help="", default=2519, type=int)
-        parser.add_argument("--LastMode", help="", default=2519, type=int)
-        parser.add_argument("--FirstRes", help="", default=1, type=int)
-        parser.add_argument("--LastRes", help="", default=842, type=int)
-        parser.add_argument(
-            "--wmatrix", help="W matrix input file that was output from C++ Scripts")
-        parser.add_argument("--vtmatrix", help="U and VT full Matrix")
+    parser.add_argument("--FirstMode", help="", default=2519, type=int)
+    parser.add_argument("--LastMode", help="", default=2519, type=int)
+    parser.add_argument("--FirstRes", help="", default=1, type=int)
+    parser.add_argument("--LastRes", help="", default=842, type=int)
+    parser.add_argument(
+        "--wmatrix", help="W matrix input file that was output from C++ Scripts")
+    parser.add_argument("--vtmatrix", help="U and VT full Matrix")
 
     args = parser.parse_args()
 
