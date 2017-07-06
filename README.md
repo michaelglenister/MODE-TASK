@@ -1,6 +1,6 @@
-# NMA-Test
+# NMA-TASK
 
-Requirements</br>
-Python 2.7
-g++</br>
-alglib (libalglib-dev)</br>
+Requirements </br>
+Python 2.7 </br>
+g++ </br>
+alglib (libalglib-dev) </br>
