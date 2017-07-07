@@ -211,7 +211,6 @@ vector< vector<double> > getHessian(vector< vector<double> > C)// this calls the
 }// getHessian
 
 
-
 int main(int argc, char *argv[])
 {	
 	if (argc != 2)

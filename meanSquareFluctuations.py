@@ -19,7 +19,7 @@ def main(args):
         52, 56, 70, 142, 161], 'D': [26]}  # residues common to multiple pdb files
     interfaceIndex = []
     # The pdb file on which NMA analysis was performed, this script handles on model at a time but we can change this
-    f = open(args.pdb_protomer, 'r')
+    f = open(args.pdbProtomer, 'r')
     NMA = f.readlines()
     f.close()
     count = 0
@@ -36,22 +36,22 @@ def main(args):
                     interfaceIndex.append(count)
                 count += 1
 
-    Virus = args.protomer_pdb[:4] + "_Protomer"
+    Virus = args.pdbProtomer[:4] + "_Protomer"
     # Specify modes
-    TotalModes = args.TotalModes  # 2526 #number of residues in protein *3
-    FirstMode = args.FirstMode  # 2519  #input user
-    LastMode = args.LastMode  # 2519 #input user
+    TotalModes = args.totalModes  # 2526 #number of residues in protein *3
+    FirstMode = args.firstMode  # 2519  #input user
+    LastMode = args.lastMode  # 2519 #input user
 
     # Specify Residue Indexes
-    FirstRes = args.FirstRes  # 1
-    LastRes = args.LastRes  # 842
+    FirstRes = args.firstResidue  # 1
+    LastRes = args.lastResidue  # 842
     ResRange = range(FirstRes - 1, LastRes)
 
     ModeRange = range(FirstMode, LastMode + 1)
     print ModeRange
 
     # '3VBSProtomerW.txt' #W matrix input file that was output from C++ Scripts
-    fw = open(args.wmatrix, 'r')
+    fw = open(args.wMatrix, 'r')
     EigenValues = fw.readlines()
     fw.close()
 
@@ -69,7 +69,7 @@ def main(args):
     print "WF in "
 
     # Read In U and VT full Matrix as U is the transpose of VT I only read in VT and create U from the VT matrix info. So we can exlcude U output from C++ script for faster analysis
-    fvt = open(args.vtmatrix, 'r')  # '3VBSProtomerVT.txt'
+    fvt = open(args.vtMatrix, 'r')  # '3VBSProtomerVT.txt'
     EigenVectors = fvt.readlines()
     fvt.close()
     print "U and VT file in "
@@ -157,15 +157,15 @@ if __name__ == "__main__":
         "--log-file", help="Output log file (default: standard output)", default=None)
 
     # custom arguments
-    parser.add_argument("--pdb_protomer", help="Input")  # '3VBSProtomer.pdb'
-    parser.add_argument("--TotalModes", help="", default=2526, type=int)
-    parser.add_argument("--FirstMode", help="", default=2519, type=int)
-    parser.add_argument("--LastMode", help="", default=2519, type=int)
-    parser.add_argument("--FirstRes", help="", default=1, type=int)
-    parser.add_argument("--LastRes", help="", default=842, type=int)
+    parser.add_argument("--pdbProtomer", help="Input")  # '3VBSProtomer.pdb'
+    parser.add_argument("--totalModes", help="[int]", default=2526, type=int)
+    parser.add_argument("--firstMode", help="[int]", default=2519, type=int)
+    parser.add_argument("--lastMode", help="[int]", default=2519, type=int)
+    parser.add_argument("--firstResidue", help="[int]", default=1, type=int)
+    parser.add_argument("--lastResidue", help="[int]", default=842, type=int)
     parser.add_argument(
-        "--wmatrix", help="W matrix input file that was output from C++ Scripts")
-    parser.add_argument("--vtmatrix", help="U and VT full Matrix")
+        "--wMatrix", help="W matrix input file that was output from C++ Scripts")
+    parser.add_argument("--vtMatrix", help="U and VT full Matrix")
 
     args = parser.parse_args()
 

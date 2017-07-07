@@ -8,12 +8,12 @@ import math
 
 
 def main(args):
-    output = args.pdb_sca[:args.pdb_sca.index('.')]  # "3VBSFull3_SCA_Aligned"
-    f = open(args.pdb_aligned, 'r')
+    output = args.pdbSca[:args.pdbSca.index('.')]  # "3VBSFull3_SCA_Aligned"
+    f = open(args.pdbAligned, 'r')
     lines = f.readlines()
     f.close()
 
-    f = open(args.pdb_sca, 'r')
+    f = open(args.pdbSca, 'r')
     CGlines = f.readlines()
     f.close()
     IndexOfTER = 210
@@ -69,8 +69,8 @@ if __name__ == "__main__":
 
     # custom arguments
     # '3VBSFull_Aligned.pdb'
-    parser.add_argument("--pdb_aligned", help="input")
-    parser.add_argument("--pdb_sca", help="input") # '3VBSFull3_SCA.pdb'
+    parser.add_argument("--pdbAligned", help="")
+    parser.add_argument("--pdbSca", help="") # '3VBSFull3_SCA.pdb'
 
     args = parser.parse_args()
 

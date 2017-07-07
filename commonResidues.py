@@ -9,7 +9,7 @@ from utils import *
 def main(args):
     # Takes two pdb models and determines the common residues
     #####################################
-    f = open(args.full_capsid, 'r')
+    f = open(args.fullCapsid, 'r')
     linesEmpty = f.readlines()
     f.close()
 
@@ -75,8 +75,8 @@ if __name__ == "__main__":
         "--log-file", help="Output log file (default: standard output)", default=None)
 
     # custom arguments
-    parser.add_argument("--full_capsid", help="input")  # '3VBSFull4_SCA.pdb'
-    parser.add_argument("--protomer", help="input")  # '3VBSProtomer3_SCA.pdb'
+    parser.add_argument("--fullCapsid", help="")  # '3VBSFull4_SCA.pdb'
+    parser.add_argument("--protomer", help="")  # '3VBSProtomer3_SCA.pdb'
 
     args = parser.parse_args()
 

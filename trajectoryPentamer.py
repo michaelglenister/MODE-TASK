@@ -78,7 +78,7 @@ def main(args):
 
         # Get the vectors
         # CHANGE HERE # may not be correct change, double check
-        vectorf = open(args.mode_file_prefix + mode + ".txt", 'r')
+        vectorf = open(args.modeFilePrefix + mode + ".txt", 'r')
         vectors = vectorf.readlines()
         vectorf.close()
 
@@ -177,10 +177,10 @@ if __name__ == "__main__":
 
     # custom arguments
     # '3VBSFull_Aligned.pdb'
-    parser.add_argument("--pdb", help="input")  # '3VBSProtomer3_SCA.pdb'
-    parser.add_argument("--modeF", help="", default=617, type=int)
-    parser.add_argument("--modeL", help="", default=617, type=int)
-    parser.add_argument("--mode_file_prefix", help="")  # 'ProtomerMode'
+    parser.add_argument("--pdb", help="")  # '3VBSProtomer3_SCA.pdb'
+    parser.add_argument("--modeF", help="[int]", default=617, type=int)
+    parser.add_argument("--modeL", help="[int]", default=617, type=int)
+    parser.add_argument("--modeFilePrefix", help="")  # 'ProtomerMode'
 
     args = parser.parse_args()
 

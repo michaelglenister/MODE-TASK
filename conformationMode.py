@@ -11,11 +11,11 @@ from math import sqrt
 
 def main(args):
     # Read In PDB files
-    f = open(args.pdb_aligned, 'r')
+    f = open(args.pdbAligned, 'r')
     linesEmpty = f.readlines()
     f.close()
 
-    f = open(args.pdb_protomer_aligned, 'r')
+    f = open(args.pdbProtomerAligned, 'r')
     linesFull = f.readlines()
     f.close()
 
@@ -136,7 +136,7 @@ def main(args):
     #CG = 621
     #Protomer = 2520
     ModeRange = range(0, 621)
-    f = open(args.protomer_vt, 'r')
+    f = open(args.vtProtomer, 'r')
     vectors = f.readlines()
     f.close()
 
@@ -203,11 +203,11 @@ if __name__ == "__main__":
         "--log-file", help="Output log file (default: standard output)", default=None)
 
     # custom arguments
-    parser.add_argument("--pdb_aligned", help="")  # '4n43_aligned.pdb'
-    # '3VBSProtomer_aligned3_SCA.pdb'
-    parser.add_argument("--pdb_protomer_aligned", help="")
-    parser.add_argument("--pdb_protomer", help="")  # '3VBSProtomer3_SCA.pdb'
-    parser.add_argument("--protomer_vt", help="")  # 'Protomer3CG_VT.txt'
+    parser.add_argument("--pdbAligned", help="")  # '4n43_aligned.pdb'
+	# missing pdb_sca args?
+    parser.add_argument("--pdbProtomerAligned", help="") # '3VBSProtomer_aligned3_SCA.pdb'
+    parser.add_argument("--pdbProtomer", help="")  # '3VBSProtomer3_SCA.pdb' used where?
+    parser.add_argument("--vtProtomer", help="")  # 'Protomer3CG_VT.txt'
     parser.add_argument("--output", help="Output file",
                         default="ProtomerCGrained.txt")  # 'Protomer3CG_VT.txt'
 

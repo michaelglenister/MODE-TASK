@@ -10,8 +10,8 @@ import math
 
 
 def main(args):
-    output = args.pdb[:args.pdb.index('.')]  # paramter
-    f = open(args.pdb, 'r')  # paramter
+    output = args.pdbFile[:args.pdbFile.index('.')]  # paramter
+    f = open(args.pdbFile, 'r')  # paramter
     lines = f.readlines()
     f.close()
 
@@ -40,7 +40,7 @@ def main(args):
                 CBetaAtoms.append(atom)
 
     # Set level of coarsegrain
-    CG = args.CG  # paramater
+    CG = args.cg  # paramater
 
     # Read in all cbeta atoms for
     cbetas = []
@@ -62,7 +62,7 @@ def main(args):
     startingAtomI = startingAtom - 1  # Index for starting atom
     IndexOfSelectedAtoms.append(startingAtomI)
 
-    NumberProtomerAtoms = args.NumberProtomerAtoms  # paratmer
+    NumberProtomerAtoms = args.protomerAtoms  # paratmer
     ProtomerCBetas = cbetas[0:NumberProtomerAtoms]
     coordsStart = ProtomerCBetas[startingAtomI]
     distancesFromStart = []
@@ -183,11 +183,11 @@ if __name__ == "__main__":
 
     # custom arguments
     # parser.add_argument("--output", help="")#output = "3VBSPent"
-    parser.add_argument("--pdb", help="PDB input")  # 3VBSPent.pdb
-    parser.add_argument("--CG", help="Course grain level", default=4, type=int)
+    parser.add_argument("--pdbFile", help="PDB input file")  # 3VBSPent.pdb
+    parser.add_argument("--cg", help="Course grain level [int]", default=4, type=int)
     parser.add_argument(
-        "--startingAtom", help="residue number of starting atoms", default=15, type=int)
-    parser.add_argument("--NumberProtomerAtoms",
+        "--startingAtom", help="Residue number of starting atoms [int]", default=15, type=int)
+    parser.add_argument("--protomerAtoms",
                         help="", default=842, type=int)
 
     args = parser.parse_args()
