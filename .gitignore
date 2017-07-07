@@ -8,3 +8,5 @@ ANM
 *.pyc
 
 *.pdb
+
+getEigenVectors
