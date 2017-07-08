@@ -16,6 +16,7 @@ from matplotlib import cm
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
+from time import gmtime, strftime
 #from calc_correlation import parse_traj
 
 #==============================================================================#
@@ -78,25 +79,55 @@ print(pca_traj)
 
 ## PCA using sci-kit learn library
 
-pca_align = PCA(n_components=2)
+#pca_align = PCA(n_components=2)
 
 # Superpose each conformation in the trajectory upon first frame
 
-pca_traj.superpose(pca_traj, 0)
+#pca_traj.superpose(pca_traj, 0)
 
-reduced_cartesian = pca_align.fit_transform(pca_traj.xyz.reshape(pca_traj.n_frames, pca_traj.n_atoms * 3))
-print(reduced_cartesian.shape)
-#print (reduced_cartesian)
 
-## Project
 
-plt.figure(figsize=(8,8))
-plt.plot(reduced_cartesian[:, 0], reduced_cartesian[:,1], marker='x', c=pca_traj.time)
-plt.xlabel('PC1')
-plt.ylabel('PC2')
-plt.title('Cartesian coordinate PCA: alanine dipeptide')
-cbar = plt.colorbar()
-cbar.set_label('Time [ps]')
-plt.show()
+#reduced_cartesian = pca_align.fit_transform(pca_traj.xyz.reshape(pca_traj.n_frames, pca_traj.n_atoms * 3)) ## Fit the model with and apply the dimensionality reduction.
+
+#print(reduced_cartesian.shape)
+#print (np.array(reduced_cartesian))
+
+
+## write the eigenvectors to a file
+#np.savetxt('pc.agr', reduced_cartesian )
+#pf = open('pc.agr', 'r')
+#pf_cont = pf.read()
+#pf.close()
+
+time = strftime("%Y-%m-%d  %a  %H:%M:%S", gmtime())
+title = '\tcreated by pca.py\t'
+legends = '@    title "Projection of PC"\n\
+@    xaxis  label "PC1"\n\
+@    yaxis  label "PC2"\n\
+@	TYPE xy\n'
+
+#pf = open('pc.agr', 'w')
+#pf.write('#'+title+'\ton\t'+time+'\n'+legends+'\n'+pf_cont)
+
+
+#print pf_cont
+#pf.close()
+
+### another methods
+
+pca2 = PCA(n_components=2)
+
+from itertools import combinations
+# this python function gives you all unique pairs of elements from a list
+
+atom_pairs = list(combinations(range(pca_traj.n_atoms), 2))
+print list(combinations(range(4),2))
+
+#pairwise_distances = md.geometry.compute_distances(pca_traj, atom_pairs)
+#print(pairwise_distances.shape)
+#reduced_distances = pca2.fit_transform(pairwise_distances)
+
+#np.savetxt(pc1.agr,reduced_distances)
+
 
 
