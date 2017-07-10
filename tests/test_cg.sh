@@ -1,4 +1,4 @@
 #!/bin/bash
 cd ..
 
-./coarseGrain.py --pdbFile 3VBSPent.pdb
+./coarseGrain.py --pdbFile tests/3VBSPent.pdb
