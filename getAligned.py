@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # Creates a PDB for a multiple protomer structure, containing co-ords of an aligned PDB structure
 import os
 import sys

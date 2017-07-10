@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # Takes a protomer structure and coarse grains to select a set amount of C-Beta
 import os
 import sys

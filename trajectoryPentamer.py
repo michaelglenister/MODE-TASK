@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # Makes a trajectory of 100 PDB files
 import os
 import sys

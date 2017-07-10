@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # Calculates and Returns Diagonals of Correlated Matrix for a given set of modes
 import os
 import sys
