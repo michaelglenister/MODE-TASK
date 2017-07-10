@@ -7,6 +7,4 @@ ANM
 
 *.pyc
 
-*.pdb
-
 getEigenVectors
