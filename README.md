@@ -1,6 +1,30 @@
 # NMA-TASK
 
-Requirements: </br>
-Python 2.7 </br>
-g++ </br>
-alglib library (included) </br>
+Collection of tools for analysing normal modes and performing principal component analysis
+
+## Installation
+
+*Download the project:*
+```bash
+git clone https://github.com/RUBi-ZA/NMA-TASK.git
+cd NMA-TASK
+```
+*Install dependencies and set up Python virtual environment:*
+```bash
+sudo apt install virtualenvwrapper python-dev 
+virtualenv venv
+source venv/bin/activate
+pip install --upgrade pip
+pip install numpy
+```
+*Compile binaries:*
+```
+sudo apt install g++
+g++ -I cpp/src/ ANM.cpp -o ANM
+g++ getEigenVectors.cpp -o getEigenVectors
+
+```
+
+## Usage
+
+[Read the docs](http://nma-task.readthedocs.io/en/latest/index.html)
