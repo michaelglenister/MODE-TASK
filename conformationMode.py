@@ -213,6 +213,7 @@ if __name__ == "__main__":
                         default="ProtomerCGrained.txt")  # 'Protomer3CG_VT.txt'
 
     args = parser.parse_args()
+
 	# Check if args supplied by user
 	if len(sys.argv) > 1:
 		# set up logging
