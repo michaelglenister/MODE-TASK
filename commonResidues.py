@@ -49,8 +49,12 @@ def main(args):
         for r in FullResidues[ch]:
             if r in EmptyResidues[ch]:
                 CommonResidues[ch].append(r)
+	
+	w = open("common_residues", 'w')
+    w.write(str(CommonResidues))
+    w.close()
 
-    print CommonResidues
+    #print CommonResidues
 
 
 silent = False
@@ -81,27 +85,27 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-	# Check if args supplied by user
-	if len(sys.argv) > 1:
-		# set up logging
-		silent = args.silent
+    # Check if args supplied by user
+    if len(sys.argv) > 1:
+        # set up logging
+        silent = args.silent
 
-		if args.log_file:
-		    stream = open(args.log_file, 'w')
+        if args.log_file:
+            stream = open(args.log_file, 'w')
 
-		start = datetime.now()
-		log("Started at: %s" % str(start))
+        start = datetime.now()
+        log("Started at: %s" % str(start))
 
-		# run script
-		main(args)
+        # run script
+        main(args)
 
-		end = datetime.now()
-		time_taken = format_seconds((end - start).seconds)
+        end = datetime.now()
+        time_taken = format_seconds((end - start).seconds)
 
-		log("Completed at: %s" % str(end))
-		log("- Total time: %s" % str(time_taken))
+        log("Completed at: %s" % str(end))
+        log("- Total time: %s" % str(time_taken))
 
-		# close logging stream
-		stream.close()
-	else:
-		print "No argumeants provided. Use -h to view help"
+        # close logging stream
+        stream.close()
+    else:
+        print "No argumeants provided. Use -h to view help"
