@@ -1,5 +1,6 @@
-# NMA-TASK
 <img src="https://api.travis-ci.com/michaelglenister/NMA-TASK.svg?token=zTmqpAXFeCMTdzy6XBH7&branch=master" align="right">
+
+# NMA-TASK
 
 Collection of tools for analysing normal modes and performing principal component analysis
 
