@@ -11,8 +11,8 @@ import math
 
 
 def main(args):
-    output = args.pdbFile[:args.pdbFile.index('.')]  # paramter
-    f = open(args.pdbFile, 'r')  # paramter
+    output = args.pdbFile[:args.pdbFile.index('.')]  # parameter
+    f = open(args.pdbFile, 'r')  # parameter
     lines = f.readlines()
     f.close()
 
@@ -24,24 +24,61 @@ def main(args):
     # get index of first atom
     for i in range(len(lines)):
         if lines[i].startswith("ATOM"):
-            indexAtom = i
+            index_atom = i
             break
-    header = lines[0:indexAtom]
-    AllAtoms = lines[indexAtom:]
-
-    CBetaAtoms = []
-    for atom in AllAtoms:
-        CBeta = []
+    header = lines[0:index_atom]
+    all_atoms = lines[index_atom:]
+    number_of_protomers = 0
+    macro_molecule = False
+    chain_dics = {}
+    number_protomer_atoms = 0
+    c_beta_atoms = []
+    change = False
+    for atom in all_atoms:
+        c_beta = []
         if atom.startswith("ATOM"):
             info = atom.split()
-            first = info[0].strip()
+            chain = info[4]
             res = info[3]
-            atomType = info[2]
-            if first == "ATOM" and (atomType == "CB" or (atomType == "CA" and res == "GLY")):
-                CBetaAtoms.append(atom)
+            atom_type = info[2]
+            if atom_type == "CB" or (atom_type == "CA" and res == "GLY"):
+                if number_protomer_atoms == 0:
+                    chain1 = chain
+                if chain not in chain_dics:
+                    number_protomer_atoms += 1
+                if chain != chain1:
+                    if chain1 not in chain_dics:
+                        chain_dics[chain1] = 1
+                    else:
+                        # print chain_dics
+                        #print chain1
+                        #print chain
+                        chain_dics[chain1] += 1
+                        macro_molecule = True
+                    chain1 = chain
+                c_beta_atoms.append(atom)
+        if atom.startswith("END"):
+            chain_dics[chain1] += 1
+
+    print number_protomer_atoms
+    # check PDB file parsed correctly
+    # chTotals = []
+    # if macro_molecule > 1:
+    # for chain in chain_dics:
+    # countCh = chain_dics[chain]
+    # if countCh not in chTotals:
+    # chTotals.append(countCh)
+    print chain_dics
+    number_of_protomers = chain_dics[chain1]
+
+    # if len(chTotals) == 1:
+    # print "Correct"
+    # number_of_protomers = chTotals[0]
+    # else:
+    # print "Problem in PDB file - asymmetric units are not equal!!!"
 
     # Set level of coarsegrain
-    CG = args.cg  # paramater
+    c_g = args.cg  # parameter
 
     # Read in all cbeta atoms for
     cbetas = []
@@ -49,33 +86,32 @@ def main(args):
         if line.startswith("ATOM"):
             coords = []
             res = line.split()[3].strip()
-            atomType = line.split()[2].strip()
-            if atomType == "CB" or (atomType == "CA" and res == "GLY"):
-
+            atom_type = line.split()[2].strip()
+            if atom_type == "CB" or (atom_type == "CA" and res == "GLY"):
                 coords.append(float(line[30:38].strip().strip()))
                 coords.append(float(line[38:46].strip().strip()))
                 coords.append(float(line[46:54].strip().strip()))
                 cbetas.append(coords)
 
-    IndexOfSelectedAtoms = []
+    index_of_selected_atoms = []
 
-    startingAtom = args.startingAtom  # residue number of starting atoms
-    startingAtomI = startingAtom - 1  # Index for starting atom
-    IndexOfSelectedAtoms.append(startingAtomI)
+    starting_atom = args.startingAtom  # residue number of starting atoms
+    starting_atom_i = starting_atom - 1  # Index for starting atom
+    index_of_selected_atoms.append(starting_atom_i)
 
-    NumberProtomerAtoms = args.protomerAtoms  # paratmer
-    ProtomerCBetas = cbetas[0:NumberProtomerAtoms]
-    coordsStart = ProtomerCBetas[startingAtomI]
-    distancesFromStart = []
-    distanceIndex = {}  # holds the index of the atoms in order of distance from
+    number_protomer_atoms = args.protomerAtoms  # parameter
+    protomer_c_betas = cbetas[0:number_protomer_atoms]
+    coords_start = protomer_c_betas[starting_atom_i]
+    distances_from_start = []
+    distance_index = {}  # holds the index of the atoms in order of distance from
 
-    xstart = coordsStart[0]
-    ystart = coordsStart[1]
-    zstart = coordsStart[2]
+    xstart = coords_start[0]
+    ystart = coords_start[1]
+    zstart = coords_start[2]
 
-    for i in range(len(ProtomerCBetas)):
-        atom = ProtomerCBetas[i]
-        if i == startingAtomI:
+    for i in range(len(protomer_c_betas)):
+        atom = protomer_c_betas[i]
+        if i == starting_atom_i:
             continue
         x = atom[0]
         y = atom[1]
@@ -83,79 +119,70 @@ def main(args):
         distance = ((xstart - x) * (xstart - x)) + ((ystart - y)
                                                     * (ystart - y)) + ((zstart - z) * (zstart - z))
         distance = math.sqrt(distance)
-        distancesFromStart.append(distance)
-        distanceIndex[distance] = i
-    distancesFromStart.sort()
+        distances_from_start.append(distance)
+        distance_index[distance] = i
+    distances_from_start.sort()
 
     # selects atoms which are not within this distance to already selected atoms
-    cutoff = distancesFromStart[(CG * (CG - 1)) - CG]
-    atomIndex = distanceIndex[cutoff]
-    IndexOfSelectedAtoms.append(atomIndex)
+    cutoff = distances_from_start[(c_g * (c_g - 1)) - c_g]
+    atom_index = distance_index[cutoff]
+    index_of_selected_atoms.append(atom_index)
 
     distribution = {}
 
     # loops through ordered list and selects all suitable atoms
-    for dist in distancesFromStart[((CG * (CG - 1)) - CG) + 1:]:
-        atomIndex = distanceIndex[dist]
-        x = ProtomerCBetas[atomIndex][0]
-        y = ProtomerCBetas[atomIndex][1]
-        z = ProtomerCBetas[atomIndex][2]
-        tooClose = False
-        localDistribution = []
-        for atom in IndexOfSelectedAtoms:
-            x1 = ProtomerCBetas[atom][0]
-            y1 = ProtomerCBetas[atom][1]
-            z1 = ProtomerCBetas[atom][2]
-            surroundingDistance = ((x1 - x) * (x1 - x)) + \
-                ((y1 - y) * (y1 - y)) + ((z1 - z) * (z1 - z))
-            surroundingDistance = math.sqrt(surroundingDistance)
-            localDistribution.append(surroundingDistance)
-            if surroundingDistance < cutoff:
-                tooClose = True
+    for dist in distances_from_start[((c_g * (c_g - 1)) - c_g) + 1:]:
+        atom_index = distance_index[dist]
+        x = protomer_c_betas[atom_index][0]
+        y = protomer_c_betas[atom_index][1]
+        z = protomer_c_betas[atom_index][2]
+        too_close = False
+        local_distribution = []
+        for atom in index_of_selected_atoms:
+            x1 = protomer_c_betas[atom][0]
+            y1 = protomer_c_betas[atom][1]
+            z1 = protomer_c_betas[atom][2]
+            surrounding_distance = ((x1 - x) * (x1 - x)) + \
+                                   ((y1 - y) * (y1 - y)) + ((z1 - z) * (z1 - z))
+            surrounding_distance = math.sqrt(surrounding_distance)
+            local_distribution.append(surrounding_distance)
+            if surrounding_distance < cutoff:
+                too_close = True
                 break
-        if not tooClose:
-            IndexOfSelectedAtoms.append(atomIndex)
-            localDistribution.sort()
-            distribution[atomIndex] = localDistribution
+        if not too_close:
+            index_of_selected_atoms.append(atom_index)
+            local_distribution.sort()
+            distribution[atom_index] = local_distribution
 
-    # print IndexOfSelectedAtoms
-    print "No. atoms selected per protomer: " + str(len(IndexOfSelectedAtoms))
-    print "No. atoms selected per Capsid: " + str(len(IndexOfSelectedAtoms) * 60)
+    # print index_of_selected_atoms
+    print "No. atoms selected per protomer: " + str(len(index_of_selected_atoms))
+    print "No. atoms selected per macro molecule: " + str(len(index_of_selected_atoms) * number_of_protomers)
+    # print "No. atoms selected per macro molecule: " + str(len(index_of_selected_atoms) * 60)
 
     # for a in distribution:
-    #	print a
-    #	print distribution[a]
+    # print a
+    # print distribution[a]
 
-    IndexOfSelectedAtoms.sort()
+    index_of_selected_atoms.sort()
     # write a pdb file of the Coarse-Grained Capsid with renumbered atoms
-    SelectedCBetaLines = []
-    # Includes all cbetas of the first penatmer and then coarse grains the rest of the surrounding capsid
+    selected_c_beta_lines = []
+    # Includes all cbetas of the first pentamer and then coarse grains the rest of the surrounding capsid
     count = 0
-    '''for i in range(5):
-		for j in range(NumberProtomerAtoms):
-		index = j+i*NumberProtomerAtoms
-		a = CBetaAtoms[index]
-		spaces = " "*(len(a[6:11])-len(str(count+1)))
-		a = a[0:6]+spaces+str(count+1)+a[11:]
-		SelectedCBetaLines.append(a)
-		count+=1
-		ter = "TER"+" "*3+" "*(5-len(str(count)))+str(count)+" "*6+a.split()[3]+" "+a.split()[4]+" "+" "*(3-len(a.split()[5]))+a.split()[5]+" \n"
-		SelectedCBetaLines.append(ter)'''
 
-    for i in range(0, 5):  # paramarter
-        for j in IndexOfSelectedAtoms:
-            index = j + i * NumberProtomerAtoms
-            a = CBetaAtoms[index]
+    for i in range(0, number_of_protomers):  # parameter
+        for j in index_of_selected_atoms:
+            index = j + i * number_protomer_atoms
+            a = c_beta_atoms[index]
             spaces = " " * (len(a[6:11]) - len(str(count + 1)))
             a = a[0:6] + spaces + str(count + 1) + a[11:]
-            SelectedCBetaLines.append(a)
+            selected_c_beta_lines.append(a)
             count += 1
         ter = "TER" + " " * 3 + " " * (5 - len(str(count))) + str(count) + " " * 6 + a.split(
         )[3] + " " + a.split()[4] + " " + " " * (3 - len(a.split()[5])) + a.split()[5] + " \n"
-        SelectedCBetaLines.append(ter)
-    w = open(output + str(CG) + "_SCA.pdb", 'w')
+        selected_c_beta_lines.append(ter)
+    w = open(output + str(c_g) + "_SCA.pdb", 'w')
     w.writelines(header)
-    w.writelines(SelectedCBetaLines)
+    w.writelines(selected_c_beta_lines)
     w.write("END")
     w.close()
 
@@ -173,48 +200,49 @@ def log(message):
 
 
 if __name__ == "__main__":
-	
-	# parse cmd arguments
-	parser = argparse.ArgumentParser()
 
-	# standard arguments for logging
-	parser.add_argument("--silent", help="Turn off logging",
-	                    action='store_true', default=False)
-	parser.add_argument(
-	    "--log-file", help="Output log file (default: standard output)", default=None)
+    # parse cmd arguments
+    parser = argparse.ArgumentParser()
 
-	# custom arguments
-	# parser.add_argument("--output", help="")#output = "3VBSPent"
-	parser.add_argument("--pdbFile", help="PDB input file")  # 3VBSPent.pdb
-	parser.add_argument("--cg", help="Course grain level [int]", default=4, type=int)
-	parser.add_argument(
-	    "--startingAtom", help="Residue number of starting atoms [int]", default=15, type=int)
-	parser.add_argument("--protomerAtoms",
-	                    help="", default=842, type=int)
+    # standard arguments for logging
+    parser.add_argument("--silent", help="Turn off logging",
+                        action='store_true', default=False)
+    parser.add_argument(
+        "--log-file", help="Output log file (default: standard output)", default=None)
 
-	args = parser.parse_args()
+    # custom arguments
+    # parser.add_argument("--output", help="")#output = "3VBSPent"
+    parser.add_argument("--pdbFile", help="PDB input file")  # 3VBSPent.pdb
+    parser.add_argument(
+        "--cg", help="Course grain level [int]", default=4, type=int)
+    parser.add_argument(
+        "--startingAtom", help="Residue number of starting atoms [int]", default=1, type=int)
+    parser.add_argument("--protomerAtoms",
+                        help="", default=842, type=int)
 
-	# Check if args supplied by user
-	if len(sys.argv) > 1:
-		# set up logging
-		silent = args.silent
+    args = parser.parse_args()
 
-		if args.log_file:
-			stream = open(args.log_file, 'w')
+    # Check if args supplied by user
+    if len(sys.argv) > 1:
+        # set up logging
+        silent = args.silent
 
-		start = datetime.now()
-		log("Started at: %s" % str(start))
+        if args.log_file:
+            stream = open(args.log_file, 'w')
 
-		# run script
-		main(args)
+        start = datetime.now()
+        log("Started at: %s" % str(start))
 
-		end = datetime.now()
-		time_taken = format_seconds((end - start).seconds)
+        # run script
+        main(args)
 
-		log("Completed at: %s" % str(end))
-		log("- Total time: %s" % str(time_taken))
+        end = datetime.now()
+        time_taken = format_seconds((end - start).seconds)
 
-		# close logging stream
-		stream.close()
-	else:
-		print "No argumeants provided. Use -h to view help"
+        log("Completed at: %s" % str(end))
+        log("- Total time: %s" % str(time_taken))
+
+        # close logging stream
+        stream.close()
+    else:
+        print "No arguments provided. Use -h to view help"

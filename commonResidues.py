@@ -11,50 +11,50 @@ def main(args):
     # Takes two pdb models and determines the common residues
     #####################################
     f = open(args.fullCapsid, 'r')
-    linesEmpty = f.readlines()
+    lines_empty = f.readlines()
     f.close()
 
     f = open(args.protomer, 'r')
-    linesFull = f.readlines()
+    lines_full = f.readlines()
     f.close()
     #####################################
 
-    EmptyResidues = {'A': [], 'B': [], 'C': [], 'D': []}
-    FullResidues = {'A': [], 'B': [], 'C': [], 'D': []}
+    empty_residues = {'A': [], 'B': [], 'C': [], 'D': []}
+    full_residues = {'A': [], 'B': [], 'C': [], 'D': []}
 
-    CommonResidues = {'A': [], 'B': [], 'C': [], 'D': []}
+    common_residues = {'A': [], 'B': [], 'C': [], 'D': []}
 
-    for line in linesEmpty:
+    for line in lines_empty:
         if line.startswith("ATOM"):
             info = line.split()
             atype = info[2].strip()
-            resType = info[3].strip()
+            res_type = info[3].strip()
             chain = info[4].strip()
             res = int(info[5].strip())
-            if (atype == "CB" or (atype == "CA" and resType == "GLY")):
-                if res not in EmptyResidues[chain]:
-                    EmptyResidues[chain].append(res)
-    for line in linesFull:
+            if atype == "CB" or (atype == "CA" and res_type == "GLY"):
+                if res not in empty_residues[chain]:
+                    empty_residues[chain].append(res)
+    for line in lines_full:
         if line.startswith("ATOM"):
             info = line.split()
             atype = info[2].strip()
-            resType = info[3].strip()
+            res_type = info[3].strip()
             chain = info[4].strip()
             res = int(info[5].strip())
-            if (atype == "CB" or (atype == "CA" and resType == "GLY")):
-                if res not in FullResidues[chain]:
-                    FullResidues[chain].append(res)
+            if atype == "CB" or (atype == "CA" and res_type == "GLY"):
+                if res not in full_residues[chain]:
+                    full_residues[chain].append(res)
 
-    for ch in FullResidues:
-        for r in FullResidues[ch]:
-            if r in EmptyResidues[ch]:
-                CommonResidues[ch].append(r)
-	
-	w = open("common_residues", 'w')
-    w.write(str(CommonResidues))
+    for ch in full_residues:
+        for r in full_residues[ch]:
+            if r in empty_residues[ch]:
+                common_residues[ch].append(r)
+
+    w = open("common_residues", 'w')
+    w.write(str(common_residues))
     w.close()
 
-    #print CommonResidues
+    # print CommonResidues
 
 
 silent = False
@@ -108,4 +108,4 @@ if __name__ == "__main__":
         # close logging stream
         stream.close()
     else:
-        print "No argumeants provided. Use -h to view help"
+        print "No arguments provided. Use -h to view help"

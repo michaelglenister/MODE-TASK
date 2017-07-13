@@ -15,33 +15,33 @@ def main(args):
     f.close()
 
     f = open(args.pdbSca, 'r')
-    CGlines = f.readlines()
+    cg_lines = f.readlines()
     f.close()
-    IndexOfTER = 210
+    index_of_ter = 210
 
-    CoarseGrained = []
-    for atom in CGlines[0:IndexOfTER]:
+    coarse_grained = []
+    for atom in cg_lines[0:index_of_ter]:
         if atom.startswith("ATOM"):
             info = atom.split()
             first = info[0].strip()
             res = info[3]
-            atomType = info[2]
+            atom_type = info[2]
             chain = info[4]
-            resNum = info[5]
+            res_num = info[5]
             for line in lines:
                 if line.startswith("ATOM"):
                     info2 = line.split()
                     res2 = info2[3]
-                    atomType2 = info2[2]
+                    atom_type2 = info2[2]
                     chain2 = info2[4]
-                    resNum2 = info2[5]
-                    if res == res2 and atomType == atomType2 and chain == chain2 and resNum == resNum2:
-                        CoarseGrained.append(line)
+                    res_num2 = info2[5]
+                    if res == res2 and atom_type == atom_type2 and chain == chain2 and res_num == res_num2:
+                        coarse_grained.append(line)
 
-    print len(CoarseGrained)
+    print len(coarse_grained)
 
     w = open(output + "_SCA.pdb", 'w')
-    w.writelines(CoarseGrained)
+    w.writelines(coarse_grained)
     w.write("END")
     w.close()
 
@@ -75,27 +75,27 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-	# Check if args supplied by user
-	if len(sys.argv) > 1:
-		# set up logging
-		silent = args.silent
+    # Check if args supplied by user
+    if len(sys.argv) > 1:
+        # set up logging
+        silent = args.silent
 
-		if args.log_file:
-		    stream = open(args.log_file, 'w')
+        if args.log_file:
+            stream = open(args.log_file, 'w')
 
-		start = datetime.now()
-		log("Started at: %s" % str(start))
+        start = datetime.now()
+        log("Started at: %s" % str(start))
 
-		# run script
-		main(args)
+        # run script
+        main(args)
 
-		end = datetime.now()
-		time_taken = format_seconds((end - start).seconds)
+        end = datetime.now()
+        time_taken = format_seconds((end - start).seconds)
 
-		log("Completed at: %s" % str(end))
-		log("- Total time: %s" % str(time_taken))
+        log("Completed at: %s" % str(end))
+        log("- Total time: %s" % str(time_taken))
 
-		# close logging stream
-		stream.close()
-	else:
-		print "No argumeants provided. Use -h to view help"
+        # close logging stream
+        stream.close()
+    else:
+        print "No arguments provided. Use -h to view help"
