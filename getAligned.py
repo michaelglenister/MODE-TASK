@@ -71,7 +71,7 @@ if __name__ == "__main__":
     # custom arguments
     # '3VBSFull_Aligned.pdb'
     parser.add_argument("--pdbAligned", help="")
-    parser.add_argument("--pdbSca", help="") # '3VBSFull3_SCA.pdb'
+    parser.add_argument("--pdbSca", help="")  # '3VBSFull3_SCA.pdb'
 
     args = parser.parse_args()
 

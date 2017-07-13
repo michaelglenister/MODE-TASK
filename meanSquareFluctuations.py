@@ -21,8 +21,14 @@ import numpy as np
 # chain
 
 def main(args):
-    common_residues = {'A': [3, 53, 59, 76, 111, 122, 142, 240, 257], 'C': [2, 7, 32, 71, 146], 'B': [
-        52, 56, 70, 142, 161], 'D': [26]}  # residues common to multiple pdb files
+    # f = open("common_residues", 'r')
+    # common_residues = f.readlines()[0].strip()
+    # f.close()
+    with open('common_residues', 'r') as inf:
+        common_residues = eval(inf.read())
+    print common_residues
+    # common_residues = {'A': [3, 53, 59, 76, 111, 122, 142, 240, 257], 'C': [2, 7, 32, 71, 146], 'B': [
+    #    52, 56, 70, 142, 161], 'D': [26]}  # residues common to multiple pdb files
     interface_index = []
     # The pdb file on which NMA analysis was performed, this script handles on model at a time but we can change this
     f = open(args.pdbProtomer, 'r')
@@ -128,7 +134,7 @@ def main(args):
     w.write("Res\tBetaValue\n")
     for i in res_range:
         w.write(str(i + 1) + "\t" + str(trace_c[i, i]) + "\n")
-    w.write("Common Residues")
+    w.write("Common Residues\n")
     for i in interface_index:
         w.write(str(i + 1) + "\t" + str(trace_c[i, i]) + "\n")
 
@@ -136,7 +142,7 @@ def main(args):
     w.write("Res\tBetaValue\n")
     for i in res_range:
         w.write(str(i + 1) + "\t" + str(trace_c_m[i, i]) + "\n")
-    w.write("Common Residues")
+    w.write("Common Residues\n")
     for i in interface_index:
         w.write(str(i + 1) + "\t" + str(trace_c_m[i, i]) + "\n")
     w.close()
@@ -166,11 +172,11 @@ if __name__ == "__main__":
 
     # custom arguments
     parser.add_argument("--pdbProtomer", help="Input")  # '3VBSProtomer.pdb'
-    parser.add_argument("--totalModes", help="[int]", default=2526, type=int)
-    parser.add_argument("--firstMode", help="[int]", default=2519, type=int)
-    parser.add_argument("--lastMode", help="[int]", default=2519, type=int)
+    parser.add_argument("--totalModes", help="[int]", default=810, type=int)
+    parser.add_argument("--firstMode", help="[int]", default=803, type=int)
+    parser.add_argument("--lastMode", help="[int]", default=803, type=int)
     parser.add_argument("--firstResidue", help="[int]", default=1, type=int)
-    parser.add_argument("--lastResidue", help="[int]", default=842, type=int)
+    parser.add_argument("--lastResidue", help="[int]", default=270, type=int)
     parser.add_argument(
         "--wMatrix", help="W matrix input file that was output from C++ Scripts")
     parser.add_argument("--vtMatrix", help="U and VT full Matrix")

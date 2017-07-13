@@ -19,8 +19,8 @@ def main(args):
     f.close()
     #####################################
 
-    empty_residues = {'A': [], 'B': [], 'C': [], 'D': []}
-    full_residues = {'A': [], 'B': [], 'C': [], 'D': []}
+    empty_residues = {}
+    full_residues = {}
 
     common_residues = {'A': [], 'B': [], 'C': [], 'D': []}
 
@@ -32,8 +32,11 @@ def main(args):
             chain = info[4].strip()
             res = int(info[5].strip())
             if atype == "CB" or (atype == "CA" and res_type == "GLY"):
-                if res not in empty_residues[chain]:
-                    empty_residues[chain].append(res)
+                if chain not in empty_residues:
+                    empty_residues[chain] = [res]
+                else:
+                    if res not in empty_residues[chain]:
+                        empty_residues[chain].append(res)
     for line in lines_full:
         if line.startswith("ATOM"):
             info = line.split()
@@ -42,8 +45,11 @@ def main(args):
             chain = info[4].strip()
             res = int(info[5].strip())
             if atype == "CB" or (atype == "CA" and res_type == "GLY"):
-                if res not in full_residues[chain]:
-                    full_residues[chain].append(res)
+                if chain not in full_residues:
+                    full_residues[chain] = [res]
+                else:
+                    if res not in full_residues[chain]:
+                        full_residues[chain].append(res)
 
     for ch in full_residues:
         for r in full_residues[ch]:

@@ -71,7 +71,7 @@ vector< vector<double> > getCoOrds(string pdbInput)// gets the x,y,z cordinates 
 	return C;
 }//cords
 
-vector< vector<double> > getForceConstants(vector<double> atom1,vector<double> atom2)// returns a 9x9 vector for the interaction between two nodes
+vector< vector<double> > getForceConstants(vector<double> atom1,vector<double> atom2, double cutoff)// returns a 9x9 vector for the interaction between two nodes
 {
 	vector< vector<double> > dv2k;
 	vector<double> dv2kROW;
@@ -86,7 +86,7 @@ vector< vector<double> > getForceConstants(vector<double> atom1,vector<double> a
 	double dv2ka;
 	
 	//if outside cutoff or atom1=atom2			
-	if (dist2>576)//parameter 
+	if (dist2>cutoff)//parameter 
 	{
 		for(int i=0;i<3;i++)
 		{		
@@ -118,7 +118,7 @@ vector< vector<double> > getForceConstants(vector<double> atom1,vector<double> a
 
 }// getForceConstants
 
-vector< vector<double> > getHessian(vector< vector<double> > C)// this calls the getForceConstants to set up the Hessian Matrix, we manipulate these force constants and the populate the hessian
+vector< vector<double> > getHessian(vector< vector<double> > C, double cutoff)// this calls the getForceConstants to set up the Hessian Matrix, we manipulate these force constants and the populate the hessian
 {
 	vector< vector<double> > Hessian; //Full 3Nx3N Hessian
 	
@@ -156,7 +156,7 @@ vector< vector<double> > getHessian(vector< vector<double> > C)// this calls the
 			atom2 = C[j];
 			if(i!=j)
 			{
-				interaction = getForceConstants(atom1,atom2);
+				interaction = getForceConstants(atom1,atom2,cutoff);
 				for(int ir = 0; ir<3; ir++)
 				{
 					rowX.push_back(interaction[0][ir]);
@@ -213,14 +213,16 @@ vector< vector<double> > getHessian(vector< vector<double> > C)// this calls the
 
 int main(int argc, char *argv[])
 {	
-	if (argc != 2)
+	if (argc != 3)
 	{
-		cout<<"PDB file is expected as a parameter"<<endl;
+		cout<<"PDB file and cutoff are expected as parameters"<<endl;
 		//cout<<"ANM [PDB file]"<<endl;
 		return -1;
 	}
 	
 	string pdbInput = argv[1]; //3VBSPent4_SCA.pdb
+	double cutoff = atof(argv[2]);
+	cutoff = cutoff * cutoff;
 	string eigenvalueMatrixFile = pdbInput.substr(0,4) + "_W.txt"; //4BIP_W.txt
 	string eigenvalueVTFile = pdbInput.substr(0,4) + "_VT.txt"; //4BIP_VT.txt
 	string eigenvalueUFile = pdbInput.substr(0,4) + "_U.txt"; //4BIP_U.txt
@@ -229,9 +231,10 @@ int main(int argc, char *argv[])
 	cout<<eigenvalueMatrixFile<<endl;
 	cout<<eigenvalueVTFile<<endl;
 	cout<<eigenvalueUFile<<endl;
+	cout<<cutoff<<endl;
 
 	vector< vector<double> > C = getCoOrds(pdbInput);
-	vector< vector<double> > Hessian = getHessian(C);
+	vector< vector<double> > Hessian = getHessian(C, cutoff);
 
 
 	int size = Hessian.size();
@@ -284,7 +287,7 @@ int main(int argc, char *argv[])
 	outputFileVT.close();
 
 	ofstream outputFileU;
-	outputFileVT.open(eigenvalueUFile.c_str());
+	outputFileU.open(eigenvalueUFile.c_str());
 
 	for (int i=0; i<r; i++)
 	{

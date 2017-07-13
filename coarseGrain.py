@@ -11,8 +11,8 @@ import math
 
 
 def main(args):
-    output = args.pdbFile[:args.pdbFile.index('.')]  # parameter
-    f = open(args.pdbFile, 'r')  # parameter
+    output = args.pdbFile[:args.pdbFile.index('.')]
+    f = open(args.pdbFile, 'r')
     lines = f.readlines()
     f.close()
 
@@ -35,7 +35,7 @@ def main(args):
     c_beta_atoms = []
     change = False
     for atom in all_atoms:
-        c_beta = []
+        cbeta = []
         if atom.startswith("ATOM"):
             info = atom.split()
             chain = info[4]
@@ -50,32 +50,19 @@ def main(args):
                     if chain1 not in chain_dics:
                         chain_dics[chain1] = 1
                     else:
-                        # print chain_dics
-                        #print chain1
-                        #print chain
                         chain_dics[chain1] += 1
                         macro_molecule = True
                     chain1 = chain
                 c_beta_atoms.append(atom)
         if atom.startswith("END"):
-            chain_dics[chain1] += 1
+            if chain1 in chain_dics:
+                chain_dics[chain1] += 1
+            else:
+                chain_dics[chain1] = 1
 
-    print number_protomer_atoms
-    # check PDB file parsed correctly
-    # chTotals = []
-    # if macro_molecule > 1:
-    # for chain in chain_dics:
-    # countCh = chain_dics[chain]
-    # if countCh not in chTotals:
-    # chTotals.append(countCh)
-    print chain_dics
+    # print number_protomer_atoms
+    # print chain_dics
     number_of_protomers = chain_dics[chain1]
-
-    # if len(chTotals) == 1:
-    # print "Correct"
-    # number_of_protomers = chTotals[0]
-    # else:
-    # print "Problem in PDB file - asymmetric units are not equal!!!"
 
     # Set level of coarsegrain
     c_g = args.cg  # parameter

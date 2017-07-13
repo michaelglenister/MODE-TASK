@@ -25,8 +25,8 @@ def main(args):
         # Get the header and coords
 
         header = []
-        atomLines = []
-        coOrds = []
+        atom_lines = []
+        coords = []
         end = []
 
         # get index of first atom
@@ -39,7 +39,7 @@ def main(args):
 
         c_beta_atoms = []
         for atom in all_atoms:
-            CBeta = []
+            cbeta = []
             if atom.startswith("ATOM"):
                 info = atom.split()
                 first = info[0].strip()
