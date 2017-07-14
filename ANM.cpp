@@ -25,6 +25,7 @@
 using namespace std;
 using namespace alglib;
 
+
 int countAtoms()//counts Carbon Atoms (Beta carbons for all residues but Alpha carbons for Glycine)
 {
 	vector< vector<int> > row;
@@ -213,15 +214,46 @@ vector< vector<double> > getHessian(vector< vector<double> > C, double cutoff)//
 
 int main(int argc, char *argv[])
 {	
-	if (argc != 3)
+	//Init vars
+	double cutoff;
+	string pdbInput;
+	bool hasPdb = false, hasCutoff = false;
+	string temp;
+
+	// Begin parameter handling
+	// Add more else if statements for further parameters
+	int i;
+    for(i=0; i<argc; ++i)
+    {
+		if (strcmp(argv[i], "-h") == 0)
+		{
+			cout<<"Help"<<endl;
+			return -1;
+		}
+		else if(strcmp(argv[i], "--pdb") == 0)
+		{
+			pdbInput = argv[i+1];
+			hasPdb = true;
+		}
+		else if(strcmp(argv[i], "--cutoff") == 0)
+		{
+			cutoff = atof(argv[i+1]);
+			hasCutoff = true;
+		}
+    }
+	
+	if(!hasPdb)
 	{
-		cout<<"PDB file and cutoff are expected as parameters"<<endl;
-		//cout<<"ANM [PDB file]"<<endl;
+		cout<<"A PDB file is required, use '-h' to view help"<<endl;
 		return -1;
 	}
+
+	if(!hasCutoff)
+	{
+		cutoff = 24;
+		cout<<"Using a default cutoff of " << cutoff <<endl;
+	}
 	
-	string pdbInput = argv[1]; //3VBSPent4_SCA.pdb
-	double cutoff = atof(argv[2]);
 	cutoff = cutoff * cutoff;
 	string eigenvalueMatrixFile = pdbInput.substr(0,4) + "_W.txt"; //4BIP_W.txt
 	string eigenvalueVTFile = pdbInput.substr(0,4) + "_VT.txt"; //4BIP_VT.txt
@@ -232,6 +264,8 @@ int main(int argc, char *argv[])
 	cout<<eigenvalueVTFile<<endl;
 	cout<<eigenvalueUFile<<endl;
 	cout<<cutoff<<endl;
+
+	// End parameter handling
 
 	vector< vector<double> > C = getCoOrds(pdbInput);
 	vector< vector<double> > Hessian = getHessian(C, cutoff);
