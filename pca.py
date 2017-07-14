@@ -41,13 +41,14 @@ print '\n'
 parser = OptionParser("Usage: pca.py -t <MD trajecotry> -p <topology file>  -a <atom group >")
 
 parser.add_option("-t", "--trj", type='string', dest="trj",
-                  help="Name of the MD trajectory")
+                  help="file name of the MD trajectory")
 
 parser.add_option("-p", "--top", type='string', dest="topology",
                   help="topology file")      
 
 parser.add_option("-a", "--ag", type='string', dest="atm_grp",
-                  help="group of atom for PCA, options are, CA= C alpha, BB= backboneone")				  
+                  help="group of atom for PCA. Options are:\
+				  all= all atoms, backbone = backbone atoms, CA= C alpha atoms" )				  
 
 (options, args) = parser.parse_args()
                      
