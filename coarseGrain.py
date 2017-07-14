@@ -11,7 +11,7 @@ import math
 
 
 def main(args):
-    output = args.pdbFile[:args.pdbFile.index('.')]
+    output = args.outdir + "/" + args.pdbFile[args.pdbFile.rfind('/') + 1:args.pdbFile.index('.')]
     f = open(args.pdbFile, 'r')
     lines = f.readlines()
     f.close()
@@ -191,11 +191,13 @@ if __name__ == "__main__":
     # parse cmd arguments
     parser = argparse.ArgumentParser()
 
-    # standard arguments for logging
+    # standard arguments for logging and output
     parser.add_argument("--silent", help="Turn off logging",
                         action='store_true', default=False)
     parser.add_argument(
         "--log-file", help="Output log file (default: standard output)", default=None)
+    parser.add_argument(
+        "--outdir", help="Output directory", default="output")
 
     # custom arguments
     # parser.add_argument("--output", help="")#output = "3VBSPent"
