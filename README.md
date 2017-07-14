@@ -32,4 +32,4 @@ g++ getEigenVectors.cpp -o getEigenVectors
 
 ## Usage
 
-[Read the docs](http://nma-task.readthedocs.io/en/latest/index.html)
+For detailed documentation on installation and usage of the tool suite please see our [ReadTheDocs](http://nma-task.readthedocs.io/en/latest/index.html) site
