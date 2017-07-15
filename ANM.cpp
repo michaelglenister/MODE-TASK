@@ -21,24 +21,25 @@
 #include <vector>
 
 
-
 // TO GENERALISE THIS WE MUST JUST TAKE A FILE NAME AS A PARAMETER AND HAVE GENERAL OUTPUT FILE NAMES.
 using namespace std;
 using namespace alglib;
 
+
 int countAtoms()//counts Carbon Atoms (Beta carbons for all residues but Alpha carbons for Glycine)
 {
-vector< vector<int> > row;
+	vector< vector<int> > row;
 }//countAtoms
 
 
-vector< vector<double> > getCoOrds()// gets the x,y,z cordinates for all the carbon atoms in PDB file. Returns 3 X numAtoms Matrix
+vector< vector<double> > getCoOrds(string pdbInput)// gets the x,y,z cordinates for all the carbon atoms in PDB file. Returns 3 X numAtoms Matrix
 {	
 	vector< vector<double> > C;
 	vector<double> atomC;
 	
-	ifstream mfile ("3VBSPent4_SCA.pdb");// This is the PDB file that will be coarse grained. 
+	ifstream mfile (pdbInput.c_str());// This is the PDB file that will be coarse grained. 
 	string li;
+	
 	while (! mfile.eof() )
 	{
 		getline (mfile,li);
@@ -55,10 +56,8 @@ vector< vector<double> > getCoOrds()// gets the x,y,z cordinates for all the car
 		iss>>z;
 		if (atom=="ATOM")
 		{	
-			
 			if((res=="GLY"&&type=="CA")||type=="CB")// This selects only CA atoms for CB atoms use if((res=="GLY"&&type=="CA")||type=="CB") such that CA are selected in the case of Glycine
 			{
-				
 				atomC.push_back(atof(x.c_str()));
 				atomC.push_back(atof(y.c_str()));
 				atomC.push_back(atof(z.c_str()));
@@ -69,13 +68,12 @@ vector< vector<double> > getCoOrds()// gets the x,y,z cordinates for all the car
 		
 		}//if ATOM
 	}//while
-        mfile.close();
+    mfile.close();
 	return C;
 }//cords
 
-vector< vector<double> > getForceConstants(vector<double> atom1,vector<double> atom2)// returns a 9x9 vector for the interaction between two nodes
+vector< vector<double> > getForceConstants(vector<double> atom1,vector<double> atom2, double cutoff)// returns a 9x9 vector for the interaction between two nodes
 {
-	
 	vector< vector<double> > dv2k;
 	vector<double> dv2kROW;
 
@@ -89,7 +87,7 @@ vector< vector<double> > getForceConstants(vector<double> atom1,vector<double> a
 	double dv2ka;
 	
 	//if outside cutoff or atom1=atom2			
-	if (dist2>576)//parameter 
+	if (dist2>cutoff)//parameter 
 	{
 		for(int i=0;i<3;i++)
 		{		
@@ -121,7 +119,7 @@ vector< vector<double> > getForceConstants(vector<double> atom1,vector<double> a
 
 }// getForceConstants
 
-vector< vector<double> > getHessian(vector< vector<double> > C)// this calls the getForceConstants to set up the Hessian Matrix, we manipulate these force constants and the populate the hessian
+vector< vector<double> > getHessian(vector< vector<double> > C, double cutoff)// this calls the getForceConstants to set up the Hessian Matrix, we manipulate these force constants and the populate the hessian
 {
 	vector< vector<double> > Hessian; //Full 3Nx3N Hessian
 	
@@ -139,7 +137,6 @@ vector< vector<double> > getHessian(vector< vector<double> > C)// this calls the
 
 	for (int i=0; i < C.size(); i++)
 	{
-		
 		//reset the diagonal
 		for (int d = 0; d<3; d++)
 		{
@@ -160,7 +157,7 @@ vector< vector<double> > getHessian(vector< vector<double> > C)// this calls the
 			atom2 = C[j];
 			if(i!=j)
 			{
-				interaction = getForceConstants(atom1,atom2);
+				interaction = getForceConstants(atom1,atom2,cutoff);
 				for(int ir = 0; ir<3; ir++)
 				{
 					rowX.push_back(interaction[0][ir]);
@@ -189,7 +186,8 @@ vector< vector<double> > getHessian(vector< vector<double> > C)// this calls the
 				}//itterate RowX,Y,Z
 			}//set diagonal
 		
-		}//for atoms 
+		}//for atoms
+		
 		//Update diagonal
 		for(int ir = 0; ir<3; ir++)
 		{
@@ -208,90 +206,134 @@ vector< vector<double> > getHessian(vector< vector<double> > C)// this calls the
 		Hessian.push_back(rowZ);
 		rowZ.clear();
 		
-	  	
 	}//for atoms
 	
-
 	return Hessian;
 }// getHessian
 
 
-
-int main()
+int main(int argc, char *argv[])
 {	
-	vector< vector<double> > C = getCoOrds();
-	vector< vector<double> > Hessian = getHessian(C);
+	//Init vars
+	double cutoff;
+	string pdbInput;
+	bool hasPdb = false, hasCutoff = false;
+	string temp;
+
+	// Begin parameter handling
+	// Add more else if statements for further parameters
+	int i;
+    for(i=0; i<argc; ++i)
+    {
+		if (strcmp(argv[i], "-h") == 0)
+		{
+			cout<<"Help"<<endl;
+			return -1;
+		}
+		else if(strcmp(argv[i], "--pdb") == 0)
+		{
+			pdbInput = argv[i+1];
+			hasPdb = true;
+		}
+		else if(strcmp(argv[i], "--cutoff") == 0)
+		{
+			cutoff = atof(argv[i+1]);
+			hasCutoff = true;
+		}
+    }
 	
+	if(!hasPdb)
+	{
+		cout<<"A PDB file is required, use '-h' to view help"<<endl;
+		return -1;
+	}
+
+	if(!hasCutoff)
+	{
+		cutoff = 24;
+		cout<<"Using a default cutoff of " << cutoff <<endl;
+	}
 	
+	cutoff = cutoff * cutoff;
+	string eigenvalueMatrixFile = pdbInput.substr(0,4) + "_W.txt"; //4BIP_W.txt
+	string eigenvalueVTFile = pdbInput.substr(0,4) + "_VT.txt"; //4BIP_VT.txt
+	string eigenvalueUFile = pdbInput.substr(0,4) + "_U.txt"; //4BIP_U.txt
+
+	cout<<"Output files will be:"<<endl;
+	cout<<eigenvalueMatrixFile<<endl;
+	cout<<eigenvalueVTFile<<endl;
+	cout<<eigenvalueUFile<<endl;
+	cout<<cutoff<<endl;
+
+	// End parameter handling
+
+	vector< vector<double> > C = getCoOrds(pdbInput);
+	vector< vector<double> > Hessian = getHessian(C, cutoff);
+
+
 	int size = Hessian.size();
 	alglib::real_2d_array Hes;
 	Hes.setlength(size,size);
+	
 	for(int i =size-1; i>=0; i--)
 	{
 		for(int j =size-1; j>=0; j--)
 		{
-		Hes[i][j]= Hessian[i][j];
-		Hessian[i].erase(Hessian[i].begin()+j);
+			Hes[i][j]= Hessian[i][j];
+			Hessian[i].erase(Hessian[i].begin()+j);
 		}			
 	}
-	
+
 	Hessian.clear();
 	cout<<"Starting Decomposition"<<endl;
 	alglib::real_1d_array w;
 	alglib::real_2d_array u;
-        alglib::real_2d_array vt;
-        alglib::rmatrixsvd(Hes,size,size,2, 2,0,w,u,vt);
-	
+	alglib::real_2d_array vt;
+	alglib::rmatrixsvd(Hes,size,size,2, 2,0,w,u,vt);
 
 	ofstream outputFileW;
-     
+ 
+	int r = vt.rows();
+	int c = vt.cols();
+ 
+	outputFileW.open(eigenvalueMatrixFile.c_str());// this is the eigenvalue matrix.
 
-        int r = vt.rows();
-        int c =vt.cols();
-     
-
-        outputFileW.open("4BIP_W.txt");// this is the eigenvalue matrix.
-        for (int i=0; i<r; i++)
-        {
+	for (int i=0; i<r; i++)
+	{
 		double e = w(i);
-        	outputFileW<<i<<" "<<e<<endl;
-        }
+		outputFileW<<i<<" "<<e<<endl;
+	}
 	outputFileW.close();
 
-        ofstream outputFileVT;
-        outputFileVT.open("4BIP_VT.txt");
+	ofstream outputFileVT;
+	outputFileVT.open(eigenvalueVTFile.c_str());
 
-        for (int i=0; i<r; i++)
+	for (int i=0; i<r; i++)
+	{
+        for (int j=0; j<c; j++)
         {
+            double e = vt(i,j); //this is the eigenvector matrix - eigenvectors are rows. 
+            outputFileVT<<e<<" ";
+        }//for U
 
-
-                for (int j=0; j<c; j++)
-                {
-                        double e = vt(i,j); //this is the eigenvector matrix - eigenvectors are rows. 
-                        outputFileVT<<e<<" ";
-                }//for U
-
-                outputFileVT<<endl;
-        }// for vt
-        outputFileVT.close();
+        outputFileVT<<endl;
+	}// for vt
+	outputFileVT.close();
 
 	ofstream outputFileU;
-        outputFileVT.open("4BIP_U.txt");
+	outputFileU.open(eigenvalueUFile.c_str());
 
-        for (int i=0; i<r; i++)
+	for (int i=0; i<r; i++)
+	{
+        for (int j=0; j<c; j++)
         {
+            double e = u(i,j); //this is the eigenvector matrix - eigenvectors are columns, U and VT are square matrics. 
+            outputFileU<<e<<" ";
+        }//for U
 
-
-                for (int j=0; j<c; j++)
-                {
-                        double e = u(i,j); //this is the eigenvector matrix - eigenvectors are columns, U and VT are square matrics. 
-                        outputFileU<<e<<" ";
-                }//for U
-
-                outputFileU<<endl;
-        }// for vt
-        outputFileU.close();
-
+        outputFileU<<endl;
+	}// for vt
+	outputFileU.close();
 
 	return 0;
 }//main

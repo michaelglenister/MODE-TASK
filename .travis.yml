@@ -1,0 +1,11 @@
+language: python
+python:
+  - "2.7"
+
+install: sh install.sh
+
+script: 
+  - cd tests
+  - ./test_cg.sh
+  - ./test_anm.sh
+  - ./test_msf.sh
