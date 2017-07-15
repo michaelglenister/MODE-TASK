@@ -48,7 +48,8 @@ parser.add_option("-p", "--top", type='string', dest="topology",
 
 parser.add_option("-a", "--ag", type='string', dest="atm_grp",
                   help="group of atom for PCA. Options are:\
-				  all= all atoms, backbone = backbone atoms, CA= C alpha atoms" )				  
+				  all= all atoms, backbone = backbone atoms, CA= C alpha atoms\
+				  protein= protein's atoms")				  
 
 (options, args) = parser.parse_args()
                      
@@ -90,20 +91,19 @@ if options.atm_grp is None:
 atm_name = options.atm_grp
 print "Group selected for PCA:", atm_name, "\n"
 
-def select_atoms():
 
-	if options.atm_grp is 'CA':
-		print 'Selected CA for PCA\n'
-		
-		
-	if options.atm_grp is 'BB':
-		print 'Selected Backbone atoms for PCA\n'
-		
-	return;
+def get_trajectory():
+	if atm_name == 'CA':
+		sele_grp=top.select("name CA")	
+	
+	if atm_name == 'backbone':
+		sele_grp=top.select("backbone")
+	if atm_name == 'all':
+		sele_grp=top.select("all")
+	return sele_grp;
+	
 
-
-sele_grp = top.select("name CA")
-
+sele_grp = get_trajectory()
 print len(sele_grp)
 #sele_trj = pca_traj.xyz[:,sele_grp,:]
 #print "Number of frames in the trajectory selected for PCA:", len(sele_trj), "\n"
@@ -122,7 +122,7 @@ rf = open('rmsd.agr', 'r')
 rf_cont = rf.read()
 rf.close()
 
-time = strftime("%Y-%m-%d  %a  %H:%M:%S", gmtime())
+my_time = strftime("%Y-%m-%d  %a  %H:%M:%S", gmtime())
 title = '\tcreated by pca.py\t'
 legends = '@    title "RMSD"\n\
 @    xaxis  label "Time"\n\
@@ -130,7 +130,7 @@ legends = '@    title "RMSD"\n\
 @	TYPE xy\n'
 
 pf = open('rmsd.agr', 'w')
-pf.write('#'+title+'\ton\t'+time+'\n'+legends+'\n'+rf_cont)
+pf.write('#'+title+'\ton\t'+my_time+'\n'+legends+'\n'+rf_cont)
 pf.close()
 
 #===============================================================
@@ -140,39 +140,35 @@ pf.close()
 
 
 def my_pca1():
-	#pca_align = PCA() 		## initialize PCA object 
+	 
 	pca_traj.superpose(pca_traj, 0, atom_indices=sele_grp) 			# Superpose each conformation in the trajectory upon first frame
 	sele_trj = pca_traj.xyz[:,sele_grp,:]												# select cordinates of selected atom groups
-	#pca_traj_reshaped = pca_traj.xyz.reshape(pca_traj.n_frames, pca_traj.n_atoms * 3) # reshape the cordinates of trajectory
-	#pca_align.fit(pca_traj_reshaped)							# Fit the model
-	#pca_reduced = pca_align.transform(pca_traj_reshaped)		 #apply the dimensionality reduction.
-	
-	# with selected trajecotry
-	#sele_trj.superpose(pca_traj, 0, atom_indices=sele_grp)   # selected trajecotry
-	
-	
 	sele_traj_reshaped = sele_trj.reshape(pca_traj.n_frames, len(sele_grp) * 3)
 	pca_sele_traj = PCA()
 	pca_sele_traj.fit(sele_traj_reshaped)
 	pca_sele_traj_reduced = pca_sele_traj.transform(sele_traj_reshaped)
 	print "Trace of the covariance matrix is: ", np.trace(pca_sele_traj.get_covariance())
 	print "Wrote covariance matrix..."
+	
+	print "processing...\\",
+	syms = ['\\', '|', '/', '-']
+	bs = '\b'
+
+	# print spinner ..need to fix
+	for _ in range(10):
+		for sym in syms:
+			sys.stdout.write("\b%s" % sym)
+			sys.stdout.flush()
+			time.sleep(.5)
 	np.savetxt('cov.dat', pca_sele_traj.get_covariance())
 	np.savetxt('pca_projection.agr', pca_sele_traj_reduced)
 	
-		
-	##print pca_align.get_covariance()
-	#print(pca_reduced.shape)
-	#print (type(pca_reduced))
-	#np.savetxt('pc_test.agr', np.array(pca_reduced ))
-	## write the eigenvectors to a file
-	#np.savetxt('pc.agr', pca_reduced )
 	
 	pf = open('pca_projection.agr', 'r')
 	pf_cont = pf.read()
 	pf.close()
 	
-	time = strftime("%Y-%m-%d  %a  %H:%M:%S", gmtime())
+	my_time = strftime("%Y-%m-%d  %a  %H:%M:%S", gmtime())
 	title = '\tcreated by pca.py\t'
 	legends = '@    title "Projection of PC"\n\
 	@    xaxis  label "PC1"\n\
@@ -180,7 +176,7 @@ def my_pca1():
 	@	TYPE xy\n'
 	
 	pf = open('pca_projection.agr', 'w')
-	pf.write('#'+title+'\ton\t'+time+'\n'+legends+'\n'+pf_cont)
+	pf.write('#'+title+'\ton\t'+my_time+'\n'+legends+'\n'+pf_cont)
 	pf.close()
 	
 	## write PCs and explained_variance_ratio_
@@ -200,7 +196,7 @@ def my_pca1():
 	@	TYPE xy\n'
 	
 	ef = open('explained_variance.agr', 'w')
-	ef.write('#'+title+'\ton\t'+time+'\n'+legends+'\n'+ef_cont)
+	ef.write('#'+title+'\ton\t'+my_time+'\n'+legends+'\n'+ef_cont)
 	ef.close()
 	
 	return;
