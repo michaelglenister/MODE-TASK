@@ -9,7 +9,7 @@ import mdtraj as md
 import numpy as np
 from matplotlib import cm
 matplotlib.use('Agg')
-from sklearn.decomposition import PCA
+from sklearn.decomposition import PCA, KernelPCA, IncrementalPCA
 from sklearn import preprocessing
 
 
@@ -53,14 +53,23 @@ parser.add_option("-p", "--top", type='string', dest="topology",
                   help="topology file")      
 
 parser.add_option("-a", "--ag", type='string', dest="atm_grp",
-                  help="group of atom for PCA. Default is C alpha atoms. Other options are:\
-				  all= all atoms\
-				  backbone = backbone atoms\
-				  CA= C alpha atoms\
-				  protein= protein's atoms")	
+                  help="group of atom for PCA. Default is C alpha atoms. Other options are :"
+				  "all= all atoms, backbone = backbone atoms, CA= C alpha atoms, protein= protein's atoms")	
 
 parser.add_option("-r", "--ref", type='string', dest="reference",
                   help="reference structure for RMSD") 
+
+parser.add_option("-m", "--pca_type", type='string', dest="pca_type",
+                  help="PCA method. Default is normal PCA. Options are:\
+				  KernelPCA, normal, ipca. If normal additional arguments can be passed by flag -svd. If KernelPCA is selected kernel type can also be defined by flag -k") 
+				  
+parser.add_option("-k", "--kernel_type", type='string', dest="kernel_type",
+                  help="Type of kernel for KernalPCA. default is linear. Options are :"
+				  "linear, poly, rbf, sigmoid, cosine, precomputed") 
+
+parser.add_option("-s", "--svd_solver", type='string', dest="svd_solver",
+                  help="Type of svd_solver  for PCA. Default is auto. Options are :"
+				  "auto, full, arpack, randomized") 
 
 (options, args) = parser.parse_args()
                      
@@ -88,6 +97,7 @@ if options.topology is None:
 traj = options.trj
 topology = options.topology
 ref = options.reference
+ptype=options.pca_type
 if ref:
 	ref = md.load(options.reference)
 
@@ -102,13 +112,17 @@ top = pca_traj.topology
 #
 #===============================================
 
-if options.atm_grp is None:
+if options.atm_grp == None:
 	print 'No atom has been selected. PCA will be performed on C alpha atoms '
 	atm_name = 'CA'  # set to default C-alpha atoms
 if options.reference == None:
 	print "No reference structure given, RMSD will be computed to the first frame in the trajectory"
 	ref = pca_traj # set reference to current trajectory
+if options.pca_type == None:
+	ptype = 'normal'
 
+if options.svd_solver == None:
+	svd='auto'
 
 #==========================================================================
 #
@@ -149,10 +163,8 @@ def trajectory_info():
 	else:
 		print "Reference for RMSD calculation is: ", options.reference
 		
-	if atm_name == None:
-		print "Total", len(sele_grp), 'C-alpha atoms selected for analysis\n'
-	else:
-		print "Total", len(sele_grp), atm_name,'atoms selected for analysis\n'
+	print "Total", len(sele_grp), atm_name,'atoms selected for analysis\n'
+	
 	return;
 
 	
@@ -186,13 +198,62 @@ def get_rmsd():
 	return;
 	
 get_rmsd()
+
+## write plots
+def write_plots(file_name, pca):
+	'function to write pca plots. takes name of the file to write and pca object name'
+	fname = ''
+	fname = file_name+'.agr'
+	np.savetxt(fname, pca)
+	pf = open(fname, 'r')
+	pf_cont = pf.read()
+	pf.close()
+	my_time = strftime("%Y-%m-%d  %a  %H:%M:%S", gmtime())
+	title = '\tcreated by pca.py\t'
+	legends = '@    title "Projection of PC"\n\
+	@    xaxis  label "PC1"\n\
+	@    yaxis  label "PC2"\n\
+	@	TYPE xy\n'
+	
+	pf = open(fname, 'w')
+	pf.write('#'+title+'\ton\t'+my_time+'\n'+legends+'\n'+pf_cont)
+	pf.close()
+	
+	return;
+
+def write_pcs(file_name, pca):
+	'write PCs and explained_variance_ratio_. takes name of the file to write and pca object name'
+	fname = ''
+	fname = file_name+'.agr'
+	#print type(pca)
+	e_ratio = pca.explained_variance_ratio_
+	e_ratio = e_ratio*100   # to make it percent
+	
+	print e_ratio.reshape((1,101)).shape
+	np.savetxt(fname, e_ratio)
+	
+	ef = open(fname, 'r')
+	ef_cont = ef.read()
+	ef.close()
+	
+	title = '\tcreated by pca.py\t'
+	my_time = strftime("%Y-%m-%d  %a  %H:%M:%S", gmtime())
+	legends = '@    title "explained_variance of PCs"\n\
+	@    xaxis  label "PCs"\n\
+	@    yaxis  label "% Variance"\n\
+	@	TYPE xy\n'
+	
+	ef = open(fname, 'w')
+	ef.write('#'+title+'\ton\t'+my_time+'\n'+legends+'\n'+ef_cont)
+	ef.close()
+	return;
+
 #===============================================================
 #
 # PCA using sci-kit learn library
 #===============================================================
 
-
-def my_pca1():
+def my_pca(svd):
 	 
 	pca_traj.superpose(pca_traj, 0, atom_indices=sele_grp) 			# Superpose each conformation in the trajectory upon first frame
 	sele_trj = pca_traj.xyz[:,sele_grp,:]												# select cordinates of selected atom groups
@@ -202,62 +263,104 @@ def my_pca1():
 	pca_sele_traj_reduced = pca_sele_traj.transform(sele_traj_reshaped)
 	print "Trace of the covariance matrix is: ", np.trace(pca_sele_traj.get_covariance())
 	print "Wrote covariance matrix..."
+	np.savetxt('cov.dat', pca_sele_traj.get_covariance())
 	
+	# write the plots 
+	write_plots('pca_projection', pca_sele_traj_reduced)
+	
+	#write the pcs variance
+	#print type(pca_sele_traj.explained_variance_ratio_)
+	write_pcs('pca_variance', pca_sele_traj)
+	
+	# print spinner ..need to fix
 	print "processing...\\",
 	syms = ['\\', '|', '/', '-']
 	bs = '\b'
-
-	# print spinner ..need to fix
 	for _ in range(10):
 		for sym in syms:
 			sys.stdout.write("\b%s" % sym)
 			sys.stdout.flush()
 			time.sleep(.5)
-	np.savetxt('cov.dat', pca_sele_traj.get_covariance())
-	np.savetxt('pca_projection.agr', pca_sele_traj_reduced)
-	
-	
-	pf = open('pca_projection.agr', 'r')
-	pf_cont = pf.read()
-	pf.close()
-	
-	my_time = strftime("%Y-%m-%d  %a  %H:%M:%S", gmtime())
-	title = '\tcreated by pca.py\t'
-	legends = '@    title "Projection of PC"\n\
-	@    xaxis  label "PC1"\n\
-	@    yaxis  label "PC2"\n\
-	@	TYPE xy\n'
-	
-	pf = open('pca_projection.agr', 'w')
-	pf.write('#'+title+'\ton\t'+my_time+'\n'+legends+'\n'+pf_cont)
-	pf.close()
-	
-	## write PCs and explained_variance_ratio_
-	expl_ratio = pca_sele_traj.explained_variance_ratio_
-	expl_ratio = expl_ratio*100   # to make it percent
-	
-	print expl_ratio.reshape((1,101)).shape
-	np.savetxt("explained_variance.agr", expl_ratio)
-	
-	ef = open('explained_variance.agr', 'r')
-	ef_cont = ef.read()
-	ef.close()
-	
-	legends = '@    title "explained_variance of PCs"\n\
-	@    xaxis  label "PCs"\n\
-	@    yaxis  label "% Variance"\n\
-	@	TYPE xy\n'
-	
-	ef = open('explained_variance.agr', 'w')
-	ef.write('#'+title+'\ton\t'+my_time+'\n'+legends+'\n'+ef_cont)
-	ef.close()
-	
 	return;
 
-my_pca1()
 
-# ==============================================================
+
+#==============================================================
 #
+# Kernel PCA
+#
+# ==============================================================
+def my_kernelPCA(kernel):
+	pca_traj.superpose(pca_traj, 0, atom_indices=sele_grp) 			# Superpose each conformation in the trajectory upon first frame
+	sele_trj = pca_traj.xyz[:,sele_grp,:]												# select cordinates of selected atom groups
+	sele_traj_reshaped = sele_trj.reshape(pca_traj.n_frames, len(sele_grp) * 3)
+	
+	kpca = KernelPCA(kernel = kernel, fit_inverse_transform=True, gamma=10)
+	kpca.fit(sele_traj_reshaped)
+	#print "Trace of the covariance matrix is: ", np.trace(kpca.get_covariance())
+	kpca_reduced = kpca.transform(sele_traj_reshaped)
+	
+	#write plots
+	write_plots('kpca_projection', kpca_reduced)
+	
+	#write variance
+	np.savetxt('kpca_variance', kpca.lambdas_)
+	return;
+
+
+#=============================================================
+#
+# Incremental PCA
+#
+#=============================================================
+
+def incremental_pca():
+	' normal PCA is not very memory intesive. It can be problemetic for large dataset, \
+	since dataset is stored in memory. Incremental principal component analysis (IPCA) is \
+	typically used for such cases. '
+	
+	pca_traj.superpose(pca_traj, 0, atom_indices=sele_grp) 			# Superpose each conformation in the trajectory upon first frame
+	sele_trj = pca_traj.xyz[:,sele_grp,:]												# select cordinates of selected atom groups
+	sele_traj_reshaped = sele_trj.reshape(pca_traj.n_frames, len(sele_grp) * 3)
+	
+	ipca = IncrementalPCA()
+	ipca = ipca.fit(sele_traj_reshaped)
+	ipca_reduced=ipca.transform(sele_traj_reshaped)
+	
+	#write plots
+	write_plots('ipca_projection', ipca_reduced)
+	
+	#write variance
+	#np.savetxt('ipca_variance', kpca.lambdas_)
+
+	return;
+
+
+if ptype == 'KernelPCA':
+	kernel = ''
+	kernel = options.kernel_type
+	if options.kernel_type:
+		print "Performing Kernel PCA with", kernel, 'kernel'
+		my_kernelPCA(kernel)
+	else:
+		print "Performing Kernel PCA with default linear kernel"
+		my_kernelPCA('linear')
+
+if ptype == 'normal':
+	svd=''
+	svd = options.svd_solver
+	if svd:
+		print "Performing normal PCA with ",svd,"svd_solver"
+		my_pca(svd)
+	else:
+		print "Performing normal PCA with 'auto' svd_solver"
+		my_pca(svd)
+if ptype == 'ipca':
+	print "Performing Incremental_pca (IPCA)"
+	incremental_pca()
+
+
+#===============================================================
 #
 #  My own method
 #
