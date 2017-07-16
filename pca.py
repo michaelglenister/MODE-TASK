@@ -10,7 +10,10 @@ import numpy as np
 from matplotlib import cm
 matplotlib.use('Agg')
 from sklearn.decomposition import PCA, KernelPCA, IncrementalPCA
+from sklearn.metrics import euclidean_distances
+from sklearn.manifold import MDS
 from sklearn import preprocessing
+from itertools import combinations
 
 
 #==============================================================================#
@@ -61,20 +64,20 @@ parser.add_option("-r", "--ref", type='string', dest="reference",
 
 parser.add_option("-m", "--pca_type", type='string', dest="pca_type",
                   help="PCA method. Default is normal PCA. Options are:\
-				  KernelPCA, normal, ipca. If normal additional arguments can be passed by flag -svd. If KernelPCA is selected kernel type can also be defined by flag -k") 
+				  KernelPCA, normal, ipca. If normal is selected, additional arguments can be passed by flag -svd. If KernelPCA is selected kernel type can also be defined by flag -k") 
 				  
 parser.add_option("-k", "--kernel_type", type='string', dest="kernel_type",
                   help="Type of kernel for KernalPCA. default is linear. Options are :"
 				  "linear, poly, rbf, sigmoid, cosine, precomputed") 
 
 parser.add_option("-s", "--svd_solver", type='string', dest="svd_solver",
-                  help="Type of svd_solver  for PCA. Default is auto. Options are :"
+                  help="Type of svd_solver for normal PCA. Default is auto. Options are :"
 				  "auto, full, arpack, randomized") 
 
 (options, args) = parser.parse_args()
                      
 atm_name = options.atm_grp
-print "Atom group selected for PCA:", atm_name, "\n"
+
 
 
 #====================================================================
@@ -157,6 +160,7 @@ def trajectory_info():
 	print "Total",pca_traj.n_frames,"frames read from", traj
 	print "MD time is from ", pca_traj.time[0],'to',pca_traj.time[-1],'ps'
 	print pca_traj.n_atoms, "atoms and ", pca_traj.n_residues, "residues in the trajectory"
+	print "Atom group selected for PCA:", atm_name, "\n"
 	
 	if options.reference == None: 
 		print "Reference for RMSD calculation is first frame of trajectory"
@@ -229,7 +233,7 @@ def write_pcs(file_name, pca):
 	e_ratio = pca.explained_variance_ratio_
 	e_ratio = e_ratio*100   # to make it percent
 	
-	print e_ratio.reshape((1,101)).shape
+	#print e_ratio.reshape((1,101)).shape
 	np.savetxt(fname, e_ratio)
 	
 	ef = open(fname, 'r')
@@ -360,6 +364,8 @@ if ptype == 'ipca':
 	incremental_pca()
 
 
+
+
 #===============================================================
 #
 #  My own method
@@ -383,24 +389,6 @@ def my_pca():
 	return;
 
 #my_pca()
-
-### another methods
-def my_pca2():
-	sele_trj = pca_traj.xyz[:,sele_grp,:]
-	pca2 = PCA()
-	
-	from itertools import combinations
-	# this python function gives you all unique pairs of elements from a list
-	
-	atom_pairs = list(combinations(range(len(sele_trj)), 2))
-	print list(combinations(range(4),2))
-	
-	pairwise_distances = md.geometry.compute_distances(pca_traj, atom_pairs)
-	print(pairwise_distances.shape)
-	reduced_distances = pca2.fit_transform(pairwise_distances)
-	
-	#np.savetxt('pc1.agr',reduced_distances)
-	return;
 
 
 
