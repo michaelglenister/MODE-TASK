@@ -222,6 +222,12 @@ def get_internal_cordinates():
 		
 		int_cord=angle[1] ## apparently compute_psi returns tupple of atoms indices and psi angles, index 1 has psi angles 
 		print np.array(angle[1]).shape
+		
+	if options.cordinate_type == 'angle':
+		print "1-3 angle selected between C,CA and CB"
+		cbeta_idx=top.select_atom_indices('minimal')
+		print cbeta_idx
+		
 	return int_cord;
 
 #===========================================================
