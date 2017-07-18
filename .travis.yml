@@ -8,4 +8,5 @@ script:
   - cd tests
   - ./test_cg.sh
   - ./test_anm.sh
+  - ./test_commonResidues.sh
   - ./test_msf.sh
