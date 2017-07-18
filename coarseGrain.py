@@ -11,7 +11,6 @@ import math
 
 
 def main(args):
-    output = args.outdir + "/" + args.pdbFile[args.pdbFile.rfind('/') + 1:args.pdbFile.index('.')]
     f = open(args.pdbFile, 'r')
     lines = f.readlines()
     f.close()
@@ -167,7 +166,13 @@ def main(args):
         ter = "TER" + " " * 3 + " " * (5 - len(str(count))) + str(count) + " " * 6 + a.split(
         )[3] + " " + a.split()[4] + " " + " " * (3 - len(a.split()[5])) + a.split()[5] + " \n"
         selected_c_beta_lines.append(ter)
-    w = open(output + str(c_g) + "_SCA.pdb", 'w')
+
+    output_dir = args.outdir
+
+    if not os.path.isdir(output_dir):
+        os.makedirs(output_dir)
+
+    w = open(output_dir + str(c_g) + "_SCA.pdb", 'w')
     w.writelines(header)
     w.writelines(selected_c_beta_lines)
     w.write("END")

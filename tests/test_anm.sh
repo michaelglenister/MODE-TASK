@@ -3,4 +3,4 @@ cd ..
 
 g++ -I cpp/src/ ANM.cpp -o ANM
 
-./ANM tests/3VBSPent4_SCA.pdb
+./ANM --pdb output/3VBSPent4_SCA.pdb --cutoff 24
