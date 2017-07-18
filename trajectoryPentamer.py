@@ -84,7 +84,7 @@ def main(args):
         vectorf.close()
 
         # Write Trajectories
-        w = open("Trajectories/" + structure + '_' + mode + ".pdb", 'w')
+        w = open(args.outdir + "/" + "Trajectories/" + structure + '_' + mode + ".pdb", 'w')
         for i in range(0, 100):
             w.writelines(header)
             v_index = -1
@@ -151,7 +151,7 @@ def main(args):
             elif v_index + 1 == chainbreaks[2]:
                 arrows.append('draw color yellow\n')
 
-    w = open("Trajectories/" + structure + 'ARROWS' + mode + ".txt", 'w')
+    w = open(args.outdir + "/" + "Trajectories/" + structure + 'ARROWS' + mode + ".txt", 'w')
     w.writelines(arrows)
     w.close()
 
@@ -177,6 +177,8 @@ if __name__ == "__main__":
                         action='store_true', default=False)
     parser.add_argument(
         "--log-file", help="Output log file (default: standard output)", default=None)
+    parser.add_argument(
+        "--outdir", help="Output directory", default="output")
 
     # custom arguments
     # '3VBSFull_Aligned.pdb'
@@ -186,6 +188,10 @@ if __name__ == "__main__":
     parser.add_argument("--modeFilePrefix", help="")  # 'ProtomerMode'
 
     args = parser.parse_args()
+
+    # Check if required directories exist
+    if not os.path.isdir(args.outdir):
+        os.makedirs(args.outdir)
 
     # Check if args supplied by user
     if len(sys.argv) > 1:
