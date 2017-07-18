@@ -172,7 +172,7 @@ def main(args):
     overlay_list.sort()
     overlay_list.reverse()
 
-    w = open(args.output, 'w')
+    w = open(args.outdir + "/" + args.output, 'w')
     for out in output:
         w.write(out)
     w.write("Sorted Values:\n")
@@ -202,6 +202,8 @@ if __name__ == "__main__":
                         action='store_true', default=False)
     parser.add_argument(
         "--log-file", help="Output log file (default: standard output)", default=None)
+    parser.add_argument(
+        "--outdir", help="Output directory", default="output")
 
     # custom arguments
     parser.add_argument("--pdbAligned", help="")  # '4n43_aligned.pdb'
@@ -213,6 +215,10 @@ if __name__ == "__main__":
                         default="ProtomerCGrained.txt")  # 'Protomer3CG_VT.txt'
 
     args = parser.parse_args()
+
+    # Check if required directories exist
+    if not os.path.isdir(args.outdir):
+        os.makedirs(args.outdir)
 
     # Check if args supplied by user
     if len(sys.argv) > 1:

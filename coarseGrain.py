@@ -168,12 +168,7 @@ def main(args):
         )[3] + " " + a.split()[4] + " " + " " * (3 - len(a.split()[5])) + a.split()[5] + " \n"
         selected_c_beta_lines.append(ter)
 
-    output_dir = args.outdir
-
-    if not os.path.isdir(output_dir):
-        os.makedirs(output_dir)
-
-    w = open(output_dir + "/" + pdb_file[pdb_file.rfind("/"):pdb_file.find(".")] + str(c_g) + "_SCA.pdb", 'w')
+    w = open(args.outdir + "/" + pdb_file[pdb_file.rfind("/"):pdb_file.find(".")] + str(c_g) + "_SCA.pdb", 'w')
     w.writelines(header)
     w.writelines(selected_c_beta_lines)
     w.write("END")
@@ -216,6 +211,10 @@ if __name__ == "__main__":
                         help="", default=842, type=int)
 
     args = parser.parse_args()
+
+    # Check if required directories exist
+    if not os.path.isdir(args.outdir):
+        os.makedirs(args.outdir)
 
     # Check if args supplied by user
     if len(sys.argv) > 1:

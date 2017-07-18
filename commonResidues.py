@@ -56,7 +56,7 @@ def main(args):
             if r in empty_residues[ch]:
                 common_residues[ch].append(r)
 
-    w = open("common_residues", 'w')
+    w = open(args.outdir + "/common_residues", 'w')
     w.write(str(common_residues))
     w.close()
 
@@ -84,12 +84,18 @@ if __name__ == "__main__":
                         action='store_true', default=False)
     parser.add_argument(
         "--log-file", help="Output log file (default: standard output)", default=None)
+    parser.add_argument(
+        "--outdir", help="Output directory", default="output")
 
     # custom arguments
     parser.add_argument("--fullCapsid", help="")  # '3VBSFull4_SCA.pdb'
     parser.add_argument("--protomer", help="")  # '3VBSProtomer3_SCA.pdb'
 
     args = parser.parse_args()
+
+    # Check if required directories exist
+    if not os.path.isdir(args.outdir):
+        os.makedirs(args.outdir)
 
     # Check if args supplied by user
     if len(sys.argv) > 1:

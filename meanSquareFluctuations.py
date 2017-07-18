@@ -24,7 +24,7 @@ def main(args):
     # f = open("common_residues", 'r')
     # common_residues = f.readlines()[0].strip()
     # f.close()
-    with open('common_residues', 'r') as inf:
+    with open(args.commonResidues, 'r') as inf:
         common_residues = eval(inf.read())
     print common_residues
     # common_residues = {'A': [3, 53, 59, 76, 111, 122, 142, 240, 257], 'C': [2, 7, 32, 71, 146], 'B': [
@@ -49,7 +49,9 @@ def main(args):
                     interface_index.append(count)
                 count += 1
 
-    virus = args.pdbProtomer[:4] + "_Protomer"
+    protein_name = args.pdbProtomer
+    protein_name = protein_name[protein_name.rfind("/")+1:protein_name.rfind("/")+5] + "_Protomer"
+
     # Specify modes
     total_modes = args.totalModes  # 2526 #number of residues in protein *3
     first_mode = args.firstMode  # 2519  #input user
@@ -128,8 +130,7 @@ def main(args):
             trace_c_m[i / 3, j / 3] = trace_m
 
     # Print the diagonal values per residue
-
-    w = open(virus + str(first_mode) + "BetaValues.txt", 'w')
+    w = open(args.outdir + "/" + protein_name + str(first_mode) + "BetaValues.txt", 'w')
     w.write("Full Correlation\n")
     w.write("Res\tBetaValue\n")
     for i in res_range:
@@ -169,8 +170,11 @@ if __name__ == "__main__":
                         action='store_true', default=False)
     parser.add_argument(
         "--log-file", help="Output log file (default: standard output)", default=None)
+    parser.add_argument(
+        "--outdir", help="Output directory", default="output")
 
     # custom arguments
+    parser.add_argument("--commonResidues", help="Files containing a dictionary like data set of common residues")  # '3VBSProtomer.pdb'
     parser.add_argument("--pdbProtomer", help="Input")  # '3VBSProtomer.pdb'
     parser.add_argument("--totalModes", help="[int]", default=810, type=int)
     parser.add_argument("--firstMode", help="[int]", default=803, type=int)
@@ -182,6 +186,10 @@ if __name__ == "__main__":
     parser.add_argument("--vtMatrix", help="U and VT full Matrix")
 
     args = parser.parse_args()
+
+    # Check if required directories exist
+    if not os.path.isdir(args.outdir):
+        os.makedirs(args.outdir)
 
     # Check if args supplied by user
     if len(sys.argv) > 1:
