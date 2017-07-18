@@ -1,12 +1,12 @@
 
 ANM
 
+getEigenVectors
+
 *.txt
 
 *.odt
 
 *.pyc
 
-getEigenVectors
-
-tests/4hhb4_SCA\.pdb
+output/

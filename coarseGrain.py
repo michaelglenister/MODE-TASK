@@ -11,7 +11,8 @@ import math
 
 
 def main(args):
-    f = open(args.pdbFile, 'r')
+    pdb_file = args.pdbFile
+    f = open(pdb_file, 'r')
     lines = f.readlines()
     f.close()
 
@@ -172,7 +173,7 @@ def main(args):
     if not os.path.isdir(output_dir):
         os.makedirs(output_dir)
 
-    w = open(output_dir + str(c_g) + "_SCA.pdb", 'w')
+    w = open(output_dir + "/" + pdb_file[pdb_file.rfind("/"):pdb_file.find(".")] + str(c_g) + "_SCA.pdb", 'w')
     w.writelines(header)
     w.writelines(selected_c_beta_lines)
     w.write("END")
