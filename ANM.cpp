@@ -215,10 +215,9 @@ vector< vector<double> > getHessian(vector< vector<double> > C, double cutoff)//
 int main(int argc, char *argv[])
 {	
 	//Init vars
-	double cutoff;
-	string pdbInput;
-	bool hasPdb = false, hasCutoff = false;
-	string temp;
+	double cutoff = 24;
+	string pdbInput, outdir = "output";
+	bool hasPdb = false;//, hasCutoff = false, hasOutdir = false;
 
 	// Begin parameter handling
 	// Add more else if statements for further parameters
@@ -238,7 +237,12 @@ int main(int argc, char *argv[])
 		else if(strcmp(argv[i], "--cutoff") == 0)
 		{
 			cutoff = atof(argv[i+1]);
-			hasCutoff = true;
+			//hasCutoff = true;
+		}
+		else if(strcmp(argv[i], "--outdir") == 0)
+		{
+			outdir = atof(argv[i+1]);
+			//hasOutdir = true;
 		}
     }
 	
@@ -248,16 +252,22 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
+	/*if(!hasOutdir)
+	{
+		outdir = 24;
+		cout<<"Using a default cutoff of " << cutoff <<endl;
+	}
+
 	if(!hasCutoff)
 	{
 		cutoff = 24;
 		cout<<"Using a default cutoff of " << cutoff <<endl;
-	}
+	}*/
 	
 	cutoff = cutoff * cutoff;
-	string eigenvalueMatrixFile = pdbInput.substr(0,4) + "_W.txt"; //4BIP_W.txt
-	string eigenvalueVTFile = pdbInput.substr(0,4) + "_VT.txt"; //4BIP_VT.txt
-	string eigenvalueUFile = pdbInput.substr(0,4) + "_U.txt"; //4BIP_U.txt
+	string eigenvalueMatrixFile = outdir + "/" + pdbInput.substr(pdbInput.find_last_of("/\\")+1, 4) + "_W.txt"; //4BIP_W.txt
+	string eigenvalueVTFile = outdir + "/" + pdbInput.substr(pdbInput.find_last_of("/\\")+1, 4) + "_VT.txt"; //4BIP_VT.txt
+	string eigenvalueUFile = outdir + "/" + pdbInput.substr(pdbInput.find_last_of("/\\")+1, 4) + "_U.txt"; //4BIP_U.txt
 
 	cout<<"Output files will be:"<<endl;
 	cout<<eigenvalueMatrixFile<<endl;

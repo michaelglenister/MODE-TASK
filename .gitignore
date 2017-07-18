@@ -8,3 +8,5 @@ ANM
 *.pyc
 
 getEigenVectors
+
+tests/4hhb4_SCA\.pdb
