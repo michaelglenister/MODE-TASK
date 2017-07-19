@@ -14,6 +14,7 @@ from sklearn.metrics import euclidean_distances
 from sklearn.manifold import MDS
 from sklearn import preprocessing
 from itertools import combinations
+from write_plot import write_plots, write_pcs
 
 
 #==============================================================================#
@@ -203,73 +204,6 @@ def get_rmsd():
 	
 get_rmsd()
 
-## write plots
-def write_plots(file_name, pca):
-	'function to write pca plots. takes name of the file to write and pca object name'
-	fname = ''
-	fname = file_name+'.agr'
-	np.savetxt(fname, pca)
-	pf = open(fname, 'r')
-	pf_cont = pf.read()
-	pf.close()
-	my_time = strftime("%Y-%m-%d  %a  %H:%M:%S", gmtime())
-	title = '\tcreated by pca.py\t'
-	legends = '@    title "Projection of PC"\n\
-	@    xaxis  label "PC1"\n\
-	@    yaxis  label "PC2"\n\
-	@	TYPE xy\n\
-	@    s0 line type 0\n\
-	@    s0 line linestyle 1\n\
-	@    s0 line linewidth 1.0\n\
-	@    s0 line color 1\n\
-	@    s0 line pattern 1\n\
-	@    s0 baseline type 0\n\
-	@    s0 baseline off\n\
-	@    s0 dropline off\n\
-	@    s0 symbol 1\n\
-	@    s0 symbol size 0.250000\n\
-	@    s0 symbol color 1\n\
-	@    s0 symbol pattern 1\n\
-	@    s0 symbol fill color 1\n\
-	@    s0 symbol fill pattern 1\n\
-	@    s0 symbol linewidth 1.0\n\
-	@    s0 symbol linestyle 1\n\
-	@    s0 symbol char 25\n\
-	@    s0 symbol char font 0\n\
-	@    s0 symbol skip 0\n'
-	
-	pf = open(fname, 'w')
-	pf.write('#'+title+'\ton\t'+my_time+'\n'+legends+'\n'+pf_cont)
-	pf.close()
-	
-	return;
-
-def write_pcs(file_name, pca):
-	'write PCs and explained_variance_ratio_. takes name of the file to write and pca object name'
-	fname = ''
-	fname = file_name+'.agr'
-	#print type(pca)
-	e_ratio = pca.explained_variance_ratio_
-	e_ratio = e_ratio*100   # to make it percent
-	
-	#print e_ratio.reshape((1,101)).shape
-	np.savetxt(fname, e_ratio)
-	
-	ef = open(fname, 'r')
-	ef_cont = ef.read()
-	ef.close()
-	
-	title = '\tcreated by pca.py\t'
-	my_time = strftime("%Y-%m-%d  %a  %H:%M:%S", gmtime())
-	legends = '@    title "explained_variance of PCs"\n\
-	@    xaxis  label "PCs"\n\
-	@    yaxis  label "% Variance"\n\
-	@	TYPE xy\n'
-	
-	ef = open(fname, 'w')
-	ef.write('#'+title+'\ton\t'+my_time+'\n'+legends+'\n'+ef_cont)
-	ef.close()
-	return;
 
 #===============================================================
 #
@@ -358,6 +292,85 @@ def incremental_pca():
 
 	return;
 
+#===============================================================
+#
+#  My own method
+#
+#=================================================================
+def my_pca():
+	
+	pca_traj.superpose(pca_traj, 0, atom_indices=sele_grp) 			# Superpose each conformation in the trajectory upon first frame
+	sele_trj = pca_traj.xyz[:,sele_grp,:]												# select cordinates of selected atom groups
+	sele_traj_reshaped = sele_trj.reshape(pca_traj.n_frames, len(sele_grp) * 3)
+		
+	sele_traj_reshaped = sele_traj_reshaped.astype(float) ## to avoid numpy Conversion Error during scaling
+	sele_traj_reshaped_scaled = preprocessing.scale(sele_traj_reshaped)
+	arr = sele_traj_reshaped_scaled
+	
+	
+	#===============================================
+	# covariance matrix of selected coloumns
+	cov_mat = np.cov(arr, rowvar=False)
+	cov_mat = np.cov(cov_mat)
+	trj_eval, trj_evec=np.linalg.eig(cov_mat)
+	
+	print "Trace of cov matrix is ",  np.trace(cov_mat)
+	
+	#=============================
+	# sanity check of calculated eigenvector and eigen values 
+	# it must be cov matrix * eigen vector = eigen vector * eigen value
+	
+	for i in range(len(trj_eval)):
+		eigv = trj_evec.real[:,i].reshape(1,len(trj_evec[:,0]),).T
+		np.testing.assert_array_almost_equal(cov_mat.dot(eigv), trj_eval[i]*eigv, decimal=3, err_msg='', verbose=True)
+
+#=============================================
+	# sort the eigenvalues and eigenvector
+	sort_idx = trj_eval.argsort()[::-1]
+	trj_eval = trj_eval[sort_idx]
+	trj_evec = trj_evec[sort_idx]
+	
+	pca = np.empty_like(trj_evec)
+	
+	# join first two eigenvector into a single matrix and write plot
+	eivec_1 = trj_evec.real[:,0].reshape(len(trj_evec[:,0]),1)
+	eivec_2 = trj_evec.real[:,1].reshape(len(trj_evec[:,1]),1)
+	pca = np.concatenate((eivec_1, eivec_2), axis=1)
+
+	write_plots('my_method_proj', pca)
+	
+
+#=============================================
+# sort the eigenvales
+	e_p = []
+	print type(e_p)
+	for i in range(len(trj_eval)):
+		eig_pairs = [np.abs(trj_eval[i]), trj_evec[:,i]]
+		e_p.append(eig_pairs)
+	#print (e_p[2])
+	e_p.sort(key=lambda x: x[0], reverse=True)
+	
+	
+	# sorted eigenvalues and variation explained
+	print ('sorted eigenvalues')
+	tot_var = 0
+	for i in e_p:
+		tot_var +=i[0]
+	variation = []
+	print tot_var
+	cum = []
+	j = 0
+	eigv = []
+	for i in e_p:
+		#print (i[0])
+		eigv.append(i[0])
+		variation.append(i[0]/tot_var)
+		#print ("variation explained:",variation[j]*100)
+		cum = np.cumsum(variation)
+		#print ('cumulative: ', cum[j]*100 )
+		j +=1
+	return;
+
 
 if ptype == 'KernelPCA':
 	kernel = ''
@@ -382,87 +395,6 @@ if ptype == 'ipca':
 	print "Performing Incremental_pca (IPCA)"
 	incremental_pca()
 
-
-
-
-#===============================================================
-#
-#  My own method
-#
-#=================================================================
-def my_pca():
-	#print "shape of the trajectory object: ", sele_trj.shape, "\n"
-	#print pca_traj.xyz[:,sele_grp,:].reshape(pca_traj.n_frames, 860 * 3).T.shape
-
-	pca_traj.superpose(pca_traj, 0, atom_indices=sele_grp) 			# Superpose each conformation in the trajectory upon first frame
-	sele_trj = pca_traj.xyz[:,sele_grp,:]												# select cordinates of selected atom groups
-	sele_traj_reshaped = sele_trj.reshape(pca_traj.n_frames, len(sele_grp) * 3)
-	
-	#pca_traj.xyz[0,sele_grp,:].reshape(1, 860 * 3).tofile('ca_cord_tr.xyz', sep = ' ',format = '%s')
-	#pca_traj.xyz[0, sele_grp].transpose().tofile('ca_cord.xyz', sep = '\t', format = '%s')
-	#x= pca_traj.xyz[:,sele_grp,:].reshape(pca_traj.n_frames, 860 * 3).T
-	sele_traj_reshaped = sele_traj_reshaped.astype(float) ## to avoid numpy Conversion Error during scaling
-	sele_traj_reshaped_scaled = preprocessing.scale(sele_traj_reshaped)
-	arr = sele_traj_reshaped_scaled
-	
-	#===============================================
-# covariance matrix of selected coloumns
-	cov_mat = np.cov(arr, rowvar=False)
-	#print x_scaled
-	cov_mat = np.cov(cov_mat)
-	trj_eval, trj_evec=np.linalg.eig(cov_mat)
-	print "Trace of cov matrix is ",  np.trace(cov_mat)
-	#=============================
-	# sanity check of calculated eigenvector and eigen values 
-	# it must be cov matrix * eigen vector = eigen vector * eigen value
-	
-	#for i in range(len(trj_eval)):
-		#eigv = trj_evec[:,i].reshape(1,pca_traj.n_frames).T
-		#np.testing.assert_array_almost_equal(cov_mat.dot(eigv), arr_eval[i]*eigv, decimal=3, err_msg='', verbose=True)
-
-#=============================================
-	#=============================================
-# sort the eigenvales
-	e_p = []
-	print type(e_p)
-	for i in range(len(trj_eval)):
-		eig_pairs = [np.abs(trj_eval[i]), trj_evec[:,i]]
-		e_p.append(eig_pairs)
-	#print (e_p[2])
-	e_p.sort(key=lambda x: x[0], reverse=True)
-	
-	
-	# sorted eigenvalues and variation explained
-	print ('sorted eigenvalues')
-	tot_var = 0
-	for i in e_p:
-		tot_var +=i[0]
-	variation = []
-	cum = []
-	j = 0
-	eigv = []
-	for i in e_p:
-		#print (i[0])
-		eigv.append(i[0])
-		variation.append(i[0]/tot_var)
-		#print ("variation explained:",variation[j]*100)
-		cum = np.cumsum(variation)
-		#print ('cumulative: ', cum[j]*100 )
-		j +=1
-	#np.savetxt('my_methods.agr', eigv)
-	#print e_p[0]
-	print type(cum)
-	of = open('my_method_proj.agr', 'w')
-	for item in e_p:
-		of.write("%s\n" % item)
-	of.close()
-	#print '\nwrote covariance matrix\n '
-	#np.savetxt('cov.txt', cov_mat )
-	#print 'covariance matrix shape is: ', cov_mat.shape, "\n"
-	#print "Trace of the covariance matrix is" , np.trace(cov_mat), "\n"
-	return;
-
-	
 if ptype == 'my':
 	my_pca()
 
