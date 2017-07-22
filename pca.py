@@ -64,15 +64,15 @@ parser.add_option("-r", "--ref", type='string', dest="reference",
                   help="reference structure for RMSD") 
 
 parser.add_option("-m", "--pca_type", type='string', dest="pca_type",
-                  help="PCA method. Default is normal PCA. Options are:\
-				  KernelPCA, normal, ipca. If normal is selected, additional arguments can be passed by flag -svd. If KernelPCA is selected kernel type can also be defined by flag -k") 
+                  help="PCA method. Default is svd (Single Value Decomposition) PCA. Options are:\
+				  KernelPCA, svd, ipca. If svd is selected, additional arguments can be passed by flag -s. If KernelPCA is selected kernel type can also be defined by flag -k") 
 				  
 parser.add_option("-k", "--kernel_type", type='string', dest="kernel_type",
                   help="Type of kernel for KernalPCA. default is linear. Options are :"
 				  "linear, poly, rbf, sigmoid, cosine, precomputed") 
 
 parser.add_option("-s", "--svd_solver", type='string', dest="svd_solver",
-                  help="Type of svd_solver for normal PCA. Default is auto. Options are :"
+                  help="Type of svd_solver for SVD (Single Value Decomposition) PCA. Default is auto. Options are :"
 				  "auto, full, arpack, randomized") 
 
 (options, args) = parser.parse_args()
@@ -123,7 +123,7 @@ if options.reference == None:
 	print "No reference structure given, RMSD will be computed to the first frame in the trajectory"
 	ref = pca_traj # set reference to current trajectory
 if options.pca_type == None:
-	ptype = 'normal'
+	ptype = 'svd'
 
 if options.svd_solver == None:
 	svd='auto'
@@ -210,21 +210,21 @@ get_rmsd()
 # PCA using sci-kit learn library
 #===============================================================
 
-def my_pca(svd):
-	 
+def svd_pca(svd):
+	'single value decomposition based PCA'
 	pca_traj.superpose(pca_traj, 0, atom_indices=sele_grp) 			# Superpose each conformation in the trajectory upon first frame
 	sele_trj = pca_traj.xyz[:,sele_grp,:]												# select cordinates of selected atom groups
 	sele_traj_reshaped = sele_trj.reshape(pca_traj.n_frames, len(sele_grp) * 3)
-	pca_sele_traj = PCA()
+	pca_sele_traj = PCA(n_components=3)
 	pca_sele_traj.fit(sele_traj_reshaped)
 	pca_sele_traj_reduced = pca_sele_traj.transform(sele_traj_reshaped)
+	#print pca_sele_traj_reduced
 	print "Trace of the covariance matrix is: ", np.trace(pca_sele_traj.get_covariance())
 	print "Wrote covariance matrix..."
 	np.savetxt('cov.dat', pca_sele_traj.get_covariance())
-	
+		
 	# write the plots 
 	write_plots('pca_projection', pca_sele_traj_reduced)
-	
 	#write the pcs variance
 	#print type(pca_sele_traj.explained_variance_ratio_)
 	write_pcs('pca_variance', pca_sele_traj)
@@ -237,6 +237,8 @@ def my_pca(svd):
 		for sym in syms:
 			sys.stdout.write("\b%s" % sym)
 			sys.stdout.flush()
+			
+			
 			time.sleep(.5)
 	return;
 
@@ -382,15 +384,15 @@ if ptype == 'KernelPCA':
 		print "Performing Kernel PCA with default linear kernel"
 		my_kernelPCA('linear')
 
-if ptype == 'normal':
+if ptype == 'svd':
 	svd=''
 	svd = options.svd_solver
 	if svd:
-		print "Performing normal PCA with ",svd,"svd_solver"
-		my_pca(svd)
+		print "Performing SVD (Single Value Decomposition) PCA with ",svd,"svd_solver"
+		svd_pca(svd)
 	else:
-		print "Performing normal PCA with 'auto' svd_solver"
-		my_pca(svd)
+		print "Performing SVD (Single Value Decomposition) PCA with 'auto' svd_solver"
+		svd_pca(svd)
 if ptype == 'ipca':
 	print "Performing Incremental_pca (IPCA)"
 	incremental_pca()
