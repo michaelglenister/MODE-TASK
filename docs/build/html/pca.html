@@ -13,6 +13,8 @@
 
   
   
+  
+  
 
   
 
@@ -44,6 +46,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -80,7 +83,10 @@
           
             
             
-                <p class="caption"><span class="caption-text">Getting started</span></p>
+              
+            
+            
+              <p class="caption"><span class="caption-text">Getting started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
@@ -88,7 +94,11 @@
 <p class="caption"><span class="caption-text">Usage</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="nma.html">Normal Mode Analysis</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Principle Component Analysis</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Principle Component Analysis</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#pca-on-cartesian-cordinates">PCA on cartesian cordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pca-on-internal-cordinates">PCA on internal cordinates</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="demo.html">Tool Demonstration</a></li>
 </ul>
 
@@ -102,8 +112,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="index.html">NMA-Task</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">NMA-Task</a>
+        
       </nav>
 
 
@@ -112,23 +124,40 @@
         <div class="rst-content">
           
 
- 
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="index.html">Docs</a> &raquo;</li>
-      
-    <li>Principle Component Analysis</li>
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Principle Component Analysis</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
+            
             <a href="_sources/pca.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -136,20 +165,114 @@
             
   <div class="section" id="principle-component-analysis">
 <h1>Principle Component Analysis<a class="headerlink" href="#principle-component-analysis" title="Permalink to this headline">¶</a></h1>
-<p>placeholder</p>
+<div class="section" id="pca-on-cartesian-cordinates">
+<h2>PCA on cartesian cordinates<a class="headerlink" href="#pca-on-cartesian-cordinates" title="Permalink to this headline">¶</a></h2>
+<p>This programe performs the PCA (Principal Component Analysis) on a MD trajectory</p>
+<p>Usage: pca.py -t &lt;MD trajectory&gt; -p &lt;topology file&gt;  -a &lt;atom group &gt;</p>
+<dl class="docutils">
+<dt>Options:</dt>
+<dd><table class="first last docutils option-list" frame="void" rules="none">
+<col class="option" />
+<col class="description" />
+<tbody valign="top">
+<tr><td class="option-group">
+<kbd><span class="option">-h</span>, <span class="option">--help</span></kbd></td>
+<td>show this help message and exit</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-t <var>TRJ</var></span>, <span class="option">--trj=<var>TRJ</var></span></kbd></td>
+</tr>
+<tr><td>&#160;</td><td>file name of the MD trajectory</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-p <var>TOPOLOGY</var></span>, <span class="option">--top=<var>TOPOLOGY</var></span></kbd></td>
+</tr>
+<tr><td>&#160;</td><td>topology file</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-a <var>ATM_GRP</var></span>, <span class="option">--ag=<var>ATM_GRP</var></span></kbd></td>
+</tr>
+<tr><td>&#160;</td><td>group of atom for PCA. Default is C alpha atoms. Other
+options are :all= all atoms, backbone = backbone
+atoms, CA= C alpha atoms, protein= protein’s atoms</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-r <var>REFERENCE</var></span>, <span class="option">--ref=<var>REFERENCE</var></span></kbd></td>
+</tr>
+<tr><td>&#160;</td><td>reference structure for RMSD</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-m <var>PCA_TYPE</var></span>, <span class="option">--pca_type=<var>PCA_TYPE</var></span></kbd></td>
+</tr>
+<tr><td>&#160;</td><td>PCA method. Default is normal PCA. Options are:
+KernelPCA, normal, ipca. If normal is selected,
+additional arguments can be passed by flag -svd. If
+KernelPCA is selected kernel type can also be defined
+by flag -k</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-k <var>KERNEL_TYPE</var></span>, <span class="option">--kernel_type=<var>KERNEL_TYPE</var></span></kbd></td>
+</tr>
+<tr><td>&#160;</td><td>Type of kernel for KernalPCA. default is linear.
+Options are :linear, poly, rbf, sigmoid, cosine,
+precomputed</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-s <var>SVD_SOLVER</var></span>, <span class="option">--svd_solver=<var>SVD_SOLVER</var></span></kbd></td>
+</tr>
+<tr><td>&#160;</td><td>Type of svd_solver for normal PCA. Default is auto.
+Options are :auto, full, arpack, randomized</td></tr>
+</tbody>
+</table>
+</dd>
+</dl>
+</div>
+<div class="section" id="pca-on-internal-cordinates">
+<h2>PCA on internal cordinates<a class="headerlink" href="#pca-on-internal-cordinates" title="Permalink to this headline">¶</a></h2>
+<p>This programe performs the PCA on internal cordinates of a MD trajectory</p>
+<p>Usage: pca.py -t &lt;MD trajectory&gt; -p &lt;topology file&gt;  -a &lt;atom group &gt;</p>
+<dl class="docutils">
+<dt>Options:</dt>
+<dd><table class="first last docutils option-list" frame="void" rules="none">
+<col class="option" />
+<col class="description" />
+<tbody valign="top">
+<tr><td class="option-group">
+<kbd><span class="option">-h</span>, <span class="option">--help</span></kbd></td>
+<td>show this help message and exit</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-t <var>TRJ</var></span>, <span class="option">--trj=<var>TRJ</var></span></kbd></td>
+</tr>
+<tr><td>&#160;</td><td>file name of the MD trajectory</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-p <var>TOPOLOGY</var></span>, <span class="option">--top=<var>TOPOLOGY</var></span></kbd></td>
+</tr>
+<tr><td>&#160;</td><td>topology file</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-a <var>ATM_GRP</var></span>, <span class="option">--ag=<var>ATM_GRP</var></span></kbd></td>
+</tr>
+<tr><td>&#160;</td><td>group of atom for PCA. Default is C alpha atoms. Other
+options are :all= all atoms, backbone = backbone
+atoms, CA= C alpha atoms, protein= protein’s atoms</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-c <var>CORDINATE_TYPE</var></span>, <span class="option">--ct=<var>CORDINATE_TYPE</var></span></kbd></td>
+</tr>
+<tr><td>&#160;</td><td>Internal cordinate type. Options are: distance,
+angles, dihedral</td></tr>
+</tbody>
+</table>
+</dd>
+</dl>
+</div>
 </div>
 
 
+           </div>
+           <div class="articleComments">
+            
            </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="demo.html" class="btn btn-neutral float-right" title="Tool Demonstration" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="demo.html" class="btn btn-neutral float-right" title="Tool Demonstration" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="nma.html" class="btn btn-neutral" title="Normal Mode Analysis" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="nma.html" class="btn btn-neutral" title="Normal Mode Analysis" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -183,7 +306,8 @@
             VERSION:'',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="_static/jquery.js"></script>

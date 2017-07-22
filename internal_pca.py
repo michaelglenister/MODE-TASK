@@ -58,13 +58,15 @@ parser.add_option("-p", "--top", type='string', dest="topology",
 
 parser.add_option("-a", "--ag", type='string', dest="atm_grp",
                   help="group of atom for PCA. Default is C alpha atoms. Other options are :"
-				  "all= all atoms, backbone = backbone atoms, CA= C alpha atoms, protein= protein's atoms")	
+				  "all= all atoms, backbone = backbone atoms, CA= C alpha atoms, protein= protein's atoms")
+
+parser.add_option("-c", "--ct", type='string', dest="cordinate_type",
+                  help="Internal cordinate type. Options are: distance, angles, dihedral")
 
 (options, args) = parser.parse_args()
                      
+
 atm_name = options.atm_grp
-
-
 
 #====================================================================
 # if no arguments are passed
@@ -190,25 +192,59 @@ def write_pcs(file_name, pca):
 	ef.write('#'+title+'\ton\t'+my_time+'\n'+legends+'\n'+ef_cont)
 	ef.close()
 	return;
+#===========================================================
+#
+# Internal cordinate type
+#
+#===========================================================
+def get_internal_cordinates():
+	'get the different types of internal cordinates as per user selections'
+	calpha_idx=top.select_atom_indices('alpha')
+	if options.cordinate_type == 'distance':
+		print "Pair wise atomic distance selected\n "
+		atom_pairs = list(combinations(calpha_idx, 2)) # all unique pairs of elements 
+		pairwise_distances = md.geometry.compute_distances(pca_traj, atom_pairs)
+		int_cord=pairwise_distances
+		#print int_cord.shape
+	if options.cordinate_type == 'phi':
+		print  "phi torsions  selected\n"
+		atom_pairs = list(combinations(calpha_idx, 3)) 
+		angle=md.compute_phi(pca_traj)
+		
+		int_cord=angle[1] ## apparently compute_phi returns tupple of atoms indices and phi angles, index 1 has phi angles 
+		print np.array(angle[1]).shape
+		#print int_cord[0]
+	
+	if options.cordinate_type == 'psi':
+		print "psi torsions  selected\n"
+		atom_pairs = list(combinations(calpha_idx, 3)) 
+		angle=md.compute_psi(pca_traj)
+		
+		int_cord=angle[1] ## apparently compute_psi returns tupple of atoms indices and psi angles, index 1 has psi angles 
+		print np.array(angle[1]).shape
+		
+	if options.cordinate_type == 'angle':
+		print "1-3 angle selected between C,CA and CB"
+		cbeta_idx=top.select_atom_indices('minimal')
+		print cbeta_idx
+		
+	return int_cord;
 
 #===========================================================
 #
 #  Internal Distance Coordinate Based PCA
 #
 #===========================================================
-def distance_pca():
-	'Internal Distance Coordinate Based PCA'
+def distance_pca(int_cord1):
+	'Internal Coordinate Based PCA'
 	
-	calpha_idx=top.select_atom_indices('alpha')
 	pca = PCA()
 	
-	atom_pairs = list(combinations(calpha_idx, 2)) # all unique pairs of elements 
-	pairwise_distances = md.compute_distances(pca_traj, atom_pairs)
-	print(pairwise_distances.shape)
-	dpca = pca.fit(pairwise_distances)
-	dpca_reduced=dpca.transform(pairwise_distances)
+	dpca = pca.fit(int_cord1)
+	dpca_reduced=dpca.transform(int_cord1)
 	write_plots('dpca_projection', dpca_reduced)
 	write_pcs('dpca_pcs', dpca)
 	return;
 
-distance_pca()
+int_cord=get_internal_cordinates()
+distance_pca(int_cord)

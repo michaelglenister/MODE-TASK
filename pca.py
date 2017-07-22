@@ -14,6 +14,7 @@ from sklearn.metrics import euclidean_distances
 from sklearn.manifold import MDS
 from sklearn import preprocessing
 from itertools import combinations
+from write_plot import write_plots, write_pcs
 
 
 #==============================================================================#
@@ -63,15 +64,15 @@ parser.add_option("-r", "--ref", type='string', dest="reference",
                   help="reference structure for RMSD") 
 
 parser.add_option("-m", "--pca_type", type='string', dest="pca_type",
-                  help="PCA method. Default is normal PCA. Options are:\
-				  KernelPCA, normal, ipca. If normal is selected, additional arguments can be passed by flag -svd. If KernelPCA is selected kernel type can also be defined by flag -k") 
+                  help="PCA method. Default is svd (Single Value Decomposition) PCA. Options are:\
+				  KernelPCA, svd, ipca. If svd is selected, additional arguments can be passed by flag -s. If KernelPCA is selected kernel type can also be defined by flag -k") 
 				  
 parser.add_option("-k", "--kernel_type", type='string', dest="kernel_type",
                   help="Type of kernel for KernalPCA. default is linear. Options are :"
 				  "linear, poly, rbf, sigmoid, cosine, precomputed") 
 
 parser.add_option("-s", "--svd_solver", type='string', dest="svd_solver",
-                  help="Type of svd_solver for normal PCA. Default is auto. Options are :"
+                  help="Type of svd_solver for SVD (Single Value Decomposition) PCA. Default is auto. Options are :"
 				  "auto, full, arpack, randomized") 
 
 (options, args) = parser.parse_args()
@@ -122,7 +123,7 @@ if options.reference == None:
 	print "No reference structure given, RMSD will be computed to the first frame in the trajectory"
 	ref = pca_traj # set reference to current trajectory
 if options.pca_type == None:
-	ptype = 'normal'
+	ptype = 'svd'
 
 if options.svd_solver == None:
 	svd='auto'
@@ -203,75 +204,27 @@ def get_rmsd():
 	
 get_rmsd()
 
-## write plots
-def write_plots(file_name, pca):
-	'function to write pca plots. takes name of the file to write and pca object name'
-	fname = ''
-	fname = file_name+'.agr'
-	np.savetxt(fname, pca)
-	pf = open(fname, 'r')
-	pf_cont = pf.read()
-	pf.close()
-	my_time = strftime("%Y-%m-%d  %a  %H:%M:%S", gmtime())
-	title = '\tcreated by pca.py\t'
-	legends = '@    title "Projection of PC"\n\
-	@    xaxis  label "PC1"\n\
-	@    yaxis  label "PC2"\n\
-	@	TYPE xy\n'
-	
-	pf = open(fname, 'w')
-	pf.write('#'+title+'\ton\t'+my_time+'\n'+legends+'\n'+pf_cont)
-	pf.close()
-	
-	return;
-
-def write_pcs(file_name, pca):
-	'write PCs and explained_variance_ratio_. takes name of the file to write and pca object name'
-	fname = ''
-	fname = file_name+'.agr'
-	#print type(pca)
-	e_ratio = pca.explained_variance_ratio_
-	e_ratio = e_ratio*100   # to make it percent
-	
-	#print e_ratio.reshape((1,101)).shape
-	np.savetxt(fname, e_ratio)
-	
-	ef = open(fname, 'r')
-	ef_cont = ef.read()
-	ef.close()
-	
-	title = '\tcreated by pca.py\t'
-	my_time = strftime("%Y-%m-%d  %a  %H:%M:%S", gmtime())
-	legends = '@    title "explained_variance of PCs"\n\
-	@    xaxis  label "PCs"\n\
-	@    yaxis  label "% Variance"\n\
-	@	TYPE xy\n'
-	
-	ef = open(fname, 'w')
-	ef.write('#'+title+'\ton\t'+my_time+'\n'+legends+'\n'+ef_cont)
-	ef.close()
-	return;
 
 #===============================================================
 #
 # PCA using sci-kit learn library
 #===============================================================
 
-def my_pca(svd):
-	 
+def svd_pca(svd):
+	'single value decomposition based PCA'
 	pca_traj.superpose(pca_traj, 0, atom_indices=sele_grp) 			# Superpose each conformation in the trajectory upon first frame
 	sele_trj = pca_traj.xyz[:,sele_grp,:]												# select cordinates of selected atom groups
 	sele_traj_reshaped = sele_trj.reshape(pca_traj.n_frames, len(sele_grp) * 3)
-	pca_sele_traj = PCA()
+	pca_sele_traj = PCA(n_components=3)
 	pca_sele_traj.fit(sele_traj_reshaped)
 	pca_sele_traj_reduced = pca_sele_traj.transform(sele_traj_reshaped)
+	#print pca_sele_traj_reduced
 	print "Trace of the covariance matrix is: ", np.trace(pca_sele_traj.get_covariance())
 	print "Wrote covariance matrix..."
 	np.savetxt('cov.dat', pca_sele_traj.get_covariance())
-	
+		
 	# write the plots 
 	write_plots('pca_projection', pca_sele_traj_reduced)
-	
 	#write the pcs variance
 	#print type(pca_sele_traj.explained_variance_ratio_)
 	write_pcs('pca_variance', pca_sele_traj)
@@ -284,6 +237,8 @@ def my_pca(svd):
 		for sym in syms:
 			sys.stdout.write("\b%s" % sym)
 			sys.stdout.flush()
+			
+			
 			time.sleep(.5)
 	return;
 
@@ -339,6 +294,85 @@ def incremental_pca():
 
 	return;
 
+#===============================================================
+#
+#  My own method
+#
+#=================================================================
+def my_pca():
+	
+	pca_traj.superpose(pca_traj, 0, atom_indices=sele_grp) 			# Superpose each conformation in the trajectory upon first frame
+	sele_trj = pca_traj.xyz[:,sele_grp,:]												# select cordinates of selected atom groups
+	sele_traj_reshaped = sele_trj.reshape(pca_traj.n_frames, len(sele_grp) * 3)
+		
+	sele_traj_reshaped = sele_traj_reshaped.astype(float) ## to avoid numpy Conversion Error during scaling
+	sele_traj_reshaped_scaled = preprocessing.scale(sele_traj_reshaped)
+	arr = sele_traj_reshaped_scaled
+	
+	
+	#===============================================
+	# covariance matrix of selected coloumns
+	cov_mat = np.cov(arr, rowvar=False)
+	cov_mat = np.cov(cov_mat)
+	trj_eval, trj_evec=np.linalg.eig(cov_mat)
+	
+	print "Trace of cov matrix is ",  np.trace(cov_mat)
+	
+	#=============================
+	# sanity check of calculated eigenvector and eigen values 
+	# it must be cov matrix * eigen vector = eigen vector * eigen value
+	
+	for i in range(len(trj_eval)):
+		eigv = trj_evec.real[:,i].reshape(1,len(trj_evec[:,0]),).T
+		np.testing.assert_array_almost_equal(cov_mat.dot(eigv), trj_eval[i]*eigv, decimal=3, err_msg='', verbose=True)
+
+#=============================================
+	# sort the eigenvalues and eigenvector
+	sort_idx = trj_eval.argsort()[::-1]
+	trj_eval = trj_eval[sort_idx]
+	trj_evec = trj_evec[sort_idx]
+	
+	pca = np.empty_like(trj_evec)
+	
+	# join first two eigenvector into a single matrix and write plot
+	eivec_1 = trj_evec.real[:,0].reshape(len(trj_evec[:,0]),1)
+	eivec_2 = trj_evec.real[:,1].reshape(len(trj_evec[:,1]),1)
+	pca = np.concatenate((eivec_1, eivec_2), axis=1)
+
+	write_plots('my_method_proj', pca)
+	
+
+#=============================================
+# sort the eigenvales
+	e_p = []
+	print type(e_p)
+	for i in range(len(trj_eval)):
+		eig_pairs = [np.abs(trj_eval[i]), trj_evec[:,i]]
+		e_p.append(eig_pairs)
+	#print (e_p[2])
+	e_p.sort(key=lambda x: x[0], reverse=True)
+	
+	
+	# sorted eigenvalues and variation explained
+	print ('sorted eigenvalues')
+	tot_var = 0
+	for i in e_p:
+		tot_var +=i[0]
+	variation = []
+	print tot_var
+	cum = []
+	j = 0
+	eigv = []
+	for i in e_p:
+		#print (i[0])
+		eigv.append(i[0])
+		variation.append(i[0]/tot_var)
+		#print ("variation explained:",variation[j]*100)
+		cum = np.cumsum(variation)
+		#print ('cumulative: ', cum[j]*100 )
+		j +=1
+	return;
+
 
 if ptype == 'KernelPCA':
 	kernel = ''
@@ -350,45 +384,21 @@ if ptype == 'KernelPCA':
 		print "Performing Kernel PCA with default linear kernel"
 		my_kernelPCA('linear')
 
-if ptype == 'normal':
+if ptype == 'svd':
 	svd=''
 	svd = options.svd_solver
 	if svd:
-		print "Performing normal PCA with ",svd,"svd_solver"
-		my_pca(svd)
+		print "Performing SVD (Single Value Decomposition) PCA with ",svd,"svd_solver"
+		svd_pca(svd)
 	else:
-		print "Performing normal PCA with 'auto' svd_solver"
-		my_pca(svd)
+		print "Performing SVD (Single Value Decomposition) PCA with 'auto' svd_solver"
+		svd_pca(svd)
 if ptype == 'ipca':
 	print "Performing Incremental_pca (IPCA)"
 	incremental_pca()
 
-
-
-
-#===============================================================
-#
-#  My own method
-#
-#=================================================================
-def my_pca():
-	print "shape of the trajectory object: ", sele_trj.shape, "\n"
-	print pca_traj.xyz[:,sele_grp,:].reshape(pca_traj.n_frames, 860 * 3).T.shape
-
-	pca_traj.xyz[0,sele_grp,:].reshape(1, 860 * 3).tofile('ca_cord_tr.xyz', sep = ' ',format = '%s')
-	pca_traj.xyz[0, sele_grp].transpose().tofile('ca_cord.xyz', sep = '\t', format = '%s')
-	x= pca_traj.xyz[:,sele_grp,:].reshape(pca_traj.n_frames, 860 * 3).T
-	x = x.astype(float) ## to avoid numpy Conversion Error during scaling
-	x_scaled = preprocessing.scale(x)
-	#print x_scaled
-	cov_mat = np.cov(x_scaled)
-	print '\nwrote covariance matrix\n '
-	np.savetxt('cov.txt', cov_mat )
-	print 'covariance matrix shape is: ', cov_mat.shape, "\n"
-	print "Trace of the covariance matrix is" , np.trace(cov_mat), "\n"
-	return;
-
-#my_pca()
+if ptype == 'my':
+	my_pca()
 
 
 
