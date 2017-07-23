@@ -80,4 +80,3 @@ def write_pcs(file_name, pca):
 	ef.close()
 	return;
 	
-

@@ -2,7 +2,7 @@
 #filename: pca.py
 import os, sys
 import shlex, subprocess, time, re, argparse, traceback, math, matplotlib
-from optparse import OptionParser
+import argparse
 from time import sleep, gmtime, strftime
 from datetime import datetime
 import mdtraj as md
@@ -48,64 +48,77 @@ print '\n'
 #                            Setting the options
 #==============================================================================
 
-parser = OptionParser("Usage: pca.py -t <MD trajectory> -p <topology file>  -a <atom group >")
+parser = argparse.ArgumentParser( usage='%(prog)s -t <MD trajectory> -p <topology file>')
+#"Usage: pca.py -t <MD trajectory> -p <topology file>  -a <atom group >"
 
-parser.add_option("-t", "--trj", type='string', dest="trj",
-                  help="file name of the MD trajectory")
+parser.add_argument("-t", "--trj", dest="trj", help="file name of the MD trajectory", action="store")
 
-parser.add_option("-p", "--top", type='string', dest="topology",
-                  help="topology file")      
+parser.add_argument("-p", "--top", dest="topology", help="topology file")      
 
-parser.add_option("-a", "--ag", type='string', dest="atm_grp",
-                  help="group of atom for PCA. Default is C alpha atoms. Other options are :"
-				  "all= all atoms, backbone = backbone atoms, CA= C alpha atoms, protein= protein's atoms")	
+parser.add_argument("-at", "--ag", dest="atm_grp", help="group of atom for PCA. Default is C alpha atoms. Other options are :"				  "all= all atoms, backbone = backbone atoms, CA= C alpha atoms, protein= protein's atoms")	
 
-parser.add_option("-r", "--ref", type='string', dest="reference",
-                  help="reference structure for RMSD") 
+parser.add_argument("-r", "--ref", dest="reference", help="reference structure for RMSD") 
 
-parser.add_option("-m", "--pca_type", type='string', dest="pca_type",
-                  help="PCA method. Default is svd (Single Value Decomposition) PCA. Options are:\
+parser.add_argument("-m", "--pca_type", dest="pca_type", help="PCA method. Default is svd (Single Value Decomposition) PCA. Options are:\
 				  KernelPCA, svd, ipca. If svd is selected, additional arguments can be passed by flag -s. If KernelPCA is selected kernel type can also be defined by flag -k") 
 				  
-parser.add_option("-k", "--kernel_type", type='string', dest="kernel_type",
-                  help="Type of kernel for KernalPCA. default is linear. Options are :"
+parser.add_argument("-nc", "--comp", type=int, dest="comp", help="Number of components to keep in a PCA object. If not set, by default all the components will be kept.")
+				  
+parser.add_argument("-kt", "--kernel_type", dest="kernel_type", help="Type of kernel for KernalPCA. default is linear. Options are :"
 				  "linear, poly, rbf, sigmoid, cosine, precomputed") 
 
-parser.add_option("-s", "--svd_solver", type='string', dest="svd_solver",
-                  help="Type of svd_solver for SVD (Single Value Decomposition) PCA. Default is auto. Options are :"
-				  "auto, full, arpack, randomized") 
+parser.add_argument("-st", "--svd_solver", dest="svd_solver", help="Type of svd_solver for SVD (Single Value Decomposition) PCA. Default is auto. Options are :"				  "auto, full, arpack, randomized") 
+				  
 
-(options, args) = parser.parse_args()
+args = parser.parse_args()
                      
-atm_name = options.atm_grp
+atm_name = args.atm_grp
 
 
 
 #====================================================================
 # if no arguments are passed
 #====================================================================
-if options.trj is None: 
-	print 'Missing trajectory arguments :(\nPlease see the help by running \n\nsystem_setup.py -h\n\n '
+if args.trj is None: 
+	print 'ERROR: Missing trajectory argument.... :(  \nPlease see the help by running \n\nsystem_setup.py -h\n\n '
 	parser.print_help()
 	sys.exit(1)
 
-if options.topology is None:
-	print 'Missing topology !!\nPlease see the help by running \n\nsystem_setup.py -h\n\n '
+if args.topology is None:
+	print 'ERROR: Missing topology.... :( \nPlease see the help by running \n\nsystem_setup.py -h\n\n '
 	parser.print_help()
 	sys.exit(1)
 
+if not os.path.exists(args.trj ):
+			print('\nERROR: {0} not found....:(  Please check the path\n' .format(args.trj ))
+			parser.print_help()
+			sys.exit(1)
+
+if not os.path.exists(args.topology):
+			print('\nERROR: {0} not found....:(  Please check the path\n' .format(args.topology ))
+			parser.print_help()
+			sys.exit(1)
 #=======================================
 # assign the passed arguments and read the trajectory 
 #=======================================
 
-traj = options.trj
-topology = options.topology
-ref = options.reference
-ptype=options.pca_type
+traj = args.trj
+topology = args.topology
+ref = args.reference
+ptype=args.pca_type
+comp = args.comp
+## read the reference structure
 if ref:
-	ref = md.load(options.reference)
-
-pca_traj = md.load(traj, top=topology)
+	try:
+		ref = md.load(args.reference)
+	except:
+			raise IOError('Could not open reference structure {0} for reading. \n' .format(args.reference))
+	
+try:
+	pca_traj = md.load(traj, top=topology)
+except:
+	raise IOError('Could not open trajectory {0} for reading. \n' .format(trj))
+	
 #print(pca_traj)
 top = pca_traj.topology
 #print top
@@ -116,16 +129,16 @@ top = pca_traj.topology
 #
 #===============================================
 
-if options.atm_grp == None:
+if args.atm_grp == None:
 	print 'No atom has been selected. PCA will be performed on C alpha atoms '
 	atm_name = 'CA'  # set to default C-alpha atoms
-if options.reference == None:
+if args.reference == None:
 	print "No reference structure given, RMSD will be computed to the first frame in the trajectory"
 	ref = pca_traj # set reference to current trajectory
-if options.pca_type == None:
+if args.pca_type == None:
 	ptype = 'svd'
 
-if options.svd_solver == None:
+if args.svd_solver == None:
 	svd='auto'
 
 #==========================================================================
@@ -163,10 +176,10 @@ def trajectory_info():
 	print pca_traj.n_atoms, "atoms and ", pca_traj.n_residues, "residues in the trajectory"
 	print "Atom group selected for PCA:", atm_name, "\n"
 	
-	if options.reference == None: 
+	if args.reference == None: 
 		print "Reference for RMSD calculation is first frame of trajectory"
 	else:
-		print "Reference for RMSD calculation is: ", options.reference
+		print "Reference for RMSD calculation is: ", args.reference
 		
 	print "Total", len(sele_grp), atm_name,'atoms selected for analysis\n'
 	
@@ -215,7 +228,7 @@ def svd_pca(svd):
 	pca_traj.superpose(pca_traj, 0, atom_indices=sele_grp) 			# Superpose each conformation in the trajectory upon first frame
 	sele_trj = pca_traj.xyz[:,sele_grp,:]												# select cordinates of selected atom groups
 	sele_traj_reshaped = sele_trj.reshape(pca_traj.n_frames, len(sele_grp) * 3)
-	pca_sele_traj = PCA(n_components=3)
+	pca_sele_traj = PCA(n_components=2)
 	pca_sele_traj.fit(sele_traj_reshaped)
 	pca_sele_traj_reduced = pca_sele_traj.transform(sele_traj_reshaped)
 	#print pca_sele_traj_reduced
@@ -376,8 +389,8 @@ def my_pca():
 
 if ptype == 'KernelPCA':
 	kernel = ''
-	kernel = options.kernel_type
-	if options.kernel_type:
+	kernel = args.kernel_type
+	if args.kernel_type:
 		print "Performing Kernel PCA with", kernel, 'kernel'
 		my_kernelPCA(kernel)
 	else:
@@ -386,7 +399,7 @@ if ptype == 'KernelPCA':
 
 if ptype == 'svd':
 	svd=''
-	svd = options.svd_solver
+	svd = args.svd_solver
 	if svd:
 		print "Performing SVD (Single Value Decomposition) PCA with ",svd,"svd_solver"
 		svd_pca(svd)
@@ -399,7 +412,4 @@ if ptype == 'ipca':
 
 if ptype == 'my':
 	my_pca()
-
-
-
 
