@@ -69,41 +69,20 @@ def set_option():
 		sys.exit(1)
 	
 	if not os.path.exists(args.trj ):
-				print('\nERROR: {0} not found....:(  Please check the path\n' .format(args.trj ))
-				parser.print_help()
-				sys.exit(1)
+		print('\nERROR: {0} not found....:(  Please check the path\n' .format(args.trj ))
+		parser.print_help()
+		sys.exit(1)
 	
 	if not os.path.exists(args.topology):
-				print('\nERROR: {0} not found....:(  Please check the path\n' .format(args.topology ))
-				parser.print_help()
-				sys.exit(1)
-		
+		print('\nERROR: {0} not found....:(  Please check the path\n' .format(args.topology ))
+		parser.print_help()
+		sys.exit(1)
+	if args.cordinate_type is None:
+		print "No arguments given for -ct...using distance as internal cordinate\n"
+		args.cordinate_type='distance'
 	return args
 	
 args = set_option()
-#==============================================================================
-#                            Setting the options
-#==============================================================================
-
-#parser = OptionParser("Usage: pca.py -t <MD trajectory> -p <topology file>  -a <atom group >")
-#
-#parser.add_option("-t", "--trj", type='string', dest="trj",
-#                  help="file name of the MD trajectory")
-#
-#parser.add_option("-p", "--top", type='string', dest="topology",
-#                  help="topology file")      
-#
-#parser.add_option("-a", "--ag", type='string', dest="atm_grp",
-#                  help="group of atom for PCA. Default is C alpha atoms. Other options are :"
-#				  "all= all atoms, backbone = backbone atoms, CA= C alpha atoms, protein= protein's atoms")
-#
-#parser.add_option("-c", "--ct", type='string', dest="cordinate_type",
-#                  help="Internal cordinate type. Options are: distance, angles, dihedral")
-#
-#(options, args) = parser.parse_args()
-#                     
-#
-#atm_name = options.atm_grp
 
 #====================================================================
 # if no arguments are passed
@@ -117,6 +96,7 @@ if args.topology is None:
 	print 'Missing topology !!\nPlease see the help by running \n\nsystem_setup.py -h\n\n '
 	parser.print_help()
 	sys.exit(1)
+
 
 #=======================================
 # assign the passed arguments and read the trajectory 
@@ -238,3 +218,4 @@ def distance_pca(int_cord1):
 
 int_cord=get_internal_cordinates()
 distance_pca(int_cord)
+
