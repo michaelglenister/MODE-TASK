@@ -15,7 +15,7 @@ from sklearn.metrics import euclidean_distances
 from sklearn.manifold import MDS
 from sklearn import preprocessing
 from itertools import combinations
-
+from write_plot import write_plots, write_pcs
 
 #==============================================================================#
 #											Internal PCA MD 
@@ -44,39 +44,76 @@ print '|\t\t\t\t\t\t\t|'
 print '|=======================================================|'
 print '\n'
 
+def set_option():
+	parser = argparse.ArgumentParser( usage='%(prog)s -t <MD trajectory> -p <topology file>')
+	#"Usage: pca.py -t <MD trajectory> -p <topology file>  -a <atom group >"
+	
+	parser.add_argument("-t", "--trj", dest="trj", help="file name of the MD trajectory", action="store")
+	parser.add_argument("-p", "--top", dest="topology", help="topology file")      
+	parser.add_argument("-at", "--ag", dest="atm_grp", help="group of atom for PCA. Default is C alpha atoms. Other options are :"				  "all= all atoms, backbone = backbone atoms, CA= C alpha atoms, protein= protein's atoms")	
+	parser.add_argument("-ct", "--ref", dest="cordinate_type", help="nternal cordinate type. Options are: distance, angles, dihedral") 
+	args = parser.parse_args()	
+	atm_name = args.atm_grp
+	
+	#====================================================================
+	# if no arguments are passed
+	#====================================================================
+	if args.trj is None: 
+		print 'ERROR: Missing trajectory argument.... :(  \nPlease see the help by running \n\nsystem_setup.py -h\n\n '
+		parser.print_help()
+		sys.exit(1)
+	
+	if args.topology is None:
+		print 'ERROR: Missing topology.... :( \nPlease see the help by running \n\nsystem_setup.py -h\n\n '
+		parser.print_help()
+		sys.exit(1)
+	
+	if not os.path.exists(args.trj ):
+				print('\nERROR: {0} not found....:(  Please check the path\n' .format(args.trj ))
+				parser.print_help()
+				sys.exit(1)
+	
+	if not os.path.exists(args.topology):
+				print('\nERROR: {0} not found....:(  Please check the path\n' .format(args.topology ))
+				parser.print_help()
+				sys.exit(1)
+		
+	return args
+	
+args = set_option()
 #==============================================================================
 #                            Setting the options
 #==============================================================================
 
-parser = OptionParser("Usage: pca.py -t <MD trajectory> -p <topology file>  -a <atom group >")
-
-parser.add_option("-t", "--trj", type='string', dest="trj",
-                  help="file name of the MD trajectory")
-
-parser.add_option("-p", "--top", type='string', dest="topology",
-                  help="topology file")      
-
-parser.add_option("-a", "--ag", type='string', dest="atm_grp",
-                  help="group of atom for PCA. Default is C alpha atoms. Other options are :"
-				  "all= all atoms, backbone = backbone atoms, CA= C alpha atoms, protein= protein's atoms")
-
-parser.add_option("-c", "--ct", type='string', dest="cordinate_type",
-                  help="Internal cordinate type. Options are: distance, angles, dihedral")
-
-(options, args) = parser.parse_args()
-                     
-
-atm_name = options.atm_grp
+#parser = OptionParser("Usage: pca.py -t <MD trajectory> -p <topology file>  -a <atom group >")
+#
+#parser.add_option("-t", "--trj", type='string', dest="trj",
+#                  help="file name of the MD trajectory")
+#
+#parser.add_option("-p", "--top", type='string', dest="topology",
+#                  help="topology file")      
+#
+#parser.add_option("-a", "--ag", type='string', dest="atm_grp",
+#                  help="group of atom for PCA. Default is C alpha atoms. Other options are :"
+#				  "all= all atoms, backbone = backbone atoms, CA= C alpha atoms, protein= protein's atoms")
+#
+#parser.add_option("-c", "--ct", type='string', dest="cordinate_type",
+#                  help="Internal cordinate type. Options are: distance, angles, dihedral")
+#
+#(options, args) = parser.parse_args()
+#                     
+#
+#atm_name = options.atm_grp
 
 #====================================================================
 # if no arguments are passed
 #====================================================================
-if options.trj is None: 
+if args.trj is None: 
 	print 'Missing trajectory arguments :(\nPlease see the help by running \n\nsystem_setup.py -h\n\n '
 	parser.print_help()
 	sys.exit(1)
 
-if options.topology is None:
+if args.topology is None:
 	print 'Missing topology !!\nPlease see the help by running \n\nsystem_setup.py -h\n\n '
 	parser.print_help()
 	sys.exit(1)
@@ -85,8 +122,8 @@ if options.topology is None:
 # assign the passed arguments and read the trajectory 
 #=======================================
 
-traj = options.trj
-topology = options.topology
+traj = args.trj
+topology = args.topology
 pca_traj = md.load(traj, top=topology)
 top = pca_traj.topology
 
@@ -96,7 +133,7 @@ top = pca_traj.topology
 #
 #===============================================
 
-if options.atm_grp == None:
+if args.atm_grp == None:
 	print 'No atom has been selected. PCA will be performed on C alpha atoms '
 	atm_name = 'CA'  # set to default C-alpha atoms
 
@@ -144,54 +181,7 @@ def trajectory_info():
 	
 trajectory_info()
 
-## write plots
-def write_plots(file_name, pca):
-	'function to write pca plots. takes name of the file to write and pca object name'
-	fname = ''
-	fname = file_name+'.agr'
-	np.savetxt(fname, pca)
-	pf = open(fname, 'r')
-	pf_cont = pf.read()
-	pf.close()
-	my_time = strftime("%Y-%m-%d  %a  %H:%M:%S", gmtime())
-	title = '\tcreated by pca.py\t'
-	legends = '@    title "Projection of PC"\n\
-	@    xaxis  label "PC1"\n\
-	@    yaxis  label "PC2"\n\
-	@	TYPE xy\n'
-	
-	pf = open(fname, 'w')
-	pf.write('#'+title+'\ton\t'+my_time+'\n'+legends+'\n'+pf_cont)
-	pf.close()
-	
-	return;
 
-def write_pcs(file_name, pca):
-	'write PCs and explained_variance_ratio_. takes name of the file to write and pca object name'
-	fname = ''
-	fname = file_name+'.agr'
-	#print type(pca)
-	e_ratio = pca.explained_variance_ratio_
-	e_ratio = e_ratio*100   # to make it percent
-	
-	#print e_ratio.reshape((1,101)).shape
-	np.savetxt(fname, e_ratio)
-	
-	ef = open(fname, 'r')
-	ef_cont = ef.read()
-	ef.close()
-	
-	title = '\tcreated by pca.py\t'
-	my_time = strftime("%Y-%m-%d  %a  %H:%M:%S", gmtime())
-	legends = '@    title "explained_variance of PCs"\n\
-	@    xaxis  label "PCs"\n\
-	@    yaxis  label "% Variance"\n\
-	@	TYPE xy\n'
-	
-	ef = open(fname, 'w')
-	ef.write('#'+title+'\ton\t'+my_time+'\n'+legends+'\n'+ef_cont)
-	ef.close()
-	return;
 #===========================================================
 #
 # Internal cordinate type
@@ -200,13 +190,13 @@ def write_pcs(file_name, pca):
 def get_internal_cordinates():
 	'get the different types of internal cordinates as per user selections'
 	calpha_idx=top.select_atom_indices('alpha')
-	if options.cordinate_type == 'distance':
+	if args.cordinate_type == 'distance':
 		print "Pair wise atomic distance selected\n "
 		atom_pairs = list(combinations(calpha_idx, 2)) # all unique pairs of elements 
 		pairwise_distances = md.geometry.compute_distances(pca_traj, atom_pairs)
 		int_cord=pairwise_distances
 		#print int_cord.shape
-	if options.cordinate_type == 'phi':
+	if args.cordinate_type == 'phi':
 		print  "phi torsions  selected\n"
 		atom_pairs = list(combinations(calpha_idx, 3)) 
 		angle=md.compute_phi(pca_traj)
@@ -215,7 +205,7 @@ def get_internal_cordinates():
 		print np.array(angle[1]).shape
 		#print int_cord[0]
 	
-	if options.cordinate_type == 'psi':
+	if args.cordinate_type == 'psi':
 		print "psi torsions  selected\n"
 		atom_pairs = list(combinations(calpha_idx, 3)) 
 		angle=md.compute_psi(pca_traj)
@@ -223,7 +213,7 @@ def get_internal_cordinates():
 		int_cord=angle[1] ## apparently compute_psi returns tupple of atoms indices and psi angles, index 1 has psi angles 
 		print np.array(angle[1]).shape
 		
-	if options.cordinate_type == 'angle':
+	if args.cordinate_type == 'angle':
 		print "1-3 angle selected between C,CA and CB"
 		cbeta_idx=top.select_atom_indices('minimal')
 		print cbeta_idx
