@@ -20,6 +20,9 @@
 #include <ap.cpp>
 #include <vector>
 
+#include <string>
+#include <stdio.h>
+#include <time.h>
 
 // TO GENERALISE THIS WE MUST JUST TAKE A FILE NAME AS A PARAMETER AND HAVE GENERAL OUTPUT FILE NAMES.
 using namespace std;
@@ -211,6 +214,17 @@ vector< vector<double> > getHessian(vector< vector<double> > C, double cutoff)//
 	return Hessian;
 }// getHessian
 
+// Get current date/time, format is YYYY-MM-DD HH:mm:ss
+const std::string currentDateTime() {
+    time_t     now = time(0);
+    struct tm  tstruct;
+    char       buf[80];
+    tstruct = *localtime(&now);
+
+    strftime(buf, sizeof(buf), "%Y-%m-%d %X", &tstruct);
+
+    return buf;
+}
 
 int main(int argc, char *argv[])
 {	
@@ -269,11 +283,22 @@ int main(int argc, char *argv[])
 	string eigenvalueVTFile = outdir + "/" + pdbInput.substr(pdbInput.find_last_of("/\\")+1, 4) + "_VT.txt"; //4BIP_VT.txt
 	string eigenvalueUFile = outdir + "/" + pdbInput.substr(pdbInput.find_last_of("/\\")+1, 4) + "_U.txt"; //4BIP_U.txt
 
-	cout<<"Output files will be:"<<endl;
-	cout<<eigenvalueMatrixFile<<endl;
-	cout<<eigenvalueVTFile<<endl;
-	cout<<eigenvalueUFile<<endl;
-	cout<<cutoff<<endl;
+	// cout<<"Output files will be:"<<endl;
+	// cout<<eigenvalueMatrixFile<<endl;
+	// cout<<eigenvalueVTFile<<endl;
+	// cout<<eigenvalueUFile<<endl;
+	// cout<<cutoff<<endl;
+	
+	// Start cronometer
+	const int ONE_HOUR = 60 * 60;
+	const int ONE_MINUE = 60;
+
+	int hour;
+	int min;
+	int sec;
+	std::cout << "Started at: " << currentDateTime() << std::endl;
+	clock_t tStart = clock();
+	//printf("Started at: %.2fs\n", (double)time(&timev));
 
 	// End parameter handling
 
@@ -344,6 +369,33 @@ int main(int argc, char *argv[])
         outputFileU<<endl;
 	}// for vt
 	outputFileU.close();
+
+	// End cronometer
+	std::cout << "Completed at: " << currentDateTime() << std::endl;
+	int time_target=(clock() - tStart)/CLOCKS_PER_SEC;
+
+	hour=time_target/ONE_HOUR;
+	time_target-=hour*ONE_HOUR;
+	min=time_target/ONE_MINUE;
+	time_target-=min*ONE_HOUR;
+	sec=time_target;
+	if (min<10 && sec<10)
+	{
+		printf("- Total time: %d:0%d:0%d\n",hour,min,sec);
+	}
+	else if (min<10)
+	{
+		printf("- Total time: %d:0%d:%d\n",hour,min,sec);
+	}
+	else if (sec<10)
+	{
+		printf("- Total time: %d:%d:0%d\n",hour,min,sec);
+	}
+	else
+	{
+		printf("- Total time: %d:%d:%d\n",hour,min,sec);
+	}
+
 
 	return 0;
 }//main
