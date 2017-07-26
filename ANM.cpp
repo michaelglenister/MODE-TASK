@@ -24,7 +24,7 @@
 #include <stdio.h>
 #include <time.h>
 
-// TO GENERALISE THIS WE MUST JUST TAKE A FILE NAME AS A PARAMETER AND HAVE GENERAL OUTPUT FILE NAMES.
+
 using namespace std;
 using namespace alglib;
 
@@ -89,8 +89,8 @@ vector< vector<double> > getForceConstants(vector<double> atom1,vector<double> a
 	
 	double dv2ka;
 	
-	//if outside cutoff or atom1=atom2			
-	if (dist2>cutoff)//parameter 
+	//if outside cutoff or atom1=atom2
+	if (dist2>cutoff)//parameter
 	{
 		for(int i=0;i<3;i++)
 		{		
@@ -231,7 +231,7 @@ int main(int argc, char *argv[])
 	//Init vars
 	double cutoff = 24;
 	string pdbInput, outdir = "output";
-	bool hasPdb = false;//, hasCutoff = false, hasOutdir = false;
+	bool hasPdb = false;
 
 	// Begin parameter handling
 	// Add more else if statements for further parameters
@@ -265,29 +265,15 @@ int main(int argc, char *argv[])
 		cout<<"A PDB file is required, use '-h' to view help"<<endl;
 		return -1;
 	}
-
-	/*if(!hasOutdir)
-	{
-		outdir = 24;
-		cout<<"Using a default cutoff of " << cutoff <<endl;
-	}
-
-	if(!hasCutoff)
-	{
-		cutoff = 24;
-		cout<<"Using a default cutoff of " << cutoff <<endl;
-	}*/
 	
 	cutoff = cutoff * cutoff;
-	string eigenvalueMatrixFile = outdir + "/" + pdbInput.substr(pdbInput.find_last_of("/\\")+1, 4) + "_W.txt"; //4BIP_W.txt
-	string eigenvalueVTFile = outdir + "/" + pdbInput.substr(pdbInput.find_last_of("/\\")+1, 4) + "_VT.txt"; //4BIP_VT.txt
-	string eigenvalueUFile = outdir + "/" + pdbInput.substr(pdbInput.find_last_of("/\\")+1, 4) + "_U.txt"; //4BIP_U.txt
+	/*string eigenvalueMatrixFile = outdir + "/" + pdbInput.substr(pdbInput.find_last_of("/\\")+1, 4) + "_W.txt";
+	string eigenvalueVTFile = outdir + "/" + pdbInput.substr(pdbInput.find_last_of("/\\")+1, 4) + "_VT.txt";
+	string eigenvalueUFile = outdir + "/" + pdbInput.substr(pdbInput.find_last_of("/\\")+1, 4) + "_U.txt";*/
 
-	// cout<<"Output files will be:"<<endl;
-	// cout<<eigenvalueMatrixFile<<endl;
-	// cout<<eigenvalueVTFile<<endl;
-	// cout<<eigenvalueUFile<<endl;
-	// cout<<cutoff<<endl;
+	string eigenvalueMatrixFile = outdir + "/W_values.txt";
+	string eigenvalueVTFile = outdir + "/VT_values.txt";
+	string eigenvalueUFile = outdir + "/U_values.txt";
 	
 	// Start cronometer
 	const int ONE_HOUR = 60 * 60;
@@ -298,7 +284,6 @@ int main(int argc, char *argv[])
 	int sec;
 	std::cout << "Started at: " << currentDateTime() << std::endl;
 	clock_t tStart = clock();
-	//printf("Started at: %.2fs\n", (double)time(&timev));
 
 	// End parameter handling
 
