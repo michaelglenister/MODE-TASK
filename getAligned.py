@@ -5,11 +5,14 @@ import sys
 import argparse
 from datetime import datetime
 
+from utils import *
+
 import math
 
 
 def main(args):
-    output = args.pdbSca[:args.pdbSca.index('.')]  # "3VBSFull3_SCA_Aligned"
+    protein_name = args.pdbSca
+    protein_name = protein_name[protein_name.rfind("/") + 1:protein_name.rfind("/") + 5]
     f = open(args.pdbAligned, 'r')
     lines = f.readlines()
     f.close()
@@ -40,7 +43,7 @@ def main(args):
 
     print len(coarse_grained)
 
-    w = open(args.outdir + "/" + output + "_SCA.pdb", 'w')
+    w = open(args.outdir + "/" + protein_name + "_SCA.pdb", 'w')
     w.writelines(coarse_grained)
     w.write("END")
     w.close()

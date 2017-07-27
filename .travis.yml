@@ -8,5 +8,7 @@ script:
   - cd tests
   - ./test_cg.sh
   - ./test_anm.sh
-  - ./test_commonResidues.sh
+  - ./test_common_residues.sh
   - ./test_msf.sh
+  - ./test_get_aligned.sh
+  - ./test_conformation.sh

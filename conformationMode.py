@@ -117,7 +117,7 @@ def main(args):
     # Get Eigenvectors for a mode
     # Calculate Indexes of vectors to be selected
     interface_index = []
-    f = open(args.pdb_sca, 'r')
+    f = open(args.pdbSca, 'r')
     nma = f.readlines()
     f.close()
     count = 0
@@ -207,9 +207,9 @@ if __name__ == "__main__":
 
     # custom arguments
     parser.add_argument("--pdbAligned", help="")  # '4n43_aligned.pdb'
-    # missing pdb_sca args?
+    # missing pdbSca args?
     parser.add_argument("--pdbProtomerAligned", help="") # '3VBSProtomer_aligned3_SCA.pdb'
-    parser.add_argument("--pdbProtomer", help="")  # '3VBSProtomer3_SCA.pdb' used where?
+    parser.add_argument("--pdbSca", help="")  # '3VBSProtomer3_SCA.pdb'
     parser.add_argument("--vtProtomer", help="")  # 'Protomer3CG_VT.txt'
     parser.add_argument("--output", help="Output file",
                         default="ProtomerCGrained.txt")  # 'Protomer3CG_VT.txt'
