@@ -87,7 +87,17 @@
 </ul>
 <p class="caption"><span class="caption-text">Usage</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Normal Mode Analysis</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Normal Mode Analysis</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#coarse-grain">Coarse grain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#anm">ANM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#common-residues">Common residues</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mean-square-fluctuation">Mean square fluctuation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#conformation-mode">Conformation mode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#get-aligned">Get aligned</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#trajectory-pentamer">Trajectory pentamer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#get-eigen-vectors">Get eigen vectors</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="pca.html">Principle Component Analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="demo.html">Tool Demonstration</a></li>
 </ul>
@@ -136,7 +146,282 @@
             
   <div class="section" id="normal-mode-analysis">
 <h1>Normal Mode Analysis<a class="headerlink" href="#normal-mode-analysis" title="Permalink to this headline">¶</a></h1>
-<p>placeholder</p>
+<div class="section" id="coarse-grain">
+<h2>Coarse grain<a class="headerlink" href="#coarse-grain" title="Permalink to this headline">¶</a></h2>
+<p><strong>Command:</strong></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">coarseGrain</span><span class="o">.</span><span class="n">py</span> <span class="o">&lt;</span><span class="n">options</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">pdbFile</span> <span class="o">&lt;</span><span class="n">pdb</span> <span class="n">file</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">cg</span> <span class="o">&lt;</span><span class="nb">int</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">startingAtom</span> <span class="o">&lt;</span><span class="nb">int</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">protomerAtoms</span> <span class="o">&lt;</span><span class="nb">int</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p><strong>Inputs:</strong></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="28%" />
+<col width="14%" />
+<col width="24%" />
+<col width="34%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Input (<em>*required</em>)</th>
+<th class="head">Input type</th>
+<th class="head">Flag</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>PDB file *</td>
+<td>File</td>
+<td><code class="docutils literal"><span class="pre">--pdbFile</span></code></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>Course grain level</td>
+<td>Integer</td>
+<td><code class="docutils literal"><span class="pre">--cg</span></code></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>Starting atom</td>
+<td>Integer</td>
+<td><code class="docutils literal"><span class="pre">--startingAtom</span></code></td>
+<td>Residue number of the
+starting atom</td>
+</tr>
+<tr class="row-odd"><td>Protomer atoms</td>
+<td>Integer</td>
+<td><code class="docutils literal"><span class="pre">--protomerAtoms</span></code></td>
+<td>&#160;</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Outputs:</strong></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="45%" />
+<col width="55%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Output</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>PDB file</td>
+<td>Coarse grained protein</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="anm">
+<h2>ANM<a class="headerlink" href="#anm" title="Permalink to this headline">¶</a></h2>
+<p><strong>Command:</strong></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ANM</span> <span class="o">&lt;</span><span class="n">options</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">pdb</span> <span class="o">&lt;</span><span class="n">pdb</span> <span class="n">file</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">cutoff</span> <span class="o">&lt;</span><span class="nb">int</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p><strong>Inputs:</strong></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="28%" />
+<col width="14%" />
+<col width="24%" />
+<col width="34%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Input (<em>*required</em>)</th>
+<th class="head">Input type</th>
+<th class="head">Flag</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>PDB file *</td>
+<td>File</td>
+<td><code class="docutils literal"><span class="pre">--pdb</span></code></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>Cutoff</td>
+<td>Integer</td>
+<td><code class="docutils literal"><span class="pre">--cutoff</span></code></td>
+<td>&#160;</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Outputs:</strong></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="45%" />
+<col width="55%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Output</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>matrix</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>vt</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>u</td>
+<td>&#160;</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="common-residues">
+<h2>Common residues<a class="headerlink" href="#common-residues" title="Permalink to this headline">¶</a></h2>
+<p><strong>Command:</strong></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">commonResidues</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">fullCapsid</span> <span class="o">&lt;</span><span class="n">pdb</span> <span class="n">file</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">protomer</span> <span class="o">&lt;</span><span class="n">pdb</span> <span class="n">file</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p><strong>Inputs:</strong></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="28%" />
+<col width="14%" />
+<col width="24%" />
+<col width="34%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Input (<em>*required</em>)</th>
+<th class="head">Input type</th>
+<th class="head">Flag</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Full capsid file *</td>
+<td>File</td>
+<td><code class="docutils literal"><span class="pre">--fullCapsid</span></code></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>Protomer file *</td>
+<td>File</td>
+<td><code class="docutils literal"><span class="pre">--protomer</span></code></td>
+<td>&#160;</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Outputs:</strong></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="45%" />
+<col width="55%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Output</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>PDB file</td>
+<td>&#160;</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="mean-square-fluctuation">
+<h2>Mean square fluctuation<a class="headerlink" href="#mean-square-fluctuation" title="Permalink to this headline">¶</a></h2>
+<p><strong>Command:</strong></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">meanSquareFluctuations</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">commonResidues</span> <span class="o">&lt;</span><span class="n">file</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">pdbProtomer</span> <span class="o">--</span><span class="n">totalModes</span> <span class="o">--</span><span class="n">firstMode</span> <span class="o">--</span><span class="n">lastMode</span> <span class="o">--</span><span class="n">firstResidue</span> <span class="o">--</span><span class="n">lastResidue</span> <span class="o">--</span><span class="n">wMatrix</span> <span class="o">--</span><span class="n">vtMatrix</span>
+</pre></div>
+</div>
+<p><strong>Inputs:</strong></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="28%" />
+<col width="14%" />
+<col width="24%" />
+<col width="34%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Input (<em>*required</em>)</th>
+<th class="head">Input type</th>
+<th class="head">Flag</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Full capsid file *</td>
+<td>File</td>
+<td><code class="docutils literal"><span class="pre">--commonResidues</span></code></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>Protomer file *</td>
+<td>File</td>
+<td><code class="docutils literal"><span class="pre">--pdbProtomer</span></code></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>Protomer file *</td>
+<td>File</td>
+<td><code class="docutils literal"><span class="pre">--totalModes</span></code></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>Protomer file *</td>
+<td>File</td>
+<td><code class="docutils literal"><span class="pre">--firstMode</span></code></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>Protomer file *</td>
+<td>File</td>
+<td><code class="docutils literal"><span class="pre">--lastMode</span></code></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>Protomer file *</td>
+<td>File</td>
+<td><code class="docutils literal"><span class="pre">--firstResidue</span></code></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>Protomer file *</td>
+<td>File</td>
+<td><code class="docutils literal"><span class="pre">--lastResidue</span></code></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>Protomer file *</td>
+<td>File</td>
+<td><code class="docutils literal"><span class="pre">--wMatrix</span></code></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>Protomer file *</td>
+<td>File</td>
+<td><code class="docutils literal"><span class="pre">--vtMatrix</span></code></td>
+<td>&#160;</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Outputs:</strong></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="45%" />
+<col width="55%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Output</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>&#160;</td>
+<td>&#160;</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="conformation-mode">
+<h2>Conformation mode<a class="headerlink" href="#conformation-mode" title="Permalink to this headline">¶</a></h2>
+<p>x</p>
+</div>
+<div class="section" id="get-aligned">
+<h2>Get aligned<a class="headerlink" href="#get-aligned" title="Permalink to this headline">¶</a></h2>
+<p>x</p>
+</div>
+<div class="section" id="trajectory-pentamer">
+<h2>Trajectory pentamer<a class="headerlink" href="#trajectory-pentamer" title="Permalink to this headline">¶</a></h2>
+<p>x</p>
+</div>
+<div class="section" id="get-eigen-vectors">
+<h2>Get eigen vectors<a class="headerlink" href="#get-eigen-vectors" title="Permalink to this headline">¶</a></h2>
+<p>x</p>
+</div>
 </div>
 
 
