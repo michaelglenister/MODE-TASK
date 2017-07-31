@@ -105,19 +105,23 @@ def mds(input):
 	npos=nmds.fit_transform(input, init=mpos)
 	write_plots('mmds_projection', mpos)
 	write_plots('nmds_projection', npos)
-	#print type(pos)
 	return;
 
 int_cord=get_internal_cordinates(top, args.cordinate_type, pca_traj)
-print int_cord
 similarities = euclidean_distances(int_cord)
-mds(similarities)
 
-rmsd = md.rmsd(pca_traj, pca_traj, 0, atom_indices=sele_grp)
-#print rmsd
-#similarities = euclidean_distances(rmsd)
-#print similarities
-#mds(similarities)
+# pair wise RMSD 
+def get_pair_rmsd(pca_traj, sele_grp):
+	'pair wise RMSD over all the frames, return a square matrix of pairwise rmsd'
+	pair_rmsd=np.empty((pca_traj.n_frames, pca_traj.n_frames))
+	for i in range(pca_traj.n_frames):
+		pair_rmsd[i]=md.rmsd(pca_traj, pca_traj, i, atom_indices=sele_grp)
+	pair_rmsd=(pair_rmsd+pair_rmsd.transpose())/2  ## due to precision level matrix might not evaluate as symmetric, hence to make it symmetric
+	return pair_rmsd;
+
+pair_rmsd=get_pair_rmsd(pca_traj, sele_grp)
+
+mds(pair_rmsd)
 
 if __name__=="__main__":
 	main()
