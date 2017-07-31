@@ -20,7 +20,6 @@
 #include <ap.cpp>
 #include <vector>
 
-#include <string>
 #include <stdio.h>
 #include <time.h>
 
@@ -275,6 +274,8 @@ int main(int argc, char *argv[])
 	string eigenvalueVTFile = outdir + "/VT_values.txt";
 	string eigenvalueUFile = outdir + "/U_values.txt";
 	
+	// End parameter handling
+
 	// Start cronometer
 	const int ONE_HOUR = 60 * 60;
 	const int ONE_MINUE = 60;
@@ -285,11 +286,9 @@ int main(int argc, char *argv[])
 	std::cout << "Started at: " << currentDateTime() << std::endl;
 	clock_t tStart = clock();
 
-	// End parameter handling
 
 	vector< vector<double> > C = getCoOrds(pdbInput);
 	vector< vector<double> > Hessian = getHessian(C, cutoff);
-
 
 	int size = Hessian.size();
 	alglib::real_2d_array Hes;
@@ -354,6 +353,7 @@ int main(int argc, char *argv[])
         outputFileU<<endl;
 	}// for vt
 	outputFileU.close();
+
 
 	// End cronometer
 	std::cout << "Completed at: " << currentDateTime() << std::endl;
