@@ -13,7 +13,7 @@ from sklearn.manifold import MDS
 from sklearn import preprocessing
 from itertools import combinations
 from write_plot import write_plots, write_pcs
-
+from traj_info import trajectory_info
 def main():
 	
 	return;
@@ -164,26 +164,8 @@ def get_trajectory():
 
 sele_grp = get_trajectory()
 
-# print trajectory informations
-def trajectory_info():
-	'Prints various information of MD trajectory'
-	print '\n\nTrajectory info:\n'
-	print "Total",pca_traj.n_frames,"frames read from", traj
-	print "MD time is from ", pca_traj.time[0],'to',pca_traj.time[-1],'ps'
-	print pca_traj.n_atoms, "atoms and ", pca_traj.n_residues, "residues in the trajectory"
-	print "Atom group selected for PCA:", atm_name, "\n"
-	
-	if args.reference == None: 
-		print "Reference for RMSD calculation is first frame of trajectory"
-	else:
-		print "Reference for RMSD calculation is: ", args.reference
-		
-	print "Total", len(sele_grp), atm_name,'atoms selected for analysis\n'
-	
-	return;
-
-	
-trajectory_info()
+# Print trajectory information
+trajectory_info(pca_traj, traj, atm_name, sele_grp)
 
 #===============================================================
 #

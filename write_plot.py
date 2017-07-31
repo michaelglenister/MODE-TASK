@@ -60,22 +60,12 @@ def write_pcs(file_name, pca):
 	#print type(pca)
 	e_ratio = pca.explained_variance_ratio_
 	e_ratio = e_ratio*100   # to make it percent
-	#print e_ratio.reshape((1,101)).shape
+	
 	np.savetxt(fname, e_ratio)
 	
 	ef = open(fname, 'r')
 	ef_cont = ef.read()
 	ef.close()
-	j=1
-	
-	#print ef_cont.rstrip('\n')
-	ef_cont=ef_cont.rstrip('\n').splitlines()
-	ef_cont_new=[None]*len(ef_cont)
-	print len(ef_cont)
-	for i in range(1, len(ef_cont)):
-		#print i
-		ef_cont_new[i]= [str(i)+'  '+ ef_cont[i]]
-	print ef_cont_new
 	title = '\tcreated by pca.py\t'
 	my_time = strftime("%Y-%m-%d  %a  %H:%M:%S", gmtime())
 	legends = '@    title "explained_variance of PCs"\n\
@@ -83,7 +73,7 @@ def write_pcs(file_name, pca):
 	@    yaxis  label "% Variance"\n\
 	@	TYPE xy\n\
 	@    s0 symbol 1\n\
-	@    s0 symbol size 0.190000\n\
+	@    s0 symbol size 0.250000\n\
 	@    s0 symbol color 1\n\
 	@    s0 symbol pattern 1\n\
 	@    s0 symbol fill color 1\n\
@@ -95,7 +85,7 @@ def write_pcs(file_name, pca):
 	@    s0 symbol skip 0\n'
 	
 	ef = open(fname, 'w')
-	ef.write('#'+title+'\ton\t'+my_time+'\n'+legends+'\n'+str(ef_cont_new))
+	ef.write('#'+title+'\ton\t'+my_time+'\n'+legends+'\n'+ef_cont)
 	ef.close()
 	return;
 	
