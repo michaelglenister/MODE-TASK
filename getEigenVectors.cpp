@@ -129,7 +129,7 @@ int main(int argc, char *argv[])
 			magnitude = magnitude+(eigenVectors[i][j]*eigenVectors[i][j]);
 		}//for j1
 
-		cout<<magnitude<<endl;
+		// cout<<magnitude<<endl;
 		magnitude = sqrt(magnitude);
 
 		for (int j= 0; j<3; j++)
