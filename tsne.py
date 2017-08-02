@@ -7,8 +7,9 @@ from time import sleep, gmtime, strftime
 from datetime import datetime
 import mdtraj as md
 import numpy as np
+from matplotlib import cm
 from sklearn.metrics import euclidean_distances
-from sklearn.manifold import MDS, TSNE
+from sklearn.manifold import TSNE
 from sklearn import preprocessing
 from write_plot import write_plots, write_pcs
 from traj_info import trajectory_info, get_internal_cordinates
@@ -18,9 +19,9 @@ def main():
 	return;
 
 #==============================================================================#
-#											MDS MD
+#											TSNE MD
 #
-#			This programe performs the MDS on a MD trajectory
+#			This programe performs the TSNE on a MD trajectory
 #
 # 								Author : Bilal Nizami
 # 						  	 Rhodes University, 2017
@@ -32,10 +33,10 @@ def main():
 print '\n\n'
 print '|=======================================================|'
 print '|\t\t\t\t\t\t\t|'
-print '|\t :-) >>-----------> MDS MD <-----------<< (-:	|'
+print '|\t :-) >>-----------> TSNE MD <-----------<< (-:	|'
 print '|\t\t\t\t\t\t\t|'
 print '|\t\t\t\t\t\t\t|'
-print '|   This programe performs the MDS (Multi dimentional\t| \n|             scaling) on a MD trajectory\t\t|'
+print '|   This programe performs the TSNE (t-distributed  \t| \n|             Stochastic Neighbor Embedding.) on a MD trajectory\t\t|'
 print '|\t\t\t\t\t\t\t|\n', '|\tAuthors:  Bilal Nizami\t\t\t\t|\n','|\tResearch Unit in Bioinformatics (RUBi)\t\t|\n', '|\tRhodes University, 2017\t\t\t\t|'
 print '|\tDistributed under GNU GPL 3.0\t\t\t|'
 print '|\t\t\t\t\t\t\t|'
@@ -48,6 +49,7 @@ print '\n'
 #                            Setting the options
 #==============================================================================
 
+
 parser = argparse.ArgumentParser(usage='%(prog)s -t <MD trajectory> -p <topology file>')
 
 parser.add_argument("-t", "--trj", dest="trj",				help="file name of the MD trajectory")
@@ -58,7 +60,6 @@ parser.add_argument("-dt", "--dissimilarity_type",  dest="dissimilarity_type",		
 
 
 args = parser.parse_args()	
-
 
 
 #====================================================================
@@ -76,6 +77,7 @@ if args.topology is None:
 if args.cordinate_type == None:
 	args.cordinate_type = "distance"
 	print "distance is the cordinate type by default"
+
 #=======================================
 # assign the passed arguments and read the trajectory
 #=======================================
@@ -86,6 +88,7 @@ topology = args.topology
 pca_traj = md.load(traj, top=topology)
 top = pca_traj.topology
 sele_grp=top.select("name CA")
+#trajectory_info(pca_traj, traj, atm_name, sele_grp)
 
 # pair wise RMSD 
 def get_pair_rmsd(pca_traj, sele_grp):
@@ -99,36 +102,34 @@ def get_pair_rmsd(pca_traj, sele_grp):
 
 #============================================
 #
-#  Multidimensional scaling
+#  TSNE
 #
 #=============================================
 calpha_idx=top.select_atom_indices('alpha')
 atom_pairs = list(combinations(calpha_idx, 2)) # all unique pairs of elements 
+#pairwise_distances = md.geometry.compute_distances(pca_traj, atom_pairs)
+#int_cord=pairwise_distances
 
-def mds(input):
-	'metric and nonmetric Multidimensional scaling'
+def tsne(input):
+	't-distributed Stochastic Neighbor Embedding'
 	seed = np.random.RandomState(seed=1)
-	
-	print "Performing metric MDS.."
-	mmds = MDS(max_iter=3000, random_state=seed, dissimilarity="precomputed")
-	print "Performing non-metric MDS.."
-	mpos = mmds.fit(input).embedding_
-	nmds=MDS(max_iter=3000, metric=False, random_state=seed, dissimilarity="precomputed")
-	npos=nmds.fit_transform(input, init=mpos)
-	write_plots('mmds_projection', mpos)
-	write_plots('nmds_projection', npos)
+	#similarities = euclidean_distances(input)
+	my_tsne = TSNE(n_iter=3000, random_state=seed, init='pca')
+	print "Performing TSNE.."
+	mpos = my_tsne.fit_transform(input)
+	write_plots('tsne_projection', mpos)
 	return;
+
+#int_cord=get_internal_cordinates()
 
 
 if args.dissimilarity_type == 'rmsd' or args.dissimilarity_type == None:
 	pair_rmsd=get_pair_rmsd(pca_traj, sele_grp)
-	mds(pair_rmsd)
+	tsne(pair_rmsd)
 if args.dissimilarity_type == 'distance':
 	int_cord=get_internal_cordinates(top, args.cordinate_type, pca_traj)
-	similarities = euclidean_distances(int_cord)
-	mds(similarities)
+	tsne(int_cord)
 	
-
 
 
 if __name__=="__main__":
