@@ -31,9 +31,9 @@ def trajectory_info(pca_traj, traj, atm_name, sele_grp):
 # Internal cordinate type
 #
 #===========================================================
-def get_internal_cordinates(top, cordinate_type, pca_traj):
+def get_internal_cordinates(top, cordinate_type, pca_traj, atom_indices):
 	'get the different types of internal cordinates as per user selections'
-	calpha_idx=top.select_atom_indices('alpha')
+	calpha_idx=top.select_atom_indices(atom_indices)
 	if cordinate_type == 'distance':
 		print "Pair wise atomic distance selected\n "
 		atom_pairs = list(combinations(calpha_idx, 2)) # all unique pairs of elements 
@@ -63,6 +63,31 @@ def get_internal_cordinates(top, cordinate_type, pca_traj):
 		#print cbeta_idx
 		
 	return int_cord;
+	
+#==========================================================================
+#
+#		selecting the atoms 
+#
+# User passes the arguements to select the subset of atoms for PCA
+#===========================================================================
+
+
+def get_trajectory(atm_name, top):
+	'get the part of system for PCA based on users input of atom group'
+	if atm_name == 'CA':
+		sele_grp=top.select("name CA")	
+
+	if atm_name == 'backbone':
+		sele_grp=top.select("backbone")
+		
+	if atm_name == 'all':
+		sele_grp=top.select("all")
+	return sele_grp;
+	
+	if atm_name == 'protein':
+		sele_grp=top.select("protein")
+	return sele_grp;
+
 
 if __name__=="__main__":
 	main()

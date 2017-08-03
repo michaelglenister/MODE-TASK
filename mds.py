@@ -1,18 +1,15 @@
 #!/usr/bin/python
 #filename: mds.py
 import os, sys
-import shlex, subprocess, time, re, traceback, math, matplotlib
 import argparse
-from time import sleep, gmtime, strftime
-from datetime import datetime
 import mdtraj as md
 import numpy as np
 from sklearn.metrics import euclidean_distances
-from sklearn.manifold import MDS, TSNE
-from sklearn import preprocessing
+from sklearn.manifold import MDS
 from write_plot import write_plots, write_pcs
-from traj_info import trajectory_info, get_internal_cordinates
-from itertools import combinations
+from traj_info import trajectory_info, get_internal_cordinates, get_trajectory
+from welcome_msg import welcome_msg
+
 def main():
 	
 	return;
@@ -29,65 +26,97 @@ def main():
 ##===============================================================================
 ##								 Welcome message
 ##===============================================================================
-print '\n\n'
-print '|=======================================================|'
-print '|\t\t\t\t\t\t\t|'
-print '|\t :-) >>-----------> MDS MD <-----------<< (-:	|'
-print '|\t\t\t\t\t\t\t|'
-print '|\t\t\t\t\t\t\t|'
-print '|   This programe performs the MDS (Multi dimentional\t| \n|             scaling) on a MD trajectory\t\t|'
-print '|\t\t\t\t\t\t\t|\n', '|\tAuthors:  Bilal Nizami\t\t\t\t|\n','|\tResearch Unit in Bioinformatics (RUBi)\t\t|\n', '|\tRhodes University, 2017\t\t\t\t|'
-print '|\tDistributed under GNU GPL 3.0\t\t\t|'
-print '|\t\t\t\t\t\t\t|'
-print '|\thttps://github.com/michaelglenister/NMA-TASK\t|'
-print '|\t\t\t\t\t\t\t|'
-print '|=======================================================|'
-print '\n'
+title='MDS MD'
+welcome_msg(title)
 
 #==============================================================================
 #                            Setting the options
 #==============================================================================
 
-parser = argparse.ArgumentParser(usage='%(prog)s -t <MD trajectory> -p <topology file>')
+def get_options():
+	parser = argparse.ArgumentParser(usage='%(prog)s -t <MD trajectory> -p <topology file>')
+	
+	parser.add_argument("-t", "--trj", dest="trj",				help="file name of the MD trajectory")
+	parser.add_argument("-p", "--top", dest="topology",				help="topology file")
+	parser.add_argument("-dt", "--dissimilarity_type",  dest="dissimilarity_type",				help="Type of dissimilarity matrix to use. euc = Euclidean distance between internal cordinates, rmsd= pairwise RMSD. Default is rmsd")
+	parser.add_argument("-ag", "--ag", dest="atm_grp", help="group of atom for MDS. Default is C alpha atoms. Other options are :"				  "all= all atoms, backbone = backbone atoms, CA= C alpha atoms, protein= protein's atoms")	
+	parser.add_argument("-ict", "--cordinate_type",  dest="cordinate_type",				help="Internal cordinates type. Default is pairwise distance")
+	parser.add_argument("-ai", "--atom_indices",  dest="atom_indices",				help="group of atom for pairwise distance. Default is C alpha atoms. Other options are :"				  "all= all atoms, backbone = backbone atoms, alpha= C alpha atoms, heavy= all non hydrogen atoms, minimal=CA,CB,C,N,O atoms")
 
-parser.add_argument("-t", "--trj", dest="trj",				help="file name of the MD trajectory")
-parser.add_argument("-p", "--top", dest="topology",				help="topology file")
-parser.add_argument("-ct", "--cordinate_type",  dest="cordinate_type",				help="Type of cordinates to use for distance calculation")
-parser.add_argument("-dt", "--dissimilarity_type",  dest="dissimilarity_type",				help="Type of dissimilarity matrix to use. Euclidean distance between internal cordinates or pairwise RMSD")
+	args = parser.parse_args()	
+	
+	if not os.path.exists(args.trj ):
+		print('\nERROR: {0} not found....:(  Please check the path or filename\n' .format(args.trj ))
+		#parser.print_help()
+		sys.exit(1)
+		
+	if args.trj is None:
+		print 'ERROR: Missing trajectory argument.... :(  \nPlease see the help by running \n\nsystem_setup.py -h\n\n '
+		parser.print_help()
+		sys.exit(1)
+	
+	if not os.path.exists(args.topology):
+		print('\nERROR: {0} not found....:(  Please check the path or filename\n' .format(args.topology ))
+		#parser.print_help()
+		sys.exit(1)
+		
+	if args.topology is None:
+		print 'ERROR: Missing toplogy argument.... :(  \nPlease see the help by running \n\nsystem_setup.py -h\n\n '
+		parser.print_help()
+		sys.exit(1)
 
+		
+	if args.cordinate_type not in  ('distance', 'phi', 'psi', None):
+		print 'ERROR: no such option as', args.cordinate_type, 'for flag -ct \nPlease see the usage\n\n '
+		parser.print_help()
+		sys.exit(1)
+	
+	if args.atm_grp == None:
+		print 'No atom selected. MDS will be performed on C alpha atoms '
+		args.atm_grp = 'CA'  # set to default C-alpha atoms
+		
+	if args.atm_grp not in  ('all', 'CA', 'backbone', 'protein'):
+		print 'ERROR: no such option as', args.atm_grp, 'for flag -at \nPlease see the usage\n\n '
+		parser.print_help()
+		sys.exit(1)
+	if 	args.dissimilarity_type == 'euc':
+		if args.atom_indices == None:
+			print 'No atom selected for pairwise distance. pairwise distance of C alpha atoms will be used'
+			args.atom_indices='alpha'
+	
+	if args.atom_indices not in  ('all', 'alpha', 'backbone', 'minimal', 'heavy', None):
+		print 'ERROR: no such option as', args.atom_indices, 'for flag -ai \nPlease see the usage\n\n '
+		parser.print_help()
+		sys.exit(1)
+	if args.dissimilarity_type == None or args.dissimilarity_type == 'rmsd':
+		if args.atom_indices != None:
+			print '\nWARNING: -ai', args.atom_indices, '  ,is meaningless with -dt set to rmsd \n'
+	
+	return args;
 
+args=get_options()
 
-args = parser.parse_args()	
-
-
-
-#====================================================================
-# if no arguments are passed
-#====================================================================
-if args.trj is None:
-	print 'Missing trajectory arguments :(\nPlease see the help by running \n\nsystem_setup.py -h\n\n '
-	parser.print_help()
-	sys.exit(1)
-
-if args.topology is None:
-	print 'Missing topology !!\nPlease see the help by running \n\nsystem_setup.py -h\n\n '
-	parser.print_help()
-	sys.exit(1)
-if args.cordinate_type == None:
-	args.cordinate_type = "distance"
-	print "distance is the cordinate type by default"
 #=======================================
 # assign the passed arguments and read the trajectory
 #=======================================
 
 traj = args.trj
 topology = args.topology
-
-pca_traj = md.load(traj, top=topology)
+#pca_traj = md.load(traj, top=topology)
+try:
+	pca_traj = md.load(traj, top=topology)
+except:
+	raise IOError('Could not open trajectory {0} for reading. \n' .format(trj))
 top = pca_traj.topology
-sele_grp=top.select("name CA")
+atm_name=args.atm_grp
+sele_grp = get_trajectory(atm_name, top)
+atom_indices=args.atom_indices
 
-# pair wise RMSD 
+## =============================
+# print trajectory info
+#===================================
+trajectory_info(pca_traj, traj, atm_name, sele_grp)
+
 def get_pair_rmsd(pca_traj, sele_grp):
 	'pair wise RMSD over all the frames, return a square matrix of pairwise rmsd'
 	pair_rmsd=np.empty((pca_traj.n_frames, pca_traj.n_frames))
@@ -102,8 +131,6 @@ def get_pair_rmsd(pca_traj, sele_grp):
 #  Multidimensional scaling
 #
 #=============================================
-calpha_idx=top.select_atom_indices('alpha')
-atom_pairs = list(combinations(calpha_idx, 2)) # all unique pairs of elements 
 
 def mds(input):
 	'metric and nonmetric Multidimensional scaling'
@@ -121,13 +148,19 @@ def mds(input):
 
 
 if args.dissimilarity_type == 'rmsd' or args.dissimilarity_type == None:
+	print 'using pairwise RMSD...'
 	pair_rmsd=get_pair_rmsd(pca_traj, sele_grp)
 	mds(pair_rmsd)
-if args.dissimilarity_type == 'distance':
-	int_cord=get_internal_cordinates(top, args.cordinate_type, pca_traj)
+	print 'FINISHED!'
+if args.dissimilarity_type == 'euc':
+	if args.cordinate_type == None:
+		args.cordinate_type = "distance"
+		print "Using pairwise distance by default"
+	print 'using Euclidean distance between', atom_indices
+	int_cord=get_internal_cordinates(top, args.cordinate_type, pca_traj, atom_indices)
 	similarities = euclidean_distances(int_cord)
 	mds(similarities)
-	
+	print 'FINISHED!'
 
 
 

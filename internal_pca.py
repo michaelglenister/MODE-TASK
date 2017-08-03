@@ -1,22 +1,16 @@
 #!/usr/bin/python
-#filename: pca.py
+#filename: internal_pca.py
 
 import os, sys
-import shlex, subprocess, time, re, argparse, traceback, math, matplotlib
-from optparse import OptionParser
-from time import sleep, gmtime, strftime
-from datetime import datetime
+import argparse
 import mdtraj as md
 import numpy as np
-from matplotlib import cm
-matplotlib.use('Agg')
 from sklearn.decomposition import PCA, KernelPCA, IncrementalPCA
 from sklearn.metrics import euclidean_distances
-from sklearn.manifold import MDS
-from sklearn import preprocessing
 from itertools import combinations
 from write_plot import write_plots, write_pcs
 from traj_info import trajectory_info
+from welcome_msg import welcome_msg
 
 def main():
 	
@@ -33,20 +27,9 @@ def main():
 ##===============================================================================
 ##								 Welcome message
 ##===============================================================================
-print '\n\n'
-print '|=======================================================|'
-print '|\t\t\t\t\t\t\t|'
-print '|\t :-) >>-------> Internal PCA MD <-------<< (-:	|'
-print '|\t\t\t\t\t\t\t|'
-print '|\t\t\t\t\t\t\t|'
-print '|   This programe performs the PCA \t| \n|  on internal cordinates of a MD trajectory\t\t|'
-print '|\t\t\t\t\t\t\t|\n', '|\tAuthors:  Bilal Nizami\t\t\t\t|\n','|\tResearch Unit in Bioinformatics (RUBi)\t\t|\n', '|\tRhodes University, 2017\t\t\t\t|'
-print '|\tDistributed under GNU GPL 3.0\t\t\t|'
-print '|\t\t\t\t\t\t\t|'
-print '|\thttps://github.com/michaelglenister/NMA-TASK\t|'
-print '|\t\t\t\t\t\t\t|'
-print '|=======================================================|'
-print '\n'
+
+title='Internal PCA MD'
+welcome_msg(title)
 
 def set_option():
 	parser = argparse.ArgumentParser( usage='%(prog)s -t <MD trajectory> -p <topology file>')
@@ -108,7 +91,11 @@ if args.topology is None:
 
 traj = args.trj
 topology = args.topology
-pca_traj = md.load(traj, top=topology)
+#pca_traj = md.load(traj, top=topology)
+try:
+	pca_traj = md.load(traj, top=topology)
+except:
+	raise IOError('Could not open trajectory {0} for reading. \n' .format(trj))
 top = pca_traj.topology
 
 #==============================================

@@ -9,11 +9,11 @@ import mdtraj as md
 import numpy as np
 from sklearn.decomposition import PCA, KernelPCA, IncrementalPCA
 from sklearn.metrics import euclidean_distances
-from sklearn.manifold import MDS
 from sklearn import preprocessing
-from itertools import combinations
 from write_plot import write_plots, write_pcs
 from traj_info import trajectory_info
+from welcome_msg import welcome_msg
+
 def main():
 	
 	return;
@@ -31,22 +31,8 @@ def main():
 ##===============================================================================
 ##								 Welcome message
 ##===============================================================================
-def welcome_msg():
-	print '\n\n'
-	print '|=======================================================|'
-	print '|\t\t\t\t\t\t\t|'
-	print '|\t :-) >>-----------> PCA MD <-----------<< (-:	|'
-	print '|\t\t\t\t\t\t\t|'
-	print '|\t\t\t\t\t\t\t|'
-	print '|   This programe performs the PCA (Principal Component\t| \n|             Analysis) on a MD trajectory\t\t|'
-	print '|\t\t\t\t\t\t\t|\n', '|\tAuthors:  Bilal Nizami\t\t\t\t|\n','|\tResearch Unit in Bioinformatics (RUBi)\t\t|\n', '|\tRhodes University, 2017\t\t\t\t|'
-	print '|\tDistributed under GNU GPL 3.0\t\t\t|'
-	print '|\t\t\t\t\t\t\t|'
-	print '|\thttps://github.com/michaelglenister/NMA-TASK\t|'
-	print '|\t\t\t\t\t\t\t|'
-	print '|=======================================================|'
-	print '\n'
-	return;
+title='PCA MD'
+welcome_msg(title)
 
 
 #==============================================================================
@@ -62,7 +48,7 @@ def set_option():
 	parser.add_argument("-at", "--ag", dest="atm_grp", help="group of atom for PCA. Default is C alpha atoms. Other options are :"				  "all= all atoms, backbone = backbone atoms, CA= C alpha atoms, protein= protein's atoms")	
 	parser.add_argument("-r", "--ref", dest="reference", help="reference structure for RMSD") 
 	parser.add_argument("-pt", "--pca_type", dest="pca_type", help="PCA method. Default is svd (Single Value Decomposition) PCA. Options are:\
-					KernelPCA, svd, ipca. If svd is selected, additional arguments can be passed by flag -st. If KernelPCA is selected kernel type can also be defined by flag -kt") 	
+					pca, KernelPCA, svd, ipca. If svd is selected, additional arguments can be passed by flag -st. If KernelPCA is selected kernel type can also be defined by flag -kt") 	
 	parser.add_argument("-nc", "--comp", type=int, dest="comp", help="Number of components to keep in a PCA object. If not set, by default all the components will be kept.")	
 	parser.add_argument("-kt", "--kernel_type", dest="kernel_type", help="Type of kernel for KernalPCA. default is linear. Options are :"
 					"linear, poly, rbf, sigmoid, cosine, precomputed") 
@@ -285,7 +271,6 @@ def my_pca():
 	pca_traj.superpose(pca_traj, 0, atom_indices=sele_grp) 			# Superpose each conformation in the trajectory upon first frame
 	sele_trj = pca_traj.xyz[:,sele_grp,:]												# select cordinates of selected atom groups
 	sele_traj_reshaped = sele_trj.reshape(pca_traj.n_frames, len(sele_grp) * 3)
-		
 	sele_traj_reshaped = sele_traj_reshaped.astype(float) ## to avoid numpy Conversion Error during scaling
 	sele_traj_reshaped_scaled = preprocessing.scale(sele_traj_reshaped)
 	arr = sele_traj_reshaped_scaled
@@ -320,13 +305,13 @@ def my_pca():
 	eivec_2 = trj_evec.real[:,1].reshape(len(trj_evec[:,1]),1)
 	pca = np.concatenate((eivec_1, eivec_2), axis=1)
 
-	write_plots('my_method_proj', pca)
+	write_plots('pca_projection', pca)
 	
 
 #=============================================
 # sort the eigenvales
 	e_p = []
-	print type(e_p)
+	#print type(e_p)
 	for i in range(len(trj_eval)):
 		eig_pairs = [np.abs(trj_eval[i]), trj_evec[:,i]]
 		e_p.append(eig_pairs)
@@ -340,7 +325,7 @@ def my_pca():
 	for i in e_p:
 		tot_var +=i[0]
 	variation = []
-	print tot_var
+	#print tot_var
 	cum = []
 	j = 0
 	eigv = []
@@ -384,7 +369,7 @@ if ptype == 'ipca':
 	incremental_pca()
 	print "\nFINISHED. !"
 
-if ptype == 'my':
+if ptype == 'pca':
 	my_pca()
 	print "\nFINISHED. !"
 

@@ -1,19 +1,15 @@
 #!/usr/bin/python
-#filename: mds.py
+#filename: tsne.py
 import os, sys
-import shlex, subprocess, time, re, traceback, math, matplotlib
 import argparse
-from time import sleep, gmtime, strftime
-from datetime import datetime
 import mdtraj as md
 import numpy as np
-from matplotlib import cm
 from sklearn.metrics import euclidean_distances
 from sklearn.manifold import TSNE
-from sklearn import preprocessing
 from write_plot import write_plots, write_pcs
 from traj_info import trajectory_info, get_internal_cordinates
-from itertools import combinations
+from welcome_msg import welcome_msg
+
 def main():
 	
 	return;
@@ -30,21 +26,8 @@ def main():
 ##===============================================================================
 ##								 Welcome message
 ##===============================================================================
-print '\n\n'
-print '|=======================================================|'
-print '|\t\t\t\t\t\t\t|'
-print '|\t :-) >>-----------> TSNE MD <-----------<< (-:	|'
-print '|\t\t\t\t\t\t\t|'
-print '|\t\t\t\t\t\t\t|'
-print '|   This programe performs the TSNE (t-distributed  \t| \n|             Stochastic Neighbor Embedding.) on a MD trajectory\t\t|'
-print '|\t\t\t\t\t\t\t|\n', '|\tAuthors:  Bilal Nizami\t\t\t\t|\n','|\tResearch Unit in Bioinformatics (RUBi)\t\t|\n', '|\tRhodes University, 2017\t\t\t\t|'
-print '|\tDistributed under GNU GPL 3.0\t\t\t|'
-print '|\t\t\t\t\t\t\t|'
-print '|\thttps://github.com/michaelglenister/NMA-TASK\t|'
-print '|\t\t\t\t\t\t\t|'
-print '|=======================================================|'
-print '\n'
-
+title='TSNE MD'
+welcome_msg(title)
 #==============================================================================
 #                            Setting the options
 #==============================================================================
@@ -85,12 +68,24 @@ if args.cordinate_type == None:
 traj = args.trj
 topology = args.topology
 
-pca_traj = md.load(traj, top=topology)
+#pca_traj = md.load(traj, top=topology)
+try:
+	pca_traj = md.load(traj, top=topology)
+except:
+	raise IOError('Could not open trajectory {0} for reading. \n' .format(trj))
 top = pca_traj.topology
 sele_grp=top.select("name CA")
-#trajectory_info(pca_traj, traj, atm_name, sele_grp)
+atm_name='CA'
 
-# pair wise RMSD 
+## =============================
+# trajectory info
+#===================================
+trajectory_info(pca_traj, traj, atm_name, sele_grp)
+# ==================================================
+#	pair wise RMSD 
+#
+#===================================================
+
 def get_pair_rmsd(pca_traj, sele_grp):
 	'pair wise RMSD over all the frames, return a square matrix of pairwise rmsd'
 	pair_rmsd=np.empty((pca_traj.n_frames, pca_traj.n_frames))
@@ -105,30 +100,25 @@ def get_pair_rmsd(pca_traj, sele_grp):
 #  TSNE
 #
 #=============================================
-calpha_idx=top.select_atom_indices('alpha')
-atom_pairs = list(combinations(calpha_idx, 2)) # all unique pairs of elements 
-#pairwise_distances = md.geometry.compute_distances(pca_traj, atom_pairs)
-#int_cord=pairwise_distances
 
 def tsne(input):
 	't-distributed Stochastic Neighbor Embedding'
 	seed = np.random.RandomState(seed=1)
-	#similarities = euclidean_distances(input)
 	my_tsne = TSNE(n_iter=3000, random_state=seed, init='pca')
-	print "Performing TSNE.."
+	print "Performing TSNE..."
 	mpos = my_tsne.fit_transform(input)
 	write_plots('tsne_projection', mpos)
 	return;
-
-#int_cord=get_internal_cordinates()
 
 
 if args.dissimilarity_type == 'rmsd' or args.dissimilarity_type == None:
 	pair_rmsd=get_pair_rmsd(pca_traj, sele_grp)
 	tsne(pair_rmsd)
+	print 'FINISHED!'
 if args.dissimilarity_type == 'distance':
 	int_cord=get_internal_cordinates(top, args.cordinate_type, pca_traj)
 	tsne(int_cord)
+	print 'FINISHED!'
 	
 
 
