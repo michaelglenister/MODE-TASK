@@ -13,3 +13,4 @@ script:
   - ./test_msf.sh
   - ./test_get_aligned.sh
   - ./test_conformation.sh
+  - ./trajectoryPentamer.sh

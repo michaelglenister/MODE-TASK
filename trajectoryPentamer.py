@@ -1,15 +1,17 @@
 #!/usr/bin/env python
 # Makes a trajectory of 100 PDB files
-import os
-import sys
+#import os
+#import sys
 import argparse
 from datetime import datetime
 
-from decimal import Decimal
+from utils import *
+
+#from decimal import Decimal
 
 
 def main(args):
-    pdb_file = open(args.pdb, 'r')  # CHANGE HERE
+    pdb_file = open(args.pdb, 'r')
     pdb_lines = pdb_file.readlines()
     pdb_file.close()
 
@@ -79,7 +81,8 @@ def main(args):
 
         # Get the vectors
         # CHANGE HERE # may not be correct change, double check
-        vectorf = open(args.modeFilePrefix + mode + ".txt", 'r')
+        # vectorf = open(args.modeFile + mode + ".txt", 'r')
+        vectorf = open(args.modeFile, 'r')
         vectors = vectorf.readlines()
         vectorf.close()
 
@@ -91,7 +94,9 @@ def main(args):
             for atom in c_beta_atoms:
                 if "ATOM" in atom:
                     v_index += 1
-                    v = vectors[v_index].split()
+                    print v_index
+                    if v_index < 209:
+                        v = vectors[v_index].split()
                     vx = float(v[0].strip())
                     vy = float(v[1].strip())
                     vz = float(v[2].strip())
@@ -131,7 +136,8 @@ def main(args):
         if "ATOM" in atom:
 
             v_index += 1
-            v = vectors[v_index].split()
+            if v_index < 209:
+                v = vectors[v_index].split()
             vx = float(v[0].strip())
             vy = float(v[1].strip())
             vz = float(v[2].strip())
@@ -182,16 +188,18 @@ if __name__ == "__main__":
 
     # custom arguments
     # '3VBSFull_Aligned.pdb'
-    parser.add_argument("--pdb", help="")  # '3VBSProtomer3_SCA.pdb'
+    parser.add_argument("--pdb", help="Coarse grained PDB file")  # '3VBSProtomer3_SCA.pdb'
     parser.add_argument("--modeF", help="[int]", default=617, type=int)
     parser.add_argument("--modeL", help="[int]", default=617, type=int)
-    parser.add_argument("--modeFilePrefix", help="")  # 'ProtomerMode'
+    parser.add_argument("--modeFile", help="File containing eigen vectors")  # 'ProtomerMode'
 
     args = parser.parse_args()
 
     # Check if required directories exist
     if not os.path.isdir(args.outdir):
         os.makedirs(args.outdir)
+    if not os.path.isdir(args.outdir + "/" + "Trajectories/"):
+        os.makedirs(args.outdir + "/" + "Trajectories/")
 
     # Check if args supplied by user
     if len(sys.argv) > 1:
