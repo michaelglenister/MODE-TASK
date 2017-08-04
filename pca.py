@@ -48,13 +48,13 @@ def set_option():
 	parser.add_argument("-at", "--ag", dest="atm_grp", help="group of atom for PCA. Default is C alpha atoms. Other options are :"				  "all= all atoms, backbone = backbone atoms, CA= C alpha atoms, protein= protein's atoms")	
 	parser.add_argument("-r", "--ref", dest="reference", help="reference structure for RMSD") 
 	parser.add_argument("-pt", "--pca_type", dest="pca_type", help="PCA method. Default is svd (Single Value Decomposition) PCA. Options are:\
-					pca, KernelPCA, svd, ipca. If svd is selected, additional arguments can be passed by flag -st. If KernelPCA is selected kernel type can also be defined by flag -kt") 	
+					evd, kpca, svd, ipca. If svd is selected, additional arguments can be passed by flag -st. If KernelPCA is selected kernel type can also be defined by flag -kt") 	
 	parser.add_argument("-nc", "--comp", type=int, dest="comp", help="Number of components to keep in a PCA object. If not set, by default all the components will be kept.")	
 	parser.add_argument("-kt", "--kernel_type", dest="kernel_type", help="Type of kernel for KernalPCA. default is linear. Options are :"
 					"linear, poly, rbf, sigmoid, cosine, precomputed") 
 	parser.add_argument("-st", "--svd_solver", dest="svd_solver", help="Type of svd_solver for SVD (Single Value Decomposition) PCA. Default is auto. Options are :"				  "auto, full, arpack, randomized") 
 	args = parser.parse_args()	
-	atm_name = args.atm_grp
+	
 	
 	#====================================================================
 	# if no arguments are passed
@@ -70,18 +70,34 @@ def set_option():
 		sys.exit(1)
 	
 	if not os.path.exists(args.trj ):
-				print('\nERROR: {0} not found....:(  Please check the path\n' .format(args.trj ))
-				parser.print_help()
-				sys.exit(1)
+		print('\nERROR: {0} not found....:(  Please check the path\n' .format(args.trj ))
+		parser.print_help()
+		sys.exit(1)
 	
 	if not os.path.exists(args.topology):
-				print('\nERROR: {0} not found....:(  Please check the path\n' .format(args.topology ))
-				parser.print_help()
-				sys.exit(1)
+		print('\nERROR: {0} not found....:(  Please check the path\n' .format(args.topology ))
+		parser.print_help()
+		sys.exit(1)
+	if args.pca_type not in  ('svd', 'evd', 'kpca', 'ipca', None):
+		print 'ERROR: no such option as', args.pca_type, 'for flag -pt \nPlease see the help by running \n pca.py -h..\n\n '
+		sys.exit(1)
+	if args.kernel_type not in  ('linear', 'poly', 'sigmoid', 'cosine', 'precomputed', None):
+		print 'ERROR: no such option as', args.kernel_type, 'for flag -kt \nPlease see the help by running \n pca.py -h..\n\n '
+		sys.exit(1)
 		
+	if args.kernel_type != None and args.pca_type != 'kpca':
+		print 'WARNING: -kt', args.kernel_type, 'is meaningless with -pt', args.pca_type, '. Flag -kt is being ignored!'
+		
+	if args.svd_solver not in  ('auto', 'full', 'arpack', 'randomized', None):
+		print 'ERROR: no such option as', args.svd_solver, 'for flag -st \nPlease see the help by running \n pca.py -h.\n\n'
+		sys.exit(1)
+	
+	if args.svd_solver != None and args.pca_type != 'svd':
+		print 'WARNING: -st', args.svd_solver, 'is meaningless with -pt', args.pca_type, '. Flag -st is being ignored!'
 	return args
 	
 args = set_option()
+atm_name = args.atm_grp
 #=======================================
 # assign the passed arguments and read the trajectory 
 #=======================================
@@ -272,14 +288,14 @@ def my_pca():
 	sele_trj = pca_traj.xyz[:,sele_grp,:]												# select cordinates of selected atom groups
 	sele_traj_reshaped = sele_trj.reshape(pca_traj.n_frames, len(sele_grp) * 3)
 	sele_traj_reshaped = sele_traj_reshaped.astype(float) ## to avoid numpy Conversion Error during scaling
-	sele_traj_reshaped_scaled = preprocessing.scale(sele_traj_reshaped)
+	sele_traj_reshaped_scaled = preprocessing.scale(sele_traj_reshaped, axis=0)
 	arr = sele_traj_reshaped_scaled
 	
 	
 	#===============================================
 	# covariance matrix of selected coloumns
 	cov_mat = np.cov(arr, rowvar=False)
-	cov_mat = np.cov(cov_mat)
+	#cov_mat = np.cov(cov_mat)
 	trj_eval, trj_evec=np.linalg.eig(cov_mat)
 	
 	print "Trace of cov matrix is ",  np.trace(cov_mat)
@@ -297,16 +313,14 @@ def my_pca():
 	sort_idx = trj_eval.argsort()[::-1]
 	trj_eval = trj_eval[sort_idx]
 	trj_evec = trj_evec[sort_idx]
+	#print trj_eval
+	#pca = np.empty_like(trj_evec)
 	
-	pca = np.empty_like(trj_evec)
-	
-	# join first two eigenvector into a single matrix and write plot
+	# join first two eigenvector into a single matrix
 	eivec_1 = trj_evec.real[:,0].reshape(len(trj_evec[:,0]),1)
 	eivec_2 = trj_evec.real[:,1].reshape(len(trj_evec[:,1]),1)
-	pca = np.concatenate((eivec_1, eivec_2), axis=1)
-
-	write_plots('pca_projection', pca)
-	
+	pca = np.concatenate((eivec_1, eivec_2), axis=1)	
+	#print pca
 
 #=============================================
 # sort the eigenvales
@@ -318,7 +332,9 @@ def my_pca():
 	#print (e_p[2])
 	e_p.sort(key=lambda x: x[0], reverse=True)
 	
-	
+	# Choose PC (take top two eigenvalues)
+	#mat_w = np.hstack((e_p[0][1].reshape(len(trj_eval),1), e_p[1][1].reshape(len(trj_eval),1)))
+	#np.savetxt('mat_w.txt', mat_w)
 	# sorted eigenvalues and variation explained
 	print ('sorted eigenvalues')
 	tot_var = 0
@@ -337,11 +353,24 @@ def my_pca():
 		cum = np.cumsum(variation)
 		#print ('cumulative: ', cum[j]*100 )
 		j +=1
+	
+	#========================================================
+	# transform the input data into choosen pc
+	arr_transformed = pca.T.dot(arr.T)
+	print arr_transformed[0,:].reshape(len(arr_transformed[0,:]),1)
+	#np.savetxt('arr_transformed.txt', arr_transformed)
+	#print (np.shape(arr_transformed))
+	#print (arr_transformed)
+	pca1 = np.concatenate((arr_transformed[0,:].reshape(len(arr_transformed[0,:]),1), arr_transformed[1,:].reshape(len(arr_transformed[1,:]),1)), axis=1)
+	write_plots('pca_projection1', pca1)
+	#plt.plot (arr_transformed[0,:], arr_transformed[1,:], marker = 'o', linestyle='None')
+	
+
 	return;
 
 
 
-if ptype == 'KernelPCA':
+if ptype == 'kpca':
 	kernel = ''
 	kernel = args.kernel_type
 	if args.kernel_type:
@@ -369,7 +398,7 @@ if ptype == 'ipca':
 	incremental_pca()
 	print "\nFINISHED. !"
 
-if ptype == 'pca':
+if ptype == 'evd':
 	my_pca()
 	print "\nFINISHED. !"
 
