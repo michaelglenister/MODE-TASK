@@ -58,13 +58,14 @@ def main(args):
     total_modes = args.totalModes  # 2526 #number of residues in protein *3
     first_mode = args.firstMode  # 2519  #input user
     last_mode = args.lastMode  # 2519 #input user
+    # Llama
 
     # Specify Residue Indexes
     # Get first residue number
     with open(args.pdbProtomer, 'r') as f:  # Future work to include this in existing pdbProtomer file read above
         line = f.readline()
         info = line.split()
-        first_res = info[1].strip()
+        first_res = int(info[1].strip())
     res_range = range(first_res - 1, last_res)
 
     mode_range = range(first_mode, last_mode + 1)
