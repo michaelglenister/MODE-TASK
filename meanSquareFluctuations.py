@@ -30,6 +30,7 @@ def main(args):
     # common_residues = {'A': [3, 53, 59, 76, 111, 122, 142, 240, 257], 'C': [2, 7, 32, 71, 146], 'B': [
     #    52, 56, 70, 142, 161], 'D': [26]}  # residues common to multiple pdb files
     interface_index = []
+
     # The pdb file on which NMA analysis was performed, this script handles on model at a time but we can change this
     f = open(args.pdbProtomer, 'r')
     nma = f.readlines()
@@ -42,6 +43,7 @@ def main(args):
             res_type = info[3].strip()
             chain = info[4].strip()
             res = int(info[5].strip())
+            last_res = int(info[5].strip())
             if atype == "CB" or (atype == "CA" and res_type == "GLY"):
                 if res in common_residues[chain]:
                     # gets the index of the common atoms, as they would appear in the output W, U and VT matrix. As
@@ -58,8 +60,11 @@ def main(args):
     last_mode = args.lastMode  # 2519 #input user
 
     # Specify Residue Indexes
-    first_res = args.firstResidue  # 1
-    last_res = args.lastResidue  # 842
+    # Get first residue number
+    with open(args.pdbProtomer, 'r') as f:  # Future work to include this in existing pdbProtomer file read above
+        line = f.readline()
+        info = line.split()
+        first_res = info[1].strip()
     res_range = range(first_res - 1, last_res)
 
     mode_range = range(first_mode, last_mode + 1)
@@ -176,14 +181,19 @@ if __name__ == "__main__":
     # custom arguments
     parser.add_argument("--commonResidues", help="Files containing a dictionary like data set of common residues")  # '3VBSProtomer.pdb'
     parser.add_argument("--pdbProtomer", help="Input")  # '3VBSProtomer.pdb'
-    parser.add_argument("--totalModes", help="[int]", default=810, type=int)
-    parser.add_argument("--firstMode", help="[int]", default=803, type=int)
-    parser.add_argument("--lastMode", help="[int]", default=803, type=int)
-    parser.add_argument("--firstResidue", help="[int]", default=1, type=int)
-    parser.add_argument("--lastResidue", help="[int]", default=270, type=int)
+    parser.add_argument("--totalModes", help="[int]", default=810, type=int)  # Generalise
+    parser.add_argument("--firstMode", help="[int]", default=803, type=int)  # Generalise
+    parser.add_argument("--lastMode", help="[int]", default=803, type=int)  # Generalise
+    #parser.add_argument("--firstResidue", help="[int]", default=1, type=int)
+    #parser.add_argument("--lastResidue", help="[int]", default=270, type=int)
     parser.add_argument(
         "--wMatrix", help="W matrix input file that was output from C++ Scripts")
     parser.add_argument("--vtMatrix", help="U and VT full Matrix")
+
+    # first res = =1
+    # find last res
+
+    #
 
     args = parser.parse_args()
 
