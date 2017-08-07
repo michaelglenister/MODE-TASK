@@ -5,7 +5,14 @@ python:
 os:
   - linux
   - osx
-
+  
+dist:
+  - trusty
+  
+matrix:
+  allow_failures:
+    - os: osx
+  
 install: sh install.sh
 
 script: 
