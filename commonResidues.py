@@ -80,12 +80,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
     # standard arguments for logging
-    parser.add_argument("--silent", help="Turn off logging",
-                        action='store_true', default=False)
-    parser.add_argument(
-        "--log-file", help="Output log file (default: standard output)", default=None)
-    parser.add_argument(
-        "--outdir", help="Output directory", default="output")
+    parser.add_argument("--silent", help="Turn off logging", action='store_true', default=False)
+    parser.add_argument("--log-file", help="Output log file (default: standard output)", default=None)
+    parser.add_argument("--outdir", help="Output directory", default="output")
 
     # custom arguments
     parser.add_argument("--fullCapsid", help="")  # '3VBSFull4_SCA.pdb'

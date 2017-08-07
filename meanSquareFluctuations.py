@@ -186,12 +186,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
     # standard arguments for logging
-    parser.add_argument("--silent", help="Turn off logging",
-                        action='store_true', default=False)
-    parser.add_argument(
-        "--log-file", help="Output log file (default: standard output)", default=None)
-    parser.add_argument(
-        "--outdir", help="Output directory", default="output")
+    parser.add_argument("--silent", help="Turn off logging", action='store_true', default=False)
+    parser.add_argument("--log-file", help="Output log file (default: standard output)", default=None)
+    parser.add_argument("--outdir", help="Output directory", default="output")
 
     # custom arguments
     parser.add_argument("--commonResidues", help="Files containing a dictionary like data set of common residues")  # '3VBSProtomer.pdb'
@@ -201,8 +198,7 @@ if __name__ == "__main__":
     parser.add_argument("--lastMode", help="[int]", default=0, type=int)  # use last mode if no user input provided
     #parser.add_argument("--firstResidue", help="[int]", default=1, type=int)
     #parser.add_argument("--lastResidue", help="[int]", default=270, type=int)
-    parser.add_argument(
-        "--wMatrix", help="W matrix input file that was output from C++ Scripts")
+    parser.add_argument("--wMatrix", help="W matrix input file that was output from C++ Scripts")
     parser.add_argument("--vtMatrix", help="U and VT full Matrix")
 
     args = parser.parse_args()

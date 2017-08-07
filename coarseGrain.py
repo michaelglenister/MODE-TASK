@@ -79,7 +79,7 @@ def main(args):
     starting_atom_i = starting_atom - 1  # Index for starting atom
     index_of_selected_atoms.append(starting_atom_i)
 
-    number_protomer_atoms = args.protomerAtoms
+    #number_protomer_atoms = args.protomerAtoms
     protomer_c_betas = cbetas[0:number_protomer_atoms]
     coords_start = protomer_c_betas[starting_atom_i]
     distances_from_start = []
@@ -185,22 +185,16 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
     # standard arguments for logging and output
-    parser.add_argument("--silent", help="Turn off logging",
-                        action='store_true', default=False)
-    parser.add_argument(
-        "--log-file", help="Output log file (default: standard output)", default=None)
-    parser.add_argument(
-        "--outdir", help="Output directory", default="output")
+    parser.add_argument("--silent", help="Turn off logging", action='store_true', default=False)
+    parser.add_argument("--log-file", help="Output log file (default: standard output)", default=None)
+    parser.add_argument("--outdir", help="Output directory", default="output")
 
     # custom arguments
     # parser.add_argument("--output", help="")#output = "3VBSPent"
     parser.add_argument("--pdbFile", help="PDB input file")  # 3VBSPent.pdb
-    parser.add_argument(
-        "--cg", help="Course grain level [int]", default=4, type=int)
-    parser.add_argument(
-        "--startingAtom", help="Residue number of starting atoms [int]", default=1, type=int)
-    parser.add_argument("--protomerAtoms",
-                        help="", default=842, type=int) # generalise?
+    parser.add_argument("--cg", help="Course grain level [int]", default=4, type=int)
+    parser.add_argument("--startingAtom", help="Residue number of starting atoms [int]", default=1, type=int)
+    # parser.add_argument("--protomerAtoms", help="", default=0, type=int)
 
     args = parser.parse_args()
 

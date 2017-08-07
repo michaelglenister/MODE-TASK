@@ -137,7 +137,7 @@ def main(args):
     # CG = 621
     # Protomer = 2520
     mode_range = range(0, 621)
-    f = open(args.vtProtomer, 'r')
+    f = open(args.vtMatrix, 'r')
     vectors = f.readlines()
     f.close()
 
@@ -165,8 +165,7 @@ def main(args):
 
             overlap = overlap / (mag_d_r * mag_mode)
 
-            output.append("Mode: " + str(mode) +
-                          " Overlap: " + str(overlap) + '\n')
+            output.append("Mode: " + str(mode) + " Overlap: " + str(overlap) + '\n')
             overlay_list.append(overlap)
 
     overlay_list.sort()
@@ -198,21 +197,17 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
     # standard arguments for logging
-    parser.add_argument("--silent", help="Turn off logging",
-                        action='store_true', default=False)
-    parser.add_argument(
-        "--log-file", help="Output log file (default: standard output)", default=None)
-    parser.add_argument(
-        "--outdir", help="Output directory", default="output")
+    parser.add_argument("--silent", help="Turn off logging", action='store_true', default=False)
+    parser.add_argument("--log-file", help="Output log file (default: standard output)", default=None)
+    parser.add_argument("--outdir", help="Output directory", default="output")
 
     # custom arguments
-    parser.add_argument("--pdbAligned", help="")  # '4n43_aligned.pdb'
+    parser.add_argument("--pdbAligned", help="")
     # missing pdbSca args?
-    parser.add_argument("--pdbProtomerAligned", help="") # '3VBSProtomer_aligned3_SCA.pdb'
-    parser.add_argument("--pdbSca", help="")  # '3VBSProtomer3_SCA.pdb'
-    parser.add_argument("--vtProtomer", help="")  # 'Protomer3CG_VT.txt'
-    parser.add_argument("--output", help="Output file",
-                        default="ProtomerCGrained.txt")  # 'Protomer3CG_VT.txt'
+    parser.add_argument("--pdbProtAligned", help="")
+    parser.add_argument("--pdbSca", help="")
+    parser.add_argument("--vtMatrix", help="")  # note: change this from vtProtomer
+    parser.add_argument("--output", help="Output file", default="ProtomerCGrained.txt")
 
     args = parser.parse_args()
 
