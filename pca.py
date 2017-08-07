@@ -212,7 +212,8 @@ def svd_pca(svd):
 	pca_sele_traj = PCA(n_components=comp)
 	pca_sele_traj.fit(sele_traj_reshaped)
 	pca_sele_traj_reduced = pca_sele_traj.transform(sele_traj_reshaped)
-	#print pca_sele_traj_reduced
+	#pca_sele_traj_reduced=pca_sele_traj_reduced[:,0:n_pc]
+	np.savetxt('pca_sele_traj_reduced.txt', pca_sele_traj_reduced)
 	print "Trace of the covariance matrix is: ", np.trace(pca_sele_traj.get_covariance())
 	print "Wrote covariance matrix..."
 	np.savetxt('cov.dat', pca_sele_traj.get_covariance())
@@ -279,23 +280,22 @@ def incremental_pca():
 
 #===============================================================
 #
-#  My own method
+#  Eigenvalue decomposition based PCA
 #
 #=================================================================
 def my_pca():
-	
+	'eigenvales decomposition PCA'
 	pca_traj.superpose(pca_traj, 0, atom_indices=sele_grp) 			# Superpose each conformation in the trajectory upon first frame
 	sele_trj = pca_traj.xyz[:,sele_grp,:]												# select cordinates of selected atom groups
 	sele_traj_reshaped = sele_trj.reshape(pca_traj.n_frames, len(sele_grp) * 3)
 	sele_traj_reshaped = sele_traj_reshaped.astype(float) ## to avoid numpy Conversion Error during scaling
-	sele_traj_reshaped_scaled = preprocessing.scale(sele_traj_reshaped, axis=0)
+	sele_traj_reshaped_scaled = preprocessing.scale(sele_traj_reshaped, axis=0, with_std=False) # center to the mean
 	arr = sele_traj_reshaped_scaled
 	
 	
 	#===============================================
-	# covariance matrix of selected coloumns
+	# covariance matrix 
 	cov_mat = np.cov(arr, rowvar=False)
-	#cov_mat = np.cov(cov_mat)
 	trj_eval, trj_evec=np.linalg.eig(cov_mat)
 	
 	print "Trace of cov matrix is ",  np.trace(cov_mat)
@@ -313,57 +313,33 @@ def my_pca():
 	sort_idx = trj_eval.argsort()[::-1]
 	trj_eval = trj_eval[sort_idx]
 	trj_evec = trj_evec[sort_idx]
-	#print trj_eval
-	#pca = np.empty_like(trj_evec)
 	
 	# join first two eigenvector into a single matrix
-	eivec_1 = trj_evec.real[:,0].reshape(len(trj_evec[:,0]),1)
-	eivec_2 = trj_evec.real[:,1].reshape(len(trj_evec[:,1]),1)
-	pca = np.concatenate((eivec_1, eivec_2), axis=1)	
-	#print pca
+	#eivec_1 = trj_evec.real[:,0].reshape(len(trj_evec[:,0]),1)
+	#eivec_2 = trj_evec.real[:,1].reshape(len(trj_evec[:,1]),1)
+	#pca = np.concatenate((eivec_1, eivec_2, eivec_3, eivec_4, eivec_5), axis=1)	
 
-#=============================================
-# sort the eigenvales
-	e_p = []
-	#print type(e_p)
-	for i in range(len(trj_eval)):
-		eig_pairs = [np.abs(trj_eval[i]), trj_evec[:,i]]
-		e_p.append(eig_pairs)
-	#print (e_p[2])
-	e_p.sort(key=lambda x: x[0], reverse=True)
-	
-	# Choose PC (take top two eigenvalues)
-	#mat_w = np.hstack((e_p[0][1].reshape(len(trj_eval),1), e_p[1][1].reshape(len(trj_eval),1)))
-	#np.savetxt('mat_w.txt', mat_w)
-	# sorted eigenvalues and variation explained
-	print ('sorted eigenvalues')
-	tot_var = 0
-	for i in e_p:
-		tot_var +=i[0]
+	tot_var = np.sum(trj_eval.real)
 	variation = []
-	#print tot_var
 	cum = []
 	j = 0
 	eigv = []
-	for i in e_p:
-		#print (i[0])
-		eigv.append(i[0])
-		variation.append(i[0]/tot_var)
-		#print ("variation explained:",variation[j]*100)
-		cum = np.cumsum(variation)
+	#i=0
+	n_comp=99
+	pca = trj_evec.real[:,0:n_comp]    ## keep first 100 eigenvectors
+	for i in trj_eval.real[0:n_comp]:
+		eigv.append(i)
+		variation.append(i/tot_var)
+		#cum = np.cumsum(variation)
+		#variation.append(cum)
 		#print ('cumulative: ', cum[j]*100 )
 		j +=1
-	
+	write_plots('variation', variation)
 	#========================================================
 	# transform the input data into choosen pc
 	arr_transformed = pca.T.dot(arr.T)
-	print arr_transformed[0,:].reshape(len(arr_transformed[0,:]),1)
-	#np.savetxt('arr_transformed.txt', arr_transformed)
-	#print (np.shape(arr_transformed))
-	#print (arr_transformed)
-	pca1 = np.concatenate((arr_transformed[0,:].reshape(len(arr_transformed[0,:]),1), arr_transformed[1,:].reshape(len(arr_transformed[1,:]),1)), axis=1)
-	write_plots('pca_projection1', pca1)
-	#plt.plot (arr_transformed[0,:], arr_transformed[1,:], marker = 'o', linestyle='None')
+	arr_transformed = np.concatenate((arr_transformed[0,:].reshape(len(arr_transformed[0,:]),1), arr_transformed[1,:].reshape(len(arr_transformed[1,:]),1)), axis=1)
+	write_plots('pca_projection', arr_transformed)
 	
 
 	return;

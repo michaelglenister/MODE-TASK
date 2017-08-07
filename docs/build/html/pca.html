@@ -97,6 +97,8 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Principle Component Analysis</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#pca-on-cartesian-cordinates">PCA on cartesian cordinates</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#pca-on-internal-cordinates">PCA on internal cordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mds-on-md-trajectory">MDS  on MD trajectory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#t-sne-on-md-trajectory">t-SNE on MD trajectory</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="demo.html">Tool Demonstration</a></li>
@@ -167,95 +169,65 @@
 <h1>Principle Component Analysis<a class="headerlink" href="#principle-component-analysis" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="pca-on-cartesian-cordinates">
 <h2>PCA on cartesian cordinates<a class="headerlink" href="#pca-on-cartesian-cordinates" title="Permalink to this headline">¶</a></h2>
-<p>This programe performs the PCA (Principal Component Analysis) on a MD trajectory</p>
-<p>Usage: pca.py -t &lt;MD trajectory&gt; -p &lt;topology file&gt;  -a &lt;atom group &gt;</p>
-<dl class="docutils">
-<dt>Options:</dt>
-<dd><table class="first last docutils option-list" frame="void" rules="none">
-<col class="option" />
-<col class="description" />
-<tbody valign="top">
-<tr><td class="option-group">
-<kbd><span class="option">-h</span>, <span class="option">--help</span></kbd></td>
-<td>show this help message and exit</td></tr>
-<tr><td class="option-group" colspan="2">
-<kbd><span class="option">-t <var>TRJ</var></span>, <span class="option">--trj=<var>TRJ</var></span></kbd></td>
-</tr>
-<tr><td>&#160;</td><td>file name of the MD trajectory</td></tr>
-<tr><td class="option-group" colspan="2">
-<kbd><span class="option">-p <var>TOPOLOGY</var></span>, <span class="option">--top=<var>TOPOLOGY</var></span></kbd></td>
-</tr>
-<tr><td>&#160;</td><td>topology file</td></tr>
-<tr><td class="option-group" colspan="2">
-<kbd><span class="option">-a <var>ATM_GRP</var></span>, <span class="option">--ag=<var>ATM_GRP</var></span></kbd></td>
-</tr>
-<tr><td>&#160;</td><td>group of atom for PCA. Default is C alpha atoms. Other
-options are :all= all atoms, backbone = backbone
-atoms, CA= C alpha atoms, protein= protein’s atoms</td></tr>
-<tr><td class="option-group" colspan="2">
-<kbd><span class="option">-r <var>REFERENCE</var></span>, <span class="option">--ref=<var>REFERENCE</var></span></kbd></td>
-</tr>
-<tr><td>&#160;</td><td>reference structure for RMSD</td></tr>
-<tr><td class="option-group" colspan="2">
-<kbd><span class="option">-m <var>PCA_TYPE</var></span>, <span class="option">--pca_type=<var>PCA_TYPE</var></span></kbd></td>
-</tr>
-<tr><td>&#160;</td><td>PCA method. Default is normal PCA. Options are:
-KernelPCA, normal, ipca. If normal is selected,
-additional arguments can be passed by flag -svd. If
-KernelPCA is selected kernel type can also be defined
-by flag -k</td></tr>
-<tr><td class="option-group" colspan="2">
-<kbd><span class="option">-k <var>KERNEL_TYPE</var></span>, <span class="option">--kernel_type=<var>KERNEL_TYPE</var></span></kbd></td>
-</tr>
-<tr><td>&#160;</td><td>Type of kernel for KernalPCA. default is linear.
-Options are :linear, poly, rbf, sigmoid, cosine,
-precomputed</td></tr>
-<tr><td class="option-group" colspan="2">
-<kbd><span class="option">-s <var>SVD_SOLVER</var></span>, <span class="option">--svd_solver=<var>SVD_SOLVER</var></span></kbd></td>
-</tr>
-<tr><td>&#160;</td><td>Type of svd_solver for normal PCA. Default is auto.
-Options are :auto, full, arpack, randomized</td></tr>
-</tbody>
-</table>
-</dd>
-</dl>
+<p>This programe performs the PCA (Principal Component Analysis) on a MD trajectory.</p>
+<p><strong>1. SVD PCA</strong></p>
+<p>To perform the singular value decomposition (SVD) PCA on C-alpha atoms of a MD trajectory (pca_test_trj.xtc)</p>
+<blockquote>
+<div><code class="docutils literal"><span class="pre">pca.py</span> <span class="pre">-t</span> <span class="pre">pca_test_trj.xtc</span> <span class="pre">-p</span> <span class="pre">complex.pdb</span> <span class="pre">-at</span> <span class="pre">CA</span> <span class="pre">-pt</span> <span class="pre">svd</span></code></div></blockquote>
+<p><strong>2. Kernel PCA</strong></p>
+<p>To perform the Kernel PCA with linear kernel on cartesian cordinates of C-alpha atoms of a MD trajectory (pca_test_trj.xtc)</p>
+<blockquote>
+<div><code class="docutils literal"><span class="pre">pca.py</span> <span class="pre">-t</span> <span class="pre">pca_test_trj.xtc</span> <span class="pre">-p</span> <span class="pre">complex.pdb</span> <span class="pre">-at</span> <span class="pre">CA</span> <span class="pre">-pt</span> <span class="pre">kpca</span> <span class="pre">-kt</span> <span class="pre">linear</span></code></div></blockquote>
+<p><strong>3. IncrementalPCA</strong></p>
+<p>IPCA (IncrementalPCA) is a varient of normal PCA, which uses low-rank approximation of the input MD trajectory. It uses the amount of memory to store the input trajectory which is independent of trajectory size. IPCA is very usefull in case the size of trajectory size bigger than availaible computer memory.</p>
+<blockquote>
+<div><code class="docutils literal"><span class="pre">pca.py</span> <span class="pre">-t</span> <span class="pre">pca_test_trj.xtc</span> <span class="pre">-p</span> <span class="pre">complex.pdb</span> <span class="pre">-at</span> <span class="pre">CA</span> <span class="pre">-pt</span> <span class="pre">ipca</span></code></div></blockquote>
+<p><strong>4. Eigenvalue decomposition (EVD) PCA</strong></p>
+<p>To perform the PCA by eigenvalue decomposition</p>
+<blockquote>
+<div><code class="docutils literal"><span class="pre">pca.py</span> <span class="pre">-t</span> <span class="pre">pca_test_trj.xtc</span> <span class="pre">-p</span> <span class="pre">complex.pdb</span> <span class="pre">-at</span> <span class="pre">CA</span> <span class="pre">-pt</span> <span class="pre">evd</span></code></div></blockquote>
+<p><strong>Detailed usage:</strong></p>
+<p>Run the following command to see the detailed usage and other options:</p>
+<blockquote>
+<div><code class="docutils literal"><span class="pre">pca.py</span> <span class="pre">-h</span></code></div></blockquote>
 </div>
 <div class="section" id="pca-on-internal-cordinates">
 <h2>PCA on internal cordinates<a class="headerlink" href="#pca-on-internal-cordinates" title="Permalink to this headline">¶</a></h2>
-<p>This programe performs the PCA on internal cordinates of a MD trajectory</p>
-<p>Usage: pca.py -t &lt;MD trajectory&gt; -p &lt;topology file&gt;  -a &lt;atom group &gt;</p>
-<dl class="docutils">
-<dt>Options:</dt>
-<dd><table class="first last docutils option-list" frame="void" rules="none">
-<col class="option" />
-<col class="description" />
-<tbody valign="top">
-<tr><td class="option-group">
-<kbd><span class="option">-h</span>, <span class="option">--help</span></kbd></td>
-<td>show this help message and exit</td></tr>
-<tr><td class="option-group" colspan="2">
-<kbd><span class="option">-t <var>TRJ</var></span>, <span class="option">--trj=<var>TRJ</var></span></kbd></td>
-</tr>
-<tr><td>&#160;</td><td>file name of the MD trajectory</td></tr>
-<tr><td class="option-group" colspan="2">
-<kbd><span class="option">-p <var>TOPOLOGY</var></span>, <span class="option">--top=<var>TOPOLOGY</var></span></kbd></td>
-</tr>
-<tr><td>&#160;</td><td>topology file</td></tr>
-<tr><td class="option-group" colspan="2">
-<kbd><span class="option">-a <var>ATM_GRP</var></span>, <span class="option">--ag=<var>ATM_GRP</var></span></kbd></td>
-</tr>
-<tr><td>&#160;</td><td>group of atom for PCA. Default is C alpha atoms. Other
-options are :all= all atoms, backbone = backbone
-atoms, CA= C alpha atoms, protein= protein’s atoms</td></tr>
-<tr><td class="option-group" colspan="2">
-<kbd><span class="option">-c <var>CORDINATE_TYPE</var></span>, <span class="option">--ct=<var>CORDINATE_TYPE</var></span></kbd></td>
-</tr>
-<tr><td>&#160;</td><td>Internal cordinate type. Options are: distance,
-angles, dihedral</td></tr>
-</tbody>
-</table>
-</dd>
-</dl>
+<p>This programe performs the PCA on internal cordinates of a MD trajectory. User can select different types of internal cordinates such as:<em>pairwise distance between atoms</em>, <em>1-3 angle between backbone atoms</em>, <em>psi angle</em>, and <em>phi angle</em>.</p>
+<p><strong>1.PCA on pairwise distance between C-alpha atoms:</strong></p>
+<p>To perform the PCA on pairwise distance between C-alpha atoms of pca_test_trc.xtc trajectory</p>
+<blockquote>
+<div><code class="docutils literal"><span class="pre">internal_pca.py</span> <span class="pre">-t</span> <span class="pre">pca_test_trj.xtc</span> <span class="pre">-p</span> <span class="pre">complex.pdb</span> <span class="pre">-at</span> <span class="pre">CA</span> <span class="pre">-ct</span> <span class="pre">distance</span></code></div></blockquote>
+<p><strong>Detailed usage:</strong></p>
+<p>Run the following command to see the detailed usage and other options:</p>
+<blockquote>
+<div><code class="docutils literal"><span class="pre">internal_pca.py</span> <span class="pre">-h</span></code></div></blockquote>
+</div>
+<div class="section" id="mds-on-md-trajectory">
+<h2>MDS  on MD trajectory<a class="headerlink" href="#mds-on-md-trajectory" title="Permalink to this headline">¶</a></h2>
+<p>It perform the metric and non metric MDS (Multi-dimentional scaling) on a given MD trajectory.
+MDS is a tool to visualize the similarity or dissimilarity in a dataset. Two types of dissimilarity measures can be used in the case of a MD trajectory. First is Euclidean distance between internal cordinates of a protein structure, second is pairwise RMSD between a set of atoms over the frames of a MD trajectory.</p>
+<p><strong>1. MDS on pairwise RMSD:</strong></p>
+<p>To perform the MDS on pairwise RMSD between C-alpha atoms of pca_test_trc.xtc trajectory</p>
+<blockquote>
+<div><code class="docutils literal"><span class="pre">mds.py</span> <span class="pre">-t</span> <span class="pre">pca_test_trj.xtc</span> <span class="pre">-p</span> <span class="pre">complex.pdb</span> <span class="pre">-dt</span> <span class="pre">rmsd</span> <span class="pre">-ag</span> <span class="pre">CA</span></code></div></blockquote>
+<p><strong>2. MDS on internal cordinates:</strong></p>
+<p>To perform the MDS on pairwise distance between C-alpha atoms of pca_test_trc.xtc trajectory.</p>
+<blockquote>
+<div><code class="docutils literal"><span class="pre">mds.py</span> <span class="pre">-t</span> <span class="pre">pca_test_trj.xtc</span> <span class="pre">-p</span> <span class="pre">complex.pdb</span> <span class="pre">-dt</span> <span class="pre">euc</span> <span class="pre">-ag</span> <span class="pre">CA</span></code></div></blockquote>
+<p><strong>Detailed usage:</strong></p>
+<p>Run the following command to see the detailed usage and other options:</p>
+<blockquote>
+<div><code class="docutils literal"><span class="pre">mds.py</span> <span class="pre">-h</span></code></div></blockquote>
+</div>
+<div class="section" id="t-sne-on-md-trajectory">
+<h2>t-SNE on MD trajectory<a class="headerlink" href="#t-sne-on-md-trajectory" title="Permalink to this headline">¶</a></h2>
+<p>t-SNE (t-distributed Stochastic Neighbor Embedding) is a tool for dimentionality reduction.</p>
+<p><strong>Detailed usage:</strong></p>
+<p>Run the following command to see the detailed usage and other options:</p>
+<blockquote>
+<div><code class="docutils literal"><span class="pre">tsne.py</span> <span class="pre">-h</span></code></div></blockquote>
+<p><em>Page created by: Bilal Nizami</em></p>
 </div>
 </div>
 

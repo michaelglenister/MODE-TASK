@@ -38,9 +38,9 @@ def set_option():
 	parser.add_argument("-t", "--trj", dest="trj", help="file name of the MD trajectory", action="store")
 	parser.add_argument("-p", "--top", dest="topology", help="topology file")      
 	parser.add_argument("-at", "--ag", dest="atm_grp", help="group of atom for PCA. Default is C alpha atoms. Other options are :"				  "all= all atoms, backbone = backbone atoms, CA= C alpha atoms, protein= protein's atoms")	
-	parser.add_argument("-ct", "--ref", dest="cordinate_type", help="nternal cordinate type. Options are: distance, angles, dihedral") 
+	parser.add_argument("-ct", "--ref", dest="cordinate_type", help="nternal cordinate type. Options are: distance, angles, phi and, psi") 
 	args = parser.parse_args()	
-	atm_name = args.atm_grp
+	
 	
 	#====================================================================
 	# if no arguments are passed
@@ -70,7 +70,7 @@ def set_option():
 	return args
 	
 args = set_option()
-
+atm_name = args.atm_grp
 #====================================================================
 # if no arguments are passed
 #====================================================================

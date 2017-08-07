@@ -77,7 +77,6 @@ def get_options():
 		
 	if args.atm_grp not in  ('all', 'CA', 'backbone', 'protein'):
 		print 'ERROR: no such option as', args.atm_grp, 'for flag -at \nPlease see the usage\n\n '
-		parser.print_help()
 		sys.exit(1)
 	if 	args.dissimilarity_type == 'euc':
 		if args.atom_indices == None:
@@ -86,7 +85,6 @@ def get_options():
 	
 	if args.atom_indices not in  ('all', 'alpha', 'backbone', 'minimal', 'heavy', None):
 		print 'ERROR: no such option as', args.atom_indices, 'for flag -ai \nPlease see the usage\n\n '
-		parser.print_help()
 		sys.exit(1)
 	if args.dissimilarity_type == None or args.dissimilarity_type == 'rmsd':
 		if args.atom_indices != None:

@@ -81,6 +81,8 @@ def write_pcs(file_name, pca):
 	@    s0 symbol linewidth 1.0\n\
 	@    s0 symbol linestyle 1\n\
 	@    s0 symbol char 25\n\
+	@	s0 symbol fill color 2\n\
+	@	s0 symbol color 2\n\
 	@    s0 symbol char font 0\n\
 	@    s0 symbol skip 0\n'
 	
