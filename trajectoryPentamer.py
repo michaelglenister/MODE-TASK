@@ -1,13 +1,10 @@
 #!/usr/bin/env python
 # Makes a trajectory of 100 PDB files
-#import os
-#import sys
+
 import argparse
 from datetime import datetime
 
 from utils import *
-
-#from decimal import Decimal
 
 
 def main(args):
@@ -24,12 +21,6 @@ def main(args):
 
     for mode in modes:
         structure = "Protomer"
-        # Get the header and coords
-
-        header = []
-        atom_lines = []
-        coords = []
-        end = []
 
         # get index of first atom
         for i in range(len(pdb_lines)):
@@ -41,7 +32,6 @@ def main(args):
 
         c_beta_atoms = []
         for atom in all_atoms:
-            cbeta = []
             if atom.startswith("ATOM"):
                 info = atom.split()
                 first = info[0].strip()
@@ -94,7 +84,7 @@ def main(args):
             for atom in c_beta_atoms:
                 if "ATOM" in atom:
                     v_index += 1
-                    print v_index
+                    # print v_index
                     if v_index < 209:
                         v = vectors[v_index].split()
                     vx = float(v[0].strip())

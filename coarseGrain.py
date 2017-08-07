@@ -16,11 +16,6 @@ def main(args):
     lines = f.readlines()
     f.close()
 
-    # Get Info to rewrite PDB
-    header = []
-    atomLines = []
-    end = []
-
     # get index of first atom
     for i in range(len(lines)):
         if lines[i].startswith("ATOM"):
@@ -28,14 +23,12 @@ def main(args):
             break
     header = lines[0:index_atom]
     all_atoms = lines[index_atom:]
-    number_of_protomers = 0
-    macro_molecule = False
+
     chain_dics = {}
     number_protomer_atoms = 0
     c_beta_atoms = []
-    change = False
+
     for atom in all_atoms:
-        cbeta = []
         if atom.startswith("ATOM"):
             info = atom.split()
             chain = info[4]
@@ -50,8 +43,8 @@ def main(args):
                     if chain1 not in chain_dics:
                         chain_dics[chain1] = 1
                     else:
+                        # Is macro molecule
                         chain_dics[chain1] += 1
-                        macro_molecule = True
                     chain1 = chain
                 c_beta_atoms.append(atom)
         if atom.startswith("END"):
@@ -61,11 +54,11 @@ def main(args):
                 chain_dics[chain1] = 1
 
     # print number_protomer_atoms
-    # print chain_dics
+
     number_of_protomers = chain_dics[chain1]
 
     # Set level of coarsegrain
-    c_g = args.cg  # parameter
+    c_g = args.cg
 
     # Read in all cbeta atoms for
     cbetas = []
@@ -86,7 +79,7 @@ def main(args):
     starting_atom_i = starting_atom - 1  # Index for starting atom
     index_of_selected_atoms.append(starting_atom_i)
 
-    number_protomer_atoms = args.protomerAtoms  # parameter
+    number_protomer_atoms = args.protomerAtoms
     protomer_c_betas = cbetas[0:number_protomer_atoms]
     coords_start = protomer_c_betas[starting_atom_i]
     distances_from_start = []
@@ -144,7 +137,6 @@ def main(args):
     # print index_of_selected_atoms
     print "No. atoms selected per protomer: " + str(len(index_of_selected_atoms))
     print "No. atoms selected per macro molecule: " + str(len(index_of_selected_atoms) * number_of_protomers)
-    # print "No. atoms selected per macro molecule: " + str(len(index_of_selected_atoms) * 60)
 
     # for a in distribution:
     # print a
@@ -208,7 +200,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--startingAtom", help="Residue number of starting atoms [int]", default=1, type=int)
     parser.add_argument("--protomerAtoms",
-                        help="", default=842, type=int)
+                        help="", default=842, type=int) # generalise?
 
     args = parser.parse_args()
 

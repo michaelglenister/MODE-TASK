@@ -26,7 +26,7 @@ def main(args):
     for atom in cg_lines[0:index_of_ter]:
         if atom.startswith("ATOM"):
             info = atom.split()
-            first = info[0].strip()
+            # first = info[0].strip() # Unused var for now
             res = info[3]
             atom_type = info[2]
             chain = info[4]
@@ -41,7 +41,7 @@ def main(args):
                     if res == res2 and atom_type == atom_type2 and chain == chain2 and res_num == res_num2:
                         coarse_grained.append(line)
 
-    print len(coarse_grained)
+    # print len(coarse_grained)
 
     w = open(args.outdir + "/" + protein_name + "_SCA.pdb", 'w')
     w.writelines(coarse_grained)
@@ -74,8 +74,7 @@ if __name__ == "__main__":
         "--outdir", help="Output directory", default="output")
 
     # custom arguments
-    # '3VBSFull_Aligned.pdb'
-    parser.add_argument("--pdbAligned", help="")
+    parser.add_argument("--pdbAligned", help="") # '3VBSFull_Aligned.pdb'
     parser.add_argument("--pdbSca", help="")  # '3VBSFull3_SCA.pdb'
 
     args = parser.parse_args()

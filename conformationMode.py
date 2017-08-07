@@ -49,9 +49,9 @@ def main(args):
         for r in full_residues[ch]:
             if r in empty_residues[ch]:
                 common_residues[ch].append(r)
-    print full_residues
-    print empty_residues
-    print common_residues
+    # print full_residues
+    # print empty_residues
+    # print common_residues
 
     selected_full = {'A': [], 'B': [], 'C': [], 'D': []}
     empty_cords = []
@@ -97,8 +97,8 @@ def main(args):
         for j in range(len(empty_cords) / number_of_protomers):
             full = full_cords[i + (j * number_of_protomers)]
             empty = empty_cords[i + (j * number_of_protomers)]
-            print full
-            print empty
+            # print full
+            # print empty
             rx = empty[0] - full[0]
             ry = empty[1] - full[1]
             rz = empty[2] - full[2]
@@ -106,7 +106,7 @@ def main(args):
             delta_r.append(ry)
             delta_r.append(rz)
 
-    print len(delta_r)
+    # print len(delta_r)
 
     # Calculate the magnitude
     mag_d_r = 0
@@ -134,8 +134,8 @@ def main(args):
                 count += 1
 
     # Mode range (Starting with 10 slowest modes)
-    #CG = 621
-    #Protomer = 2520
+    # CG = 621
+    # Protomer = 2520
     mode_range = range(0, 621)
     f = open(args.vtProtomer, 'r')
     vectors = f.readlines()
@@ -159,7 +159,7 @@ def main(args):
         mag_mode = sqrt(mag_mode)
         # Calculate Dot Product
         if len(common_vector) == len(delta_r):
-            print "Vectors Match"
+            # print "Vectors Match"
             for i in range(len(common_vector)):
                 overlap += common_vector[i] * delta_r[i]
 

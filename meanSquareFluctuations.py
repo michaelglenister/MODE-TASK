@@ -21,14 +21,11 @@ import numpy as np
 # chain
 
 def main(args):
-    # f = open("common_residues", 'r')
-    # common_residues = f.readlines()[0].strip()
-    # f.close()
+    # residues common to multiple pdb files
     with open(args.commonResidues, 'r') as inf:
         common_residues = eval(inf.read())
-    print common_residues
-    # common_residues = {'A': [3, 53, 59, 76, 111, 122, 142, 240, 257], 'C': [2, 7, 32, 71, 146], 'B': [
-    #    52, 56, 70, 142, 161], 'D': [26]}  # residues common to multiple pdb files
+    # print common_residues
+
     interface_index = []
 
     # The pdb file on which NMA analysis was performed, this script handles on model at a time but we can change this
@@ -55,23 +52,40 @@ def main(args):
     protein_name = protein_name[protein_name.rfind("/")+1:protein_name.rfind("/")+5] + "_Protomer"
 
     # Specify modes
-    total_modes = args.totalModes  # 2526 #number of residues in protein *3
-    first_mode = args.firstMode  # 2519  #input user
-    last_mode = args.lastMode  # 2519 #input user
+    total_modes = 0 #args.totalModes  # 2526 #number of residues in protein *3
+    f = open(args.wMatrix, 'r')
+    lines = f.readlines()
+    f.close()
+    for i in range(len(lines)):
+        total_modes += 1
+
+    first_mode = args.firstMode  # 2519
+    last_mode = args.lastMode  # 2519
+
+    # If user fails to provide first and last modes get default values
+    if args.firstMode == 0 and args.lastMode == 0:
+        first_mode = total_modes - 6
+        last_mode = total_modes - 1
+
     # Llama
 
+    first_res = 0
     # Specify Residue Indexes
     # Get first residue number
-    with open(args.pdbProtomer, 'r') as f:  # Future work to include this in existing pdbProtomer file read above
-        line = f.readline()
-        info = line.split()
-        first_res = int(info[1].strip())
+    for line in nma:  # Future work to include this in existing pdbProtomer file read above
+        if line.startswith("ATOM"):
+            if first_res == 0:
+                info = line.split()
+                first_res = int(info[1].strip())
     res_range = range(first_res - 1, last_res)
+    print "Residue range: " + str(res_range)
+
+    print "Residue count: " + str(last_res - first_res + 1)
 
     mode_range = range(first_mode, last_mode + 1)
-    print mode_range
+    print "Mode range: " + str(mode_range)
 
-    # '3VBSProtomerW.txt' #W matrix input file that was output from C++ Scripts
+    # '3VBSProtomerW.txt' # W matrix input file that was output from C++ Scripts
     fw = open(args.wMatrix, 'r')
     eigen_values = fw.readlines()
     fw.close()
@@ -81,20 +95,20 @@ def main(args):
     for i in range(total_modes):
         if i < total_modes - 6:
             w_inv[i, i] = 1 / (float(eigen_values[i].split()[1].strip()))
-    print "W in "
+    # print "W in "
 
     # Create Filtered W Inverse Matrix (This is if we want correlation for a specific mode)
     w_f = np.zeros((total_modes, total_modes))
     for i in mode_range:
         w_f[i, i] = 1 / (float(eigen_values[i].split()[1].strip()))
-    print "WF in "
+    # print "WF in "
 
     # Read In U and VT full Matrix as U is the transpose of VT I only read in VT and create U from the VT matrix
     # info. So we can exclude U output from C++ script for faster analysis
     fvt = open(args.vtMatrix, 'r')  # '3VBSProtomerVT.txt'
     eigen_vectors = fvt.readlines()
     fvt.close()
-    print "U and VT file in "
+    # print "U and VT file in "
 
     v_t = np.zeros((total_modes, total_modes))
     u = np.zeros((total_modes, total_modes))
@@ -106,20 +120,20 @@ def main(args):
             v_t[i, j] = vector
             u[j, i] = vector
 
-    print "U and VT read"
+    # print "U and VT read"
     # Calculate Correlation Matrices
     # Full C matrix
     w_v_t = np.dot(w_inv, v_t)
-    print "Correlations Calculated"
+    # print "Correlations Calculated"
     c = np.dot(u, w_v_t)
-    print "Correlations Calculated"
+    # print "Correlations Calculated"
 
     # Mode Specific C Matrix
     w_v_tm = np.dot(w_f, v_t)
-    print "Correlations Calculated"
+    # print "Correlations Calculated"
     CM = np.dot(u, w_v_tm)
 
-    print "Correlations Calculated"
+    # print "Correlations Calculated"
 
     # Calculate Trace of the Correlation Matrices
     trace_c = np.zeros((total_modes / 3, total_modes / 3))
@@ -182,28 +196,29 @@ if __name__ == "__main__":
     # custom arguments
     parser.add_argument("--commonResidues", help="Files containing a dictionary like data set of common residues")  # '3VBSProtomer.pdb'
     parser.add_argument("--pdbProtomer", help="Input")  # '3VBSProtomer.pdb'
-    parser.add_argument("--totalModes", help="[int]", default=810, type=int)  # Generalise
-    parser.add_argument("--firstMode", help="[int]", default=803, type=int)  # Generalise
-    parser.add_argument("--lastMode", help="[int]", default=803, type=int)  # Generalise
+    #parser.add_argument("--totalModes", help="[int]", default=810, type=int)  # Generalise
+    parser.add_argument("--firstMode", help="[int]", default=0, type=int)  # last mode - 7
+    parser.add_argument("--lastMode", help="[int]", default=0, type=int)  # use last mode if no user input provided
     #parser.add_argument("--firstResidue", help="[int]", default=1, type=int)
     #parser.add_argument("--lastResidue", help="[int]", default=270, type=int)
     parser.add_argument(
         "--wMatrix", help="W matrix input file that was output from C++ Scripts")
     parser.add_argument("--vtMatrix", help="U and VT full Matrix")
 
-    # first res = =1
-    # find last res
-
-    #
-
     args = parser.parse_args()
-
-    # Check if required directories exist
-    if not os.path.isdir(args.outdir):
-        os.makedirs(args.outdir)
 
     # Check if args supplied by user
     if len(sys.argv) > 1:
+        # Check modes
+        if args.firstMode > args.lastMode:
+            print "First mode cannot be greater than last mode"
+            sys.exit()
+
+
+        # Check if required directories exist
+        if not os.path.isdir(args.outdir):
+            os.makedirs(args.outdir)
+
         # set up logging
         silent = args.silent
 
