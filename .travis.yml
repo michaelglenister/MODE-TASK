@@ -6,13 +6,14 @@ os:
   - linux
   - osx
   
-dist:
-  - trusty
-  
 matrix:
   allow_failures:
     - os: osx
-  
+
+before_install:
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update          ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install tar     ; fi  
+
 install: sh install.sh
 
 script: 

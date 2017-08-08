@@ -16,7 +16,7 @@ def main(args):
     lines_empty = f.readlines()
     f.close()
 
-    f = open(args.pdbProtomerAligned, 'r')
+    f = open(args.pdbProtAligned, 'r')
     lines_full = f.readlines()
     f.close()
 
