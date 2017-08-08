@@ -106,6 +106,7 @@ topology = args.topology
 ref = args.reference
 ptype=args.pca_type
 comp = args.comp
+n_eivec=5
 ## read the reference structure
 if ref:
 	try:
@@ -209,9 +210,11 @@ def svd_pca(svd):
 	pca_traj.superpose(pca_traj, 0, atom_indices=sele_grp) 			# Superpose each conformation in the trajectory upon first frame
 	sele_trj = pca_traj.xyz[:,sele_grp,:]												# select cordinates of selected atom groups
 	sele_traj_reshaped = sele_trj.reshape(pca_traj.n_frames, len(sele_grp) * 3)
+	sele_traj_reshaped = sele_traj_reshaped.astype(float) ## to avoid numpy Conversion Error during scaling
+	sele_traj_reshaped_scaled = preprocessing.scale(sele_traj_reshaped, axis=0, with_std=False) # center to the mean
 	pca_sele_traj = PCA(n_components=comp)
-	pca_sele_traj.fit(sele_traj_reshaped)
-	pca_sele_traj_reduced = pca_sele_traj.transform(sele_traj_reshaped)
+	pca_sele_traj.fit(sele_traj_reshaped_scaled)
+	pca_sele_traj_reduced = pca_sele_traj.transform(sele_traj_reshaped_scaled)
 	#pca_sele_traj_reduced=pca_sele_traj_reduced[:,0:n_pc]
 	np.savetxt('pca_sele_traj_reduced.txt', pca_sele_traj_reduced)
 	print "Trace of the covariance matrix is: ", np.trace(pca_sele_traj.get_covariance())
@@ -237,11 +240,13 @@ def my_kernelPCA(kernel):
 	pca_traj.superpose(pca_traj, 0, atom_indices=sele_grp) 			# Superpose each conformation in the trajectory upon first frame
 	sele_trj = pca_traj.xyz[:,sele_grp,:]												# select cordinates of selected atom groups
 	sele_traj_reshaped = sele_trj.reshape(pca_traj.n_frames, len(sele_grp) * 3)
-	
+	sele_traj_reshaped = sele_traj_reshaped.astype(float) ## to avoid numpy Conversion Error during scaling
+	sele_traj_reshaped_scaled = preprocessing.scale(sele_traj_reshaped, axis=0, with_std=False) # center to the mean
+
 	kpca = KernelPCA(kernel = kernel, fit_inverse_transform=True, gamma=10)
-	kpca.fit(sele_traj_reshaped)
+	kpca.fit(sele_traj_reshaped_scaled)
 	#print "Trace of the covariance matrix is: ", np.trace(kpca.get_covariance())
-	kpca_reduced = kpca.transform(sele_traj_reshaped)
+	kpca_reduced = kpca.transform(sele_traj_reshaped_scaled)
 	
 	#write plots
 	write_plots('kpca_projection', kpca_reduced)
@@ -258,17 +263,19 @@ def my_kernelPCA(kernel):
 #=============================================================
 
 def incremental_pca():
-	' normal PCA is not very memory intesive. It can be problemetic for large dataset, \
+	' normal PCA is very memory intesive. It can be problemetic for large dataset, \
 	since dataset is stored in memory. Incremental principal component analysis (IPCA) is \
 	typically used for such cases. '
 	
 	pca_traj.superpose(pca_traj, 0, atom_indices=sele_grp) 			# Superpose each conformation in the trajectory upon first frame
 	sele_trj = pca_traj.xyz[:,sele_grp,:]												# select cordinates of selected atom groups
 	sele_traj_reshaped = sele_trj.reshape(pca_traj.n_frames, len(sele_grp) * 3)
-	
+	sele_traj_reshaped = sele_traj_reshaped.astype(float) ## to avoid numpy Conversion Error during scaling
+	sele_traj_reshaped_scaled = preprocessing.scale(sele_traj_reshaped, axis=0, with_std=False) # center to the mean
+
 	ipca = IncrementalPCA()
-	ipca = ipca.fit(sele_traj_reshaped)
-	ipca_reduced=ipca.transform(sele_traj_reshaped)
+	ipca = ipca.fit(sele_traj_reshaped_scaled)
+	ipca_reduced=ipca.transform(sele_traj_reshaped_scaled)
 	
 	#write plots
 	write_plots('ipca_projection', ipca_reduced)
@@ -325,20 +332,19 @@ def my_pca():
 	j = 0
 	eigv = []
 	#i=0
-	n_comp=99
+	n_comp=100
 	pca = trj_evec.real[:,0:n_comp]    ## keep first 100 eigenvectors
 	for i in trj_eval.real[0:n_comp]:
 		eigv.append(i)
 		variation.append(i/tot_var)
-		#cum = np.cumsum(variation)
-		#variation.append(cum)
-		#print ('cumulative: ', cum[j]*100 )
 		j +=1
-	write_plots('variation', variation)
+	#write_plots('variation', variation)
 	#========================================================
 	# transform the input data into choosen pc
 	arr_transformed = pca.T.dot(arr.T)
-	arr_transformed = np.concatenate((arr_transformed[0,:].reshape(len(arr_transformed[0,:]),1), arr_transformed[1,:].reshape(len(arr_transformed[1,:]),1)), axis=1)
+	print type(arr_transformed)
+	#arr_transformed = np.concatenate((arr_transformed[0,:].reshape(len(arr_transformed[0,:]),1), arr_transformed[1,:].reshape(len(arr_transformed[1,:]),1)), axis=1)
+	#arr_transformed[:,0]
 	write_plots('pca_projection', arr_transformed)
 	
 
