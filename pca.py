@@ -13,7 +13,7 @@ from sklearn import preprocessing
 from write_plot import write_plots, write_pcs
 from traj_info import trajectory_info
 from welcome_msg import welcome_msg
-
+import scipy.integrate
 def main():
 	
 	return;
@@ -81,7 +81,7 @@ def set_option():
 	if args.pca_type not in  ('svd', 'evd', 'kpca', 'ipca', None):
 		print 'ERROR: no such option as', args.pca_type, 'for flag -pt \nPlease see the help by running \n pca.py -h..\n\n '
 		sys.exit(1)
-	if args.kernel_type not in  ('linear', 'poly', 'sigmoid', 'cosine', 'precomputed', None):
+	if args.kernel_type not in  ('linear', 'poly', 'sigmoid', 'cosine', 'precomputed', 'rbf',None):
 		print 'ERROR: no such option as', args.kernel_type, 'for flag -kt \nPlease see the help by running \n pca.py -h..\n\n '
 		sys.exit(1)
 		
@@ -199,7 +199,20 @@ def get_rmsd():
 	
 get_rmsd()
 
+##============================================
+#
+#	cosine content 
+#
+#=================================================
 
+def get_cosine(pca_sele_traj_reduced, pc_idx):
+	i=pc_idx
+	t = np.arange(len(pca_sele_traj_reduced))
+	T = len(pca_sele_traj_reduced)
+	cos = np.cos(np.pi * t * (i+1 ) / T)
+	cos=((2.0 / T) * (scipy.integrate.simps(cos*pca_sele_traj_reduced[:, i])) ** 2/scipy.integrate.simps(pca_sele_traj_reduced[:, i] ** 2))
+	#print cos
+	return cos;
 #===============================================================
 #
 # PCA using sci-kit learn library
@@ -212,6 +225,12 @@ def svd_pca(svd):
 	sele_traj_reshaped = sele_trj.reshape(pca_traj.n_frames, len(sele_grp) * 3)
 	sele_traj_reshaped = sele_traj_reshaped.astype(float) ## to avoid numpy Conversion Error during scaling
 	sele_traj_reshaped_scaled = preprocessing.scale(sele_traj_reshaped, axis=0, with_std=False) # center to the mean
+	
+	
+	##arr=sele_traj_reshaped_scaled
+	##cov_mat = np.cov(arr, rowvar=False)
+	##sele_traj_reshaped_scaled=cov_mat
+	
 	pca_sele_traj = PCA(n_components=comp)
 	pca_sele_traj.fit(sele_traj_reshaped_scaled)
 	pca_sele_traj_reduced = pca_sele_traj.transform(sele_traj_reshaped_scaled)
@@ -227,8 +246,16 @@ def svd_pca(svd):
 	#print type(pca_sele_traj.explained_variance_ratio_)
 	write_pcs('pca_variance', pca_sele_traj)
 	
+	pc1_cos=get_cosine(pca_sele_traj_reduced, 0)
+	print 'cosine content of first PC=',pc1_cos
+	pc2_cos=get_cosine(pca_sele_traj_reduced, 1)
+	print 'cosine content of second PC=', pc2_cos
+	pc3_cos=get_cosine(pca_sele_traj_reduced, 2)
+	print 'cosine content of 3rd PC=',pc3_cos
+	pc4_cos=get_cosine(pca_sele_traj_reduced, 3)
+	print 'cosine content of 4th PC=', pc4_cos
+	
 	return;
-
 
 
 #==============================================================
@@ -253,6 +280,15 @@ def my_kernelPCA(kernel):
 	
 	#write variance
 	np.savetxt('kpca_variance', kpca.lambdas_)
+	
+	pc1_cos=get_cosine(kpca_reduced, 0)
+	print 'cosine content of first PC=',pc1_cos
+	pc2_cos=get_cosine(kpca_reduced, 1)
+	print 'cosine content of second PC=', pc2_cos
+	pc3_cos=get_cosine(kpca_reduced, 2)
+	print 'cosine content of 3rd PC=',pc3_cos
+	pc4_cos=get_cosine(kpca_reduced, 3)
+	print 'cosine content of 4th PC=', pc4_cos
 	return;
 
 
@@ -282,6 +318,14 @@ def incremental_pca():
 	
 	#write variance
 	#np.savetxt('ipca_variance', kpca.lambdas_)
+	pc1_cos=get_cosine(ipca_reduced, 0)
+	print 'cosine content of first PC=',pc1_cos
+	pc2_cos=get_cosine(ipca_reduced, 1)
+	print 'cosine content of second PC=', pc2_cos
+	pc3_cos=get_cosine(ipca_reduced, 2)
+	print 'cosine content of 3rd PC=',pc3_cos
+	pc4_cos=get_cosine(ipca_reduced, 3)
+	print 'cosine content of 4th PC=', pc4_cos
 
 	return;
 
@@ -342,11 +386,18 @@ def my_pca():
 	#========================================================
 	# transform the input data into choosen pc
 	arr_transformed = pca.T.dot(arr.T)
-	print type(arr_transformed)
 	#arr_transformed = np.concatenate((arr_transformed[0,:].reshape(len(arr_transformed[0,:]),1), arr_transformed[1,:].reshape(len(arr_transformed[1,:]),1)), axis=1)
 	#arr_transformed[:,0]
 	write_plots('pca_projection', arr_transformed)
 	
+	pc1_cos=get_cosine(arr_transformed, 0)
+	print 'cosine content of first PC=',pc1_cos
+	pc2_cos=get_cosine(arr_transformed, 1)
+	print 'cosine content of second PC=', pc2_cos
+	pc3_cos=get_cosine(arr_transformed, 2)
+	print 'cosine content of 3rd PC=',pc3_cos
+	pc4_cos=get_cosine(arr_transformed, 3)
+	print 'cosine content of 4th PC=', pc4_cos
 
 	return;
 
