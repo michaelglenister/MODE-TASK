@@ -2,6 +2,8 @@
 #filename: pca.py
 from itertools import combinations
 import mdtraj as md
+import scipy.integrate
+import numpy as np
 #==============================================================================#
 #											
 #			This programe is the part of PCA MD. It read and prints the information about trajectory 
@@ -87,7 +89,20 @@ def get_trajectory(atm_name, top):
 	if atm_name == 'protein':
 		sele_grp=top.select("protein")
 	return sele_grp;
+##============================================
+#
+#	cosine content 
+#
+#=================================================
 
+def get_cosine(pca_sele_traj_reduced, pc_idx):
+	i=pc_idx
+	t = np.arange(len(pca_sele_traj_reduced))
+	T = len(pca_sele_traj_reduced)
+	cos = np.cos(np.pi * t * (i+1 ) / T)
+	cos=((2.0 / T) * (scipy.integrate.simps(cos*pca_sele_traj_reduced[:, i])) ** 2/scipy.integrate.simps(pca_sele_traj_reduced[:, i] ** 2))
+	#print cos
+	return cos;
 
 if __name__=="__main__":
 	main()

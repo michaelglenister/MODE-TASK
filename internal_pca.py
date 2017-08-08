@@ -9,7 +9,7 @@ from sklearn.decomposition import PCA, KernelPCA, IncrementalPCA
 from sklearn.metrics import euclidean_distances
 from itertools import combinations
 from write_plot import write_plots, write_pcs
-from traj_info import trajectory_info
+from traj_info import trajectory_info, get_cosine
 from welcome_msg import welcome_msg
 
 def main():
@@ -191,6 +191,15 @@ def distance_pca(int_cord1):
 	dpca_reduced=dpca.transform(int_cord1)
 	write_plots('dpca_projection', dpca_reduced)
 	write_pcs('dpca_pcs', dpca)
+	
+	pc1_cos=get_cosine(dpca_reduced, 0)
+	print 'cosine content of first PC=',pc1_cos
+	pc2_cos=get_cosine(dpca_reduced, 1)
+	print 'cosine content of second PC=', pc2_cos
+	pc3_cos=get_cosine(dpca_reduced, 2)
+	print 'cosine content of 3rd PC=',pc3_cos
+	pc4_cos=get_cosine(dpca_reduced, 3)
+	print 'cosine content of 4th PC=', pc4_cos
 	return;
 
 int_cord=get_internal_cordinates()
