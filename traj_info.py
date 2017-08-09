@@ -4,6 +4,8 @@ from itertools import combinations
 import mdtraj as md
 import scipy.integrate
 import numpy as np
+import math
+from sklearn import preprocessing
 #==============================================================================#
 #											
 #			This programe is the part of PCA MD. It read and prints the information about trajectory 
@@ -104,5 +106,50 @@ def get_cosine(pca_sele_traj_reduced, pc_idx):
 	#print cos
 	return cos;
 
+def get_kmo(input):
+	'compute the global KMO (kaiser-meyer-olkein) measure for the input dataset. KMO measure is the indication of sampling significace. KMO value range from 1 to 0, 1 indicating a perfect sampling.\
+	adopted from book "Comparitive approach to using R and python for statistical data analysis"'
+	
+	# get the inverse of correlation / covariance matrix
+	cov_inv = np.linalg.inv(input)
+	cov_inv=np.absolute(cov_inv)
+	input_nrow, input_ncol = input.shape
+
+	# partial correlation matrix
+	B = np.ones((input_nrow, input_ncol))
+	for i in range(0,input_nrow,1):
+		for j in range(i, input_ncol, 1):
+			
+			# above the diagonal
+			B[i,j]=-(cov_inv[i,j])/(math.sqrt(cov_inv[i,i]*cov_inv[j,j]))
+			
+			# below the diagonal
+			B[j,i]=B[i,j]
+	
+	# KMO 
+	numerator_kmo=np.sum(np.square(input))-np.sum(np.square(np.diagonal(input)))
+	deno_kmo=numerator_kmo+np.sum(np.square(B))-np.sum(np.square(np.diagonal(B)))
+	kmo=numerator_kmo/deno_kmo
+	print 'KMO for input trajectory is ', kmo
+	return;
+	
+def print_kmo(pca_traj, traj, atm_name, sele_grp):
+	pca_traj.superpose(pca_traj, 0, atom_indices=sele_grp) 			# Superpose each conformation in the trajectory upon first frame
+	sele_trj = pca_traj.xyz[:,sele_grp,:]												# select cordinates of selected atom groups
+	sele_traj_reshaped = sele_trj.reshape(pca_traj.n_frames, len(sele_grp) * 3)
+	arr = sele_traj_reshaped
+	#===============================================
+	# covariance matrix 
+	#===============================================
+	cov_mat = np.cov(arr, rowvar=False)
+	
+	get_kmo(cov_mat)
+	return;
+	
+	
+	
+	
+	
+	
 if __name__=="__main__":
 	main()

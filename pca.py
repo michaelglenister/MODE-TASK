@@ -11,7 +11,7 @@ from sklearn.decomposition import PCA, KernelPCA, IncrementalPCA
 from sklearn.metrics import euclidean_distances
 from sklearn import preprocessing
 from write_plot import write_plots, write_pcs
-from traj_info import trajectory_info
+from traj_info import trajectory_info, get_cosine, get_kmo, print_kmo
 from welcome_msg import welcome_msg
 import scipy.integrate
 def main():
@@ -45,7 +45,7 @@ def set_option():
 	
 	parser.add_argument("-t", "--trj", dest="trj", help="file name of the MD trajectory", action="store")
 	parser.add_argument("-p", "--top", dest="topology", help="topology file")      
-	parser.add_argument("-at", "--ag", dest="atm_grp", help="group of atom for PCA. Default is C alpha atoms. Other options are :"				  "all= all atoms, backbone = backbone atoms, CA= C alpha atoms, protein= protein's atoms")	
+	parser.add_argument("-ag", "--ag", dest="atm_grp", help="group of atom for PCA. Default is C alpha atoms. Other options are :"				  "all= all atoms, backbone = backbone atoms, CA= C alpha atoms, protein= protein's atoms")	
 	parser.add_argument("-r", "--ref", dest="reference", help="reference structure for RMSD") 
 	parser.add_argument("-pt", "--pca_type", dest="pca_type", help="PCA method. Default is svd (Single Value Decomposition) PCA. Options are:\
 					evd, kpca, svd, ipca. If svd is selected, additional arguments can be passed by flag -st. If KernelPCA is selected kernel type can also be defined by flag -kt") 	
@@ -119,9 +119,8 @@ try:
 except:
 	raise IOError('Could not open trajectory {0} for reading. \n' .format(trj))
 	
-#print(pca_traj)
 top = pca_traj.topology
-#print top
+
 
 #==============================================
 #
@@ -170,6 +169,9 @@ sele_grp = get_trajectory()
 # Print trajectory information
 trajectory_info(pca_traj, traj, atm_name, sele_grp)
 
+# print KMO 
+print_kmo(pca_traj, traj, atm_name, sele_grp)
+
 #===============================================================
 #
 #  RMSD in reference with first frame
@@ -199,20 +201,6 @@ def get_rmsd():
 	
 get_rmsd()
 
-##============================================
-#
-#	cosine content 
-#
-#=================================================
-
-def get_cosine(pca_sele_traj_reduced, pc_idx):
-	i=pc_idx
-	t = np.arange(len(pca_sele_traj_reduced))
-	T = len(pca_sele_traj_reduced)
-	cos = np.cos(np.pi * t * (i+1 ) / T)
-	cos=((2.0 / T) * (scipy.integrate.simps(cos*pca_sele_traj_reduced[:, i])) ** 2/scipy.integrate.simps(pca_sele_traj_reduced[:, i] ** 2))
-	#print cos
-	return cos;
 #===============================================================
 #
 # PCA using sci-kit learn library
@@ -226,11 +214,6 @@ def svd_pca(svd):
 	sele_traj_reshaped = sele_traj_reshaped.astype(float) ## to avoid numpy Conversion Error during scaling
 	sele_traj_reshaped_scaled = preprocessing.scale(sele_traj_reshaped, axis=0, with_std=False) # center to the mean
 	
-	
-	##arr=sele_traj_reshaped_scaled
-	##cov_mat = np.cov(arr, rowvar=False)
-	##sele_traj_reshaped_scaled=cov_mat
-	
 	pca_sele_traj = PCA(n_components=comp)
 	pca_sele_traj.fit(sele_traj_reshaped_scaled)
 	pca_sele_traj_reduced = pca_sele_traj.transform(sele_traj_reshaped_scaled)
@@ -239,7 +222,7 @@ def svd_pca(svd):
 	print "Trace of the covariance matrix is: ", np.trace(pca_sele_traj.get_covariance())
 	print "Wrote covariance matrix..."
 	np.savetxt('cov.dat', pca_sele_traj.get_covariance())
-		
+	
 	# write the plots 
 	write_plots('pca_projection', pca_sele_traj_reduced)
 	#write the pcs variance

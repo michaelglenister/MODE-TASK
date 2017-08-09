@@ -7,7 +7,7 @@ import numpy as np
 from sklearn.metrics import euclidean_distances
 from sklearn.manifold import MDS
 from write_plot import write_plots, write_pcs
-from traj_info import trajectory_info, get_internal_cordinates, get_trajectory, get_cosine
+from traj_info import trajectory_info, get_internal_cordinates, get_trajectory, get_cosine, print_kmo
 from welcome_msg import welcome_msg
 
 def main():
@@ -121,6 +121,9 @@ atom_indices=args.atom_indices
 # print trajectory info
 #===================================
 trajectory_info(pca_traj, traj, atm_name, sele_grp)
+
+# print KMO 
+print_kmo(pca_traj, traj, atm_name, sele_grp)
 
 def get_pair_rmsd(pca_traj, sele_grp):
 	'pair wise RMSD over all the frames, return a square matrix of pairwise rmsd'

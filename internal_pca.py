@@ -9,7 +9,7 @@ from sklearn.decomposition import PCA, KernelPCA, IncrementalPCA
 from sklearn.metrics import euclidean_distances
 from itertools import combinations
 from write_plot import write_plots, write_pcs
-from traj_info import trajectory_info, get_cosine
+from traj_info import trajectory_info, get_cosine, print_kmo
 from welcome_msg import welcome_msg
 
 def main():
@@ -37,7 +37,7 @@ def set_option():
 	
 	parser.add_argument("-t", "--trj", dest="trj", help="file name of the MD trajectory", action="store")
 	parser.add_argument("-p", "--top", dest="topology", help="topology file")      
-	parser.add_argument("-at", "--ag", dest="atm_grp", help="group of atom for PCA. Default is C alpha atoms. Other options are :"				  "all= all atoms, backbone = backbone atoms, CA= C alpha atoms, protein= protein's atoms")	
+	parser.add_argument("-ag", "--ag", dest="atm_grp", help="group of atom for PCA. Default is C alpha atoms. Other options are :"				  "all= all atoms, backbone = backbone atoms, CA= C alpha atoms, protein= protein's atoms")	
 	parser.add_argument("-ct", "--ref", dest="cordinate_type", help="nternal cordinate type. Options are: distance, angles, phi and, psi") 
 	args = parser.parse_args()	
 	
@@ -137,6 +137,9 @@ sele_grp = get_trajectory()
 
 # print trajectory informations	
 trajectory_info(pca_traj, traj, atm_name, sele_grp)
+
+# print KMO 
+print_kmo(pca_traj, traj, atm_name, sele_grp)
 
 
 #===========================================================
