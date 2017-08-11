@@ -2,7 +2,7 @@
 #filename: pca.py
 import numpy as np
 from time import sleep, gmtime, strftime
-
+import matplotlib.pyplot as plt
 #==============================================================================#
 #											
 #			This programe is the part of PCA MD. It writes the PCA plots in xmgrace formatted .agr file 
@@ -14,12 +14,6 @@ from time import sleep, gmtime, strftime
 ## write plots
 def write_plots(file_name, pca):
 	'function to write pca plots. takes name of the file to write and pca object name'
-	fname = ''
-	fname = file_name+'.agr'
-	np.savetxt(fname, pca)
-	pf = open(fname, 'r')
-	pf_cont = pf.read()
-	pf.close()
 	my_time = strftime("%Y-%m-%d  %a  %H:%M:%S", gmtime())
 	title = '\tcreated by pca.py\t'
 	legends = '@    title "Projection of PC"\n\
@@ -46,12 +40,88 @@ def write_plots(file_name, pca):
 	@    s0 symbol char font 0\n\
 	@    s0 symbol skip 0\n'
 	
+	fname = ''
+	
+	#=======================================
+	# xmgrace formated plot
+	#================================
+	# plot 1 and 2 PC
+	
+	pca1=pca[:,[0,1]]
+	fname = file_name+'1_2'+'.agr'
+	np.savetxt(fname, pca1)
+	pf = open(fname, 'r')
+	pf_cont = pf.read()
+	pf.close()
 	pf = open(fname, 'w')
 	pf.write('#'+title+'\ton\t'+my_time+'\n'+legends+'\n'+pf_cont)
 	pf.close()
 	
-	return;
+	# plot 1 and 3 PC
+	pca1=pca[:,[0,2]]
+	fname = file_name+'1_3'+'.agr'
+	np.savetxt(fname, pca1)
+	pf = open(fname, 'r')
+	pf_cont = pf.read()
+	pf.close()
+	pf = open(fname, 'w')
+	pf.write('#'+title+'\ton\t'+my_time+'\n'+legends+'\n'+pf_cont)
+	pf.close()
 	
+	# plot 2 and 3 PC
+	pca1=pca[:,[1,2]]
+	fname = file_name+'2_3'+'.agr'
+	np.savetxt(fname, pca1)
+	pf = open(fname, 'r')
+	pf_cont = pf.read()
+	pf.close()
+	pf = open(fname, 'w')
+	pf.write('#'+title+'\ton\t'+my_time+'\n'+legends+'\n'+pf_cont)
+	pf.close()
+	
+	
+	return;
+
+def write_fig(file_name, pca):
+	#========================================
+	# coloured png using matplotlib
+	#=================================================
+	## # plot 1 and 2 PC
+	
+	fname = file_name+'1_2'+'.png'
+	fig=plt.figure()
+	col=range(1,len(pca[:,0])+1) # color map to the number of frames in trajectory 
+	plt.scatter(pca[:,0], pca[:,1], marker='x', c=col)
+	plt.xlabel('PC1')
+	plt.ylabel('PC2')
+	plt.title('Cartesian coordinate PCA')
+	cbar = plt.colorbar()
+	cbar.set_label('Time [ps]')
+	fig.savefig(fname)
+	
+	## # plot 1 and 3 PC
+	fname = file_name+'1_3'+'.png'
+	fig=plt.figure()
+	plt.scatter(pca[:,0], pca[:,2], marker='x', c=col)
+	plt.xlabel('PC1')
+	plt.ylabel('PC2')
+	plt.title('Cartesian coordinate PCA')
+	cbar = plt.colorbar()
+	cbar.set_label('Time [ps]')
+	fig.savefig(fname)
+	
+	## # plot 2 and 3 PC
+	fname = file_name+'2_3'+'.png'
+	fig=plt.figure()
+	plt.scatter(pca[:,1], pca[:,2], marker='x', c=col)
+	plt.xlabel('PC1')
+	plt.ylabel('PC2')
+	plt.title('Cartesian coordinate PCA')
+	cbar = plt.colorbar()
+	cbar.set_label('Time [ps]')
+	fig.savefig(fname)
+	return;
+
 ## write PCs 
 def write_pcs(file_name, pca):
 	'write PCs and explained_variance_ratio_. takes name of the file to write and pca object name'

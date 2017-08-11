@@ -10,10 +10,11 @@ import numpy as np
 from sklearn.decomposition import PCA, KernelPCA, IncrementalPCA
 from sklearn.metrics import euclidean_distances
 from sklearn import preprocessing
-from write_plot import write_plots, write_pcs
-from traj_info import trajectory_info, get_cosine, get_kmo, print_kmo
+from write_plot import write_plots, write_pcs, write_fig
+from traj_info import trajectory_info, get_cosine, get_kmo, print_kmo, get_rmsf
 from welcome_msg import welcome_msg
 import scipy.integrate
+
 def main():
 	
 	return;
@@ -224,9 +225,12 @@ def svd_pca(svd):
 	np.savetxt('cov.dat', pca_sele_traj.get_covariance())
 	
 	# write the plots 
+	
 	write_plots('pca_projection', pca_sele_traj_reduced)
+	write_fig('pca_projection', pca_sele_traj_reduced)
+	
+
 	#write the pcs variance
-	#print type(pca_sele_traj.explained_variance_ratio_)
 	write_pcs('pca_variance', pca_sele_traj)
 	
 	pc1_cos=get_cosine(pca_sele_traj_reduced, 0)
@@ -260,7 +264,8 @@ def my_kernelPCA(kernel):
 	
 	#write plots
 	write_plots('kpca_projection', kpca_reduced)
-	
+	write_fig('kpca_projection', kpca_reduced)
+
 	#write variance
 	np.savetxt('kpca_variance', kpca.lambdas_)
 	
@@ -298,7 +303,7 @@ def incremental_pca():
 	
 	#write plots
 	write_plots('ipca_projection', ipca_reduced)
-	
+	write_fig('ipca_projection', ipca_reduced)
 	#write variance
 	#np.savetxt('ipca_variance', kpca.lambdas_)
 	pc1_cos=get_cosine(ipca_reduced, 0)
@@ -321,11 +326,10 @@ def my_pca():
 	'eigenvales decomposition PCA'
 	pca_traj.superpose(pca_traj, 0, atom_indices=sele_grp) 			# Superpose each conformation in the trajectory upon first frame
 	sele_trj = pca_traj.xyz[:,sele_grp,:]												# select cordinates of selected atom groups
-	sele_traj_reshaped = sele_trj.reshape(pca_traj.n_frames, len(sele_grp) * 3)
+	sele_traj_reshaped = sele_trj.reshape(pca_traj.n_frames, len(sele_grp)* 3)
 	sele_traj_reshaped = sele_traj_reshaped.astype(float) ## to avoid numpy Conversion Error during scaling
 	sele_traj_reshaped_scaled = preprocessing.scale(sele_traj_reshaped, axis=0, with_std=False) # center to the mean
 	arr = sele_traj_reshaped_scaled
-	
 	
 	#===============================================
 	# covariance matrix 
@@ -347,11 +351,6 @@ def my_pca():
 	sort_idx = trj_eval.argsort()[::-1]
 	trj_eval = trj_eval[sort_idx]
 	trj_evec = trj_evec[sort_idx]
-	
-	# join first two eigenvector into a single matrix
-	#eivec_1 = trj_evec.real[:,0].reshape(len(trj_evec[:,0]),1)
-	#eivec_2 = trj_evec.real[:,1].reshape(len(trj_evec[:,1]),1)
-	#pca = np.concatenate((eivec_1, eivec_2, eivec_3, eivec_4, eivec_5), axis=1)	
 
 	tot_var = np.sum(trj_eval.real)
 	variation = []
@@ -369,9 +368,10 @@ def my_pca():
 	#========================================================
 	# transform the input data into choosen pc
 	arr_transformed = pca.T.dot(arr.T)
-	#arr_transformed = np.concatenate((arr_transformed[0,:].reshape(len(arr_transformed[0,:]),1), arr_transformed[1,:].reshape(len(arr_transformed[1,:]),1)), axis=1)
-	#arr_transformed[:,0]
 	write_plots('pca_projection', arr_transformed)
+	write_fig('pca_projection', arr_transformed)
+	## RMSF 
+	get_rmsf(pca_traj, traj, atm_name, sele_grp, trj_eval, trj_evec)
 	
 	pc1_cos=get_cosine(arr_transformed, 0)
 	print 'cosine content of first PC=',pc1_cos
@@ -381,7 +381,7 @@ def my_pca():
 	print 'cosine content of 3rd PC=',pc3_cos
 	pc4_cos=get_cosine(arr_transformed, 3)
 	print 'cosine content of 4th PC=', pc4_cos
-
+	
 	return;
 
 
