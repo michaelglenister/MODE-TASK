@@ -1,15 +1,15 @@
 #!/usr/bin/env python
 # Calculates and Returns Diagonals of Correlated Matrix for a given set of modes
-import os
-import sys
+# import os
+# import sys
 import argparse
 from datetime import datetime
 
 from utils import *
 
-import matplotlib
-import matplotlib.pyplot as plt
-from matplotlib import cm as CM
+# import matplotlib
+# import matplotlib.pyplot as plt
+# from matplotlib import cm as CM
 import numpy as np
 
 
@@ -67,6 +67,8 @@ def main(args):
         first_mode = total_modes - 6
         last_mode = total_modes - 1
 
+    print "First mode: " + str(first_mode)
+    print "Last mode: " + str(last_mode)
     # Llama
 
     first_res = 0
