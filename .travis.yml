@@ -17,9 +17,11 @@ matrix:
 before_install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update     ; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install python2     ; fi
-  - if [[ "$TRAVIS_OS_NAME" == "oxs" ]]; then 
+  - virtualenv venv
+  - source venv/bin/activate
 
-install: sh install.sh
+install:
+    - pip install -r requirements.txt
 
 script: 
   - cd tests
