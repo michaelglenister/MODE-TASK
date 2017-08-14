@@ -218,17 +218,16 @@ def svd_pca(svd):
 	pca_sele_traj = PCA(n_components=comp)
 	pca_sele_traj.fit(sele_traj_reshaped_scaled)
 	pca_sele_traj_reduced = pca_sele_traj.transform(sele_traj_reshaped_scaled)
-	#pca_sele_traj_reduced=pca_sele_traj_reduced[:,0:n_pc]
-	np.savetxt('pca_sele_traj_reduced.txt', pca_sele_traj_reduced)
+	
 	print "Trace of the covariance matrix is: ", np.trace(pca_sele_traj.get_covariance())
 	print "Wrote covariance matrix..."
 	np.savetxt('cov.dat', pca_sele_traj.get_covariance())
-	
+	print pca_sele_traj.components_.shape
+
 	# write the plots 
 	
 	write_plots('pca_projection', pca_sele_traj_reduced)
 	write_fig('pca_projection', pca_sele_traj_reduced)
-	
 
 	#write the pcs variance
 	write_pcs('pca_variance', pca_sele_traj)
@@ -327,13 +326,14 @@ def my_pca():
 	pca_traj.superpose(pca_traj, 0, atom_indices=sele_grp) 			# Superpose each conformation in the trajectory upon first frame
 	sele_trj = pca_traj.xyz[:,sele_grp,:]												# select cordinates of selected atom groups
 	sele_traj_reshaped = sele_trj.reshape(pca_traj.n_frames, len(sele_grp)* 3)
+	#arr1=sele_traj_reshaped
 	sele_traj_reshaped = sele_traj_reshaped.astype(float) ## to avoid numpy Conversion Error during scaling
 	sele_traj_reshaped_scaled = preprocessing.scale(sele_traj_reshaped, axis=0, with_std=False) # center to the mean
 	arr = sele_traj_reshaped_scaled
 	
 	#===============================================
 	# covariance matrix 
-	cov_mat = np.cov(arr, rowvar=False)
+	cov_mat = np.corrcoef(arr, rowvar=False)
 	trj_eval, trj_evec=np.linalg.eig(cov_mat)
 	
 	print "Trace of cov matrix is ",  np.trace(cov_mat)
@@ -357,8 +357,8 @@ def my_pca():
 	cum = []
 	j = 0
 	eigv = []
-	#i=0
 	n_comp=100
+	print trj_evec.real.shape
 	pca = trj_evec.real[:,0:n_comp]    ## keep first 100 eigenvectors
 	for i in trj_eval.real[0:n_comp]:
 		eigv.append(i)
@@ -367,11 +367,14 @@ def my_pca():
 	#write_plots('variation', variation)
 	#========================================================
 	# transform the input data into choosen pc
+	print pca.shape
 	arr_transformed = pca.T.dot(arr.T)
+	
 	write_plots('pca_projection', arr_transformed)
 	write_fig('pca_projection', arr_transformed)
+	
 	## RMSF 
-	get_rmsf(pca_traj, traj, atm_name, sele_grp, trj_eval, trj_evec)
+	get_rmsf(pca_traj, sele_grp, trj_eval)
 	
 	pc1_cos=get_cosine(arr_transformed, 0)
 	print 'cosine content of first PC=',pc1_cos

@@ -6,6 +6,7 @@ import scipy.integrate
 import numpy as np
 import math
 from sklearn import preprocessing
+from time import sleep, gmtime, strftime
 #==============================================================================#
 #											
 #			This programe is the part of PCA MD. It read and prints the information about trajectory 
@@ -106,6 +107,12 @@ def get_cosine(pca_sele_traj_reduced, pc_idx):
 	#print cos
 	return cos;
 
+#=====================================
+#
+# Kaiser-Meyer-Olkein index
+#
+#==================================
+
 def get_kmo(input):
 	'compute the global KMO (kaiser-meyer-olkein) measure for the input dataset. KMO measure is the indication of sampling significace. KMO value range from 1 to 0, 1 indicating a perfect sampling.\
 	adopted from book "Comparitive approach to using R and python for statistical data analysis"'
@@ -146,8 +153,84 @@ def print_kmo(pca_traj, traj, atm_name, sele_grp):
 	get_kmo(cov_mat)
 	return;
 	
+def get_rmsf(pca_traj, sele_grp, trj_eval):
+	'calculates the RMSD mode'
+	pca_traj.superpose(pca_traj, 0, atom_indices=sele_grp) 			# Superpose each conformation in the trajectory upon first frame
+	sele_trj = pca_traj.xyz[:,sele_grp,:]												# select cordinates of selected atom groups
+	sele_traj_reshaped = sele_trj.reshape(pca_traj.n_frames, len(sele_grp) * 3)
+	arr = sele_traj_reshaped
 	
+	iter=len(sele_grp)*3
+	iter=iter
+	nrow=pca_traj.n_frames
+	ncol = len(sele_grp)
+
+	# matrix for storing RMSF
+	B = np.ones((nrow, ncol))
+	C = np.ones((nrow, ncol))
+	D = np.ones((nrow, ncol))
+	#print len(trj_eval)
+	for i in range(0,pca_traj.n_frames):
+		k=0
+		for j in range(0,iter,3):   ## iterate over every third coloumn (x,y,z of each atom)
+			B[i,k]=math.sqrt(pow(sele_traj_reshaped[i,j],2)+pow(sele_traj_reshaped[i,j+1],2)+pow(sele_traj_reshaped[i,j+2],2)*trj_eval.real[0]) # for first eigenvector, multiply by first eigenvalue
+			C[i,k]=math.sqrt(pow(sele_traj_reshaped[i,j],2)+pow(sele_traj_reshaped[i,j+1],2)+pow(sele_traj_reshaped[i,j+2],2)*trj_eval.real[1])
+			D[i,k]=math.sqrt(pow(sele_traj_reshaped[i,j],2)+pow(sele_traj_reshaped[i,j+1],2)+pow(sele_traj_reshaped[i,j+2],2)*trj_eval.real[2])
+			k=k+1
 	
+	## write the RMSF mode file for first PC
+	
+	np.savetxt('pc1_rmsf.agr',np.average(B, axis=0))
+	rf = open('pc1_rmsf.agr', 'r')
+	rf_cont = rf.read()
+	rf.close()
+	
+	my_time = strftime("%Y-%m-%d  %a  %H:%M:%S", gmtime())
+	title = '\tcreated by pca.py\t'
+	legends = '@    title "RMSD modes"\n\
+	@    xaxis  label "Residue"\n\
+	@    yaxis  label "RMSD"\n\
+	@	TYPE xy\n'
+	
+	pf = open('pc1_rmsf.agr', 'w')
+	pf.write('#'+title+'\ton\t'+my_time+'\n'+legends+'\n'+rf_cont)
+	pf.close()
+
+	## write the RMSF mode file for second PC
+	np.savetxt('pc2_rmsf.agr',np.average(C, axis=0))
+	rf = open('pc2_rmsf.agr', 'r')
+	rf_cont = rf.read()
+	rf.close()
+	
+	my_time = strftime("%Y-%m-%d  %a  %H:%M:%S", gmtime())
+	title = '\tcreated by pca.py\t'
+	legends = '@    title "RMSD modes"\n\
+	@    xaxis  label "Residue"\n\
+	@    yaxis  label "RMSD"\n\
+	@	TYPE xy\n'
+	
+	pf = open('pc2_rmsf.agr', 'w')
+	pf.write('#'+title+'\ton\t'+my_time+'\n'+legends+'\n'+rf_cont)
+	pf.close()
+	
+	## write the RMSF mode file for third PC
+	np.savetxt('pc3_rmsf.agr',np.average(D, axis=0))
+	rf = open('pc3_rmsf.agr', 'r')
+	rf_cont = rf.read()
+	rf.close()
+	
+	my_time = strftime("%Y-%m-%d  %a  %H:%M:%S", gmtime())
+	title = '\tcreated by pca.py\t'
+	legends = '@    title "RMSD modes"\n\
+	@    xaxis  label "Residue"\n\
+	@    yaxis  label "RMSD"\n\
+	@	TYPE xy\n'
+	
+	pf = open('pc3_rmsf.agr', 'w')
+	pf.write('#'+title+'\ton\t'+my_time+'\n'+legends+'\n'+rf_cont)
+	pf.close()
+	
+	return;
 	
 	
 	
