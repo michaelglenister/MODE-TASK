@@ -1,14 +1,23 @@
-os:
-  - linux
-  - osx
-  
+language: python
+
+branches:
+    only:
+        - master
+
 matrix:
   allow_failures:
     - os: osx
+  include:
+    - os: linux
+      sudo: required
+      python: 2.7
+    - os: osx
+      lanuage: generic
 
 before_install:
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update          ; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install tar     ; fi 
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update     ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install python2     ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "oxs" ]]; then 
 
 install: sh install.sh
 
