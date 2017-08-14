@@ -1,4 +1,6 @@
-<img src="https://api.travis-ci.com/michaelglenister/NMA-TASK.svg?token=zTmqpAXFeCMTdzy6XBH7&branch=master" align="right">
+| Linux/OSX | Windows |
+|----------:|--------:|
+|<img src="https://api.travis-ci.com/michaelglenister/NMA-TASK.svg?token=zTmqpAXFeCMTdzy6XBH7&branch=master" align="right">:|WIP:|
 
 # NMA-TASK
 
@@ -33,3 +35,4 @@ g++ getEigenVectors.cpp -o getEigenVectors
 ## Usage
 
 For detailed documentation on installation and usage of the tool suite please see our [ReadTheDocs](http://nma-task.readthedocs.io/en/latest/index.html) site
+
