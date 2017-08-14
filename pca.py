@@ -9,10 +9,11 @@ import mdtraj as md
 import numpy as np
 from sklearn.decomposition import PCA, KernelPCA, IncrementalPCA
 from sklearn.metrics import euclidean_distances
-from sklearn.manifold import MDS
 from sklearn import preprocessing
-from itertools import combinations
-from write_plot import write_plots, write_pcs
+from write_plot import write_plots, write_pcs, write_fig
+from traj_info import trajectory_info, get_cosine, get_kmo, print_kmo, get_rmsf
+from welcome_msg import welcome_msg
+import scipy.integrate
 
 def main():
 	
@@ -31,22 +32,8 @@ def main():
 ##===============================================================================
 ##								 Welcome message
 ##===============================================================================
-def welcome_msg():
-	print '\n\n'
-	print '|=======================================================|'
-	print '|\t\t\t\t\t\t\t|'
-	print '|\t :-) >>-----------> PCA MD <-----------<< (-:	|'
-	print '|\t\t\t\t\t\t\t|'
-	print '|\t\t\t\t\t\t\t|'
-	print '|   This programe performs the PCA (Principal Component\t| \n|             Analysis) on a MD trajectory\t\t|'
-	print '|\t\t\t\t\t\t\t|\n', '|\tAuthors:  Bilal Nizami\t\t\t\t|\n','|\tResearch Unit in Bioinformatics (RUBi)\t\t|\n', '|\tRhodes University, 2017\t\t\t\t|'
-	print '|\tDistributed under GNU GPL 3.0\t\t\t|'
-	print '|\t\t\t\t\t\t\t|'
-	print '|\thttps://github.com/michaelglenister/NMA-TASK\t|'
-	print '|\t\t\t\t\t\t\t|'
-	print '|=======================================================|'
-	print '\n'
-	return;
+title='PCA MD'
+welcome_msg(title)
 
 
 #==============================================================================
@@ -59,16 +46,16 @@ def set_option():
 	
 	parser.add_argument("-t", "--trj", dest="trj", help="file name of the MD trajectory", action="store")
 	parser.add_argument("-p", "--top", dest="topology", help="topology file")      
-	parser.add_argument("-at", "--ag", dest="atm_grp", help="group of atom for PCA. Default is C alpha atoms. Other options are :"				  "all= all atoms, backbone = backbone atoms, CA= C alpha atoms, protein= protein's atoms")	
+	parser.add_argument("-ag", "--ag", dest="atm_grp", help="group of atom for PCA. Default is C alpha atoms. Other options are :"				  "all= all atoms, backbone = backbone atoms, CA= C alpha atoms, protein= protein's atoms")	
 	parser.add_argument("-r", "--ref", dest="reference", help="reference structure for RMSD") 
 	parser.add_argument("-pt", "--pca_type", dest="pca_type", help="PCA method. Default is svd (Single Value Decomposition) PCA. Options are:\
-					KernelPCA, svd, ipca. If svd is selected, additional arguments can be passed by flag -st. If KernelPCA is selected kernel type can also be defined by flag -kt") 	
+					evd, kpca, svd, ipca. If svd is selected, additional arguments can be passed by flag -st. If KernelPCA is selected kernel type can also be defined by flag -kt") 	
 	parser.add_argument("-nc", "--comp", type=int, dest="comp", help="Number of components to keep in a PCA object. If not set, by default all the components will be kept.")	
 	parser.add_argument("-kt", "--kernel_type", dest="kernel_type", help="Type of kernel for KernalPCA. default is linear. Options are :"
 					"linear, poly, rbf, sigmoid, cosine, precomputed") 
 	parser.add_argument("-st", "--svd_solver", dest="svd_solver", help="Type of svd_solver for SVD (Single Value Decomposition) PCA. Default is auto. Options are :"				  "auto, full, arpack, randomized") 
 	args = parser.parse_args()	
-	atm_name = args.atm_grp
+	
 	
 	#====================================================================
 	# if no arguments are passed
@@ -84,18 +71,34 @@ def set_option():
 		sys.exit(1)
 	
 	if not os.path.exists(args.trj ):
-				print('\nERROR: {0} not found....:(  Please check the path\n' .format(args.trj ))
-				parser.print_help()
-				sys.exit(1)
+		print('\nERROR: {0} not found....:(  Please check the path\n' .format(args.trj ))
+		parser.print_help()
+		sys.exit(1)
 	
 	if not os.path.exists(args.topology):
-				print('\nERROR: {0} not found....:(  Please check the path\n' .format(args.topology ))
-				parser.print_help()
-				sys.exit(1)
+		print('\nERROR: {0} not found....:(  Please check the path\n' .format(args.topology ))
+		parser.print_help()
+		sys.exit(1)
+	if args.pca_type not in  ('svd', 'evd', 'kpca', 'ipca', None):
+		print 'ERROR: no such option as', args.pca_type, 'for flag -pt \nPlease see the help by running \n pca.py -h..\n\n '
+		sys.exit(1)
+	if args.kernel_type not in  ('linear', 'poly', 'sigmoid', 'cosine', 'precomputed', 'rbf',None):
+		print 'ERROR: no such option as', args.kernel_type, 'for flag -kt \nPlease see the help by running \n pca.py -h..\n\n '
+		sys.exit(1)
 		
+	if args.kernel_type != None and args.pca_type != 'kpca':
+		print 'WARNING: -kt', args.kernel_type, 'is meaningless with -pt', args.pca_type, '. Flag -kt is being ignored!'
+		
+	if args.svd_solver not in  ('auto', 'full', 'arpack', 'randomized', None):
+		print 'ERROR: no such option as', args.svd_solver, 'for flag -st \nPlease see the help by running \n pca.py -h.\n\n'
+		sys.exit(1)
+	
+	if args.svd_solver != None and args.pca_type != 'svd':
+		print 'WARNING: -st', args.svd_solver, 'is meaningless with -pt', args.pca_type, '. Flag -st is being ignored!'
 	return args
 	
 args = set_option()
+atm_name = args.atm_grp
 #=======================================
 # assign the passed arguments and read the trajectory 
 #=======================================
@@ -104,6 +107,7 @@ topology = args.topology
 ref = args.reference
 ptype=args.pca_type
 comp = args.comp
+n_eivec=5
 ## read the reference structure
 if ref:
 	try:
@@ -116,9 +120,8 @@ try:
 except:
 	raise IOError('Could not open trajectory {0} for reading. \n' .format(trj))
 	
-#print(pca_traj)
 top = pca_traj.topology
-#print top
+
 
 #==============================================
 #
@@ -164,26 +167,11 @@ def get_trajectory():
 
 sele_grp = get_trajectory()
 
-# print trajectory informations
-def trajectory_info():
-	'Prints various information of MD trajectory'
-	print '\n\nTrajectory info:\n'
-	print "Total",pca_traj.n_frames,"frames read from", traj
-	print "MD time is from ", pca_traj.time[0],'to',pca_traj.time[-1],'ps'
-	print pca_traj.n_atoms, "atoms and ", pca_traj.n_residues, "residues in the trajectory"
-	print "Atom group selected for PCA:", atm_name, "\n"
-	
-	if args.reference == None: 
-		print "Reference for RMSD calculation is first frame of trajectory"
-	else:
-		print "Reference for RMSD calculation is: ", args.reference
-		
-	print "Total", len(sele_grp), atm_name,'atoms selected for analysis\n'
-	
-	return;
+# Print trajectory information
+trajectory_info(pca_traj, traj, atm_name, sele_grp)
 
-	
-trajectory_info()
+# print KMO 
+print_kmo(pca_traj, traj, atm_name, sele_grp)
 
 #===============================================================
 #
@@ -214,7 +202,6 @@ def get_rmsd():
 	
 get_rmsd()
 
-
 #===============================================================
 #
 # PCA using sci-kit learn library
@@ -225,22 +212,36 @@ def svd_pca(svd):
 	pca_traj.superpose(pca_traj, 0, atom_indices=sele_grp) 			# Superpose each conformation in the trajectory upon first frame
 	sele_trj = pca_traj.xyz[:,sele_grp,:]												# select cordinates of selected atom groups
 	sele_traj_reshaped = sele_trj.reshape(pca_traj.n_frames, len(sele_grp) * 3)
+	sele_traj_reshaped = sele_traj_reshaped.astype(float) ## to avoid numpy Conversion Error during scaling
+	sele_traj_reshaped_scaled = preprocessing.scale(sele_traj_reshaped, axis=0, with_std=False) # center to the mean
+	
 	pca_sele_traj = PCA(n_components=comp)
-	pca_sele_traj.fit(sele_traj_reshaped)
-	pca_sele_traj_reduced = pca_sele_traj.transform(sele_traj_reshaped)
-	#print pca_sele_traj_reduced
+	pca_sele_traj.fit(sele_traj_reshaped_scaled)
+	pca_sele_traj_reduced = pca_sele_traj.transform(sele_traj_reshaped_scaled)
+	
 	print "Trace of the covariance matrix is: ", np.trace(pca_sele_traj.get_covariance())
 	print "Wrote covariance matrix..."
 	np.savetxt('cov.dat', pca_sele_traj.get_covariance())
-		
+	print pca_sele_traj.components_.shape
+
 	# write the plots 
+	
 	write_plots('pca_projection', pca_sele_traj_reduced)
+	write_fig('pca_projection', pca_sele_traj_reduced)
+
 	#write the pcs variance
-	#print type(pca_sele_traj.explained_variance_ratio_)
 	write_pcs('pca_variance', pca_sele_traj)
 	
+	pc1_cos=get_cosine(pca_sele_traj_reduced, 0)
+	print 'cosine content of first PC=',pc1_cos
+	pc2_cos=get_cosine(pca_sele_traj_reduced, 1)
+	print 'cosine content of second PC=', pc2_cos
+	pc3_cos=get_cosine(pca_sele_traj_reduced, 2)
+	print 'cosine content of 3rd PC=',pc3_cos
+	pc4_cos=get_cosine(pca_sele_traj_reduced, 3)
+	print 'cosine content of 4th PC=', pc4_cos
+	
 	return;
-
 
 
 #==============================================================
@@ -252,17 +253,29 @@ def my_kernelPCA(kernel):
 	pca_traj.superpose(pca_traj, 0, atom_indices=sele_grp) 			# Superpose each conformation in the trajectory upon first frame
 	sele_trj = pca_traj.xyz[:,sele_grp,:]												# select cordinates of selected atom groups
 	sele_traj_reshaped = sele_trj.reshape(pca_traj.n_frames, len(sele_grp) * 3)
-	
+	sele_traj_reshaped = sele_traj_reshaped.astype(float) ## to avoid numpy Conversion Error during scaling
+	sele_traj_reshaped_scaled = preprocessing.scale(sele_traj_reshaped, axis=0, with_std=False) # center to the mean
+
 	kpca = KernelPCA(kernel = kernel, fit_inverse_transform=True, gamma=10)
-	kpca.fit(sele_traj_reshaped)
+	kpca.fit(sele_traj_reshaped_scaled)
 	#print "Trace of the covariance matrix is: ", np.trace(kpca.get_covariance())
-	kpca_reduced = kpca.transform(sele_traj_reshaped)
+	kpca_reduced = kpca.transform(sele_traj_reshaped_scaled)
 	
 	#write plots
 	write_plots('kpca_projection', kpca_reduced)
-	
+	write_fig('kpca_projection', kpca_reduced)
+
 	#write variance
 	np.savetxt('kpca_variance', kpca.lambdas_)
+	
+	pc1_cos=get_cosine(kpca_reduced, 0)
+	print 'cosine content of first PC=',pc1_cos
+	pc2_cos=get_cosine(kpca_reduced, 1)
+	print 'cosine content of second PC=', pc2_cos
+	pc3_cos=get_cosine(kpca_reduced, 2)
+	print 'cosine content of 3rd PC=',pc3_cos
+	pc4_cos=get_cosine(kpca_reduced, 3)
+	print 'cosine content of 4th PC=', pc4_cos
 	return;
 
 
@@ -273,46 +286,54 @@ def my_kernelPCA(kernel):
 #=============================================================
 
 def incremental_pca():
-	' normal PCA is not very memory intesive. It can be problemetic for large dataset, \
+	' normal PCA is very memory intesive. It can be problemetic for large dataset, \
 	since dataset is stored in memory. Incremental principal component analysis (IPCA) is \
 	typically used for such cases. '
 	
 	pca_traj.superpose(pca_traj, 0, atom_indices=sele_grp) 			# Superpose each conformation in the trajectory upon first frame
 	sele_trj = pca_traj.xyz[:,sele_grp,:]												# select cordinates of selected atom groups
 	sele_traj_reshaped = sele_trj.reshape(pca_traj.n_frames, len(sele_grp) * 3)
-	
+	sele_traj_reshaped = sele_traj_reshaped.astype(float) ## to avoid numpy Conversion Error during scaling
+	sele_traj_reshaped_scaled = preprocessing.scale(sele_traj_reshaped, axis=0, with_std=False) # center to the mean
+
 	ipca = IncrementalPCA()
-	ipca = ipca.fit(sele_traj_reshaped)
-	ipca_reduced=ipca.transform(sele_traj_reshaped)
+	ipca = ipca.fit(sele_traj_reshaped_scaled)
+	ipca_reduced=ipca.transform(sele_traj_reshaped_scaled)
 	
 	#write plots
 	write_plots('ipca_projection', ipca_reduced)
-	
+	write_fig('ipca_projection', ipca_reduced)
 	#write variance
 	#np.savetxt('ipca_variance', kpca.lambdas_)
+	pc1_cos=get_cosine(ipca_reduced, 0)
+	print 'cosine content of first PC=',pc1_cos
+	pc2_cos=get_cosine(ipca_reduced, 1)
+	print 'cosine content of second PC=', pc2_cos
+	pc3_cos=get_cosine(ipca_reduced, 2)
+	print 'cosine content of 3rd PC=',pc3_cos
+	pc4_cos=get_cosine(ipca_reduced, 3)
+	print 'cosine content of 4th PC=', pc4_cos
 
 	return;
 
 #===============================================================
 #
-#  My own method
+#  Eigenvalue decomposition based PCA
 #
 #=================================================================
 def my_pca():
-	
+	'eigenvales decomposition PCA'
 	pca_traj.superpose(pca_traj, 0, atom_indices=sele_grp) 			# Superpose each conformation in the trajectory upon first frame
 	sele_trj = pca_traj.xyz[:,sele_grp,:]												# select cordinates of selected atom groups
-	sele_traj_reshaped = sele_trj.reshape(pca_traj.n_frames, len(sele_grp) * 3)
-		
+	sele_traj_reshaped = sele_trj.reshape(pca_traj.n_frames, len(sele_grp)* 3)
+	#arr1=sele_traj_reshaped
 	sele_traj_reshaped = sele_traj_reshaped.astype(float) ## to avoid numpy Conversion Error during scaling
-	sele_traj_reshaped_scaled = preprocessing.scale(sele_traj_reshaped)
+	sele_traj_reshaped_scaled = preprocessing.scale(sele_traj_reshaped, axis=0, with_std=False) # center to the mean
 	arr = sele_traj_reshaped_scaled
 	
-	
 	#===============================================
-	# covariance matrix of selected coloumns
-	cov_mat = np.cov(arr, rowvar=False)
-	cov_mat = np.cov(cov_mat)
+	# covariance matrix 
+	cov_mat = np.corrcoef(arr, rowvar=False)
 	trj_eval, trj_evec=np.linalg.eig(cov_mat)
 	
 	print "Trace of cov matrix is ",  np.trace(cov_mat)
@@ -330,51 +351,45 @@ def my_pca():
 	sort_idx = trj_eval.argsort()[::-1]
 	trj_eval = trj_eval[sort_idx]
 	trj_evec = trj_evec[sort_idx]
-	
-	pca = np.empty_like(trj_evec)
-	
-	# join first two eigenvector into a single matrix and write plot
-	eivec_1 = trj_evec.real[:,0].reshape(len(trj_evec[:,0]),1)
-	eivec_2 = trj_evec.real[:,1].reshape(len(trj_evec[:,1]),1)
-	pca = np.concatenate((eivec_1, eivec_2), axis=1)
 
-	write_plots('my_method_proj', pca)
-	
-
-#=============================================
-# sort the eigenvales
-	e_p = []
-	print type(e_p)
-	for i in range(len(trj_eval)):
-		eig_pairs = [np.abs(trj_eval[i]), trj_evec[:,i]]
-		e_p.append(eig_pairs)
-	#print (e_p[2])
-	e_p.sort(key=lambda x: x[0], reverse=True)
-	
-	
-	# sorted eigenvalues and variation explained
-	print ('sorted eigenvalues')
-	tot_var = 0
-	for i in e_p:
-		tot_var +=i[0]
+	tot_var = np.sum(trj_eval.real)
 	variation = []
-	print tot_var
 	cum = []
 	j = 0
 	eigv = []
-	for i in e_p:
-		#print (i[0])
-		eigv.append(i[0])
-		variation.append(i[0]/tot_var)
-		#print ("variation explained:",variation[j]*100)
-		cum = np.cumsum(variation)
-		#print ('cumulative: ', cum[j]*100 )
+	n_comp=100
+	print trj_evec.real.shape
+	pca = trj_evec.real[:,0:n_comp]    ## keep first 100 eigenvectors
+	for i in trj_eval.real[0:n_comp]:
+		eigv.append(i)
+		variation.append(i/tot_var)
 		j +=1
+	#write_plots('variation', variation)
+	#========================================================
+	# transform the input data into choosen pc
+	print pca.shape
+	arr_transformed = pca.T.dot(arr.T)
+	
+	write_plots('pca_projection', arr_transformed)
+	write_fig('pca_projection', arr_transformed)
+	
+	## RMSF 
+	get_rmsf(pca_traj, sele_grp, trj_eval)
+	
+	pc1_cos=get_cosine(arr_transformed, 0)
+	print 'cosine content of first PC=',pc1_cos
+	pc2_cos=get_cosine(arr_transformed, 1)
+	print 'cosine content of second PC=', pc2_cos
+	pc3_cos=get_cosine(arr_transformed, 2)
+	print 'cosine content of 3rd PC=',pc3_cos
+	pc4_cos=get_cosine(arr_transformed, 3)
+	print 'cosine content of 4th PC=', pc4_cos
+	
 	return;
 
 
 
-if ptype == 'KernelPCA':
+if ptype == 'kpca':
 	kernel = ''
 	kernel = args.kernel_type
 	if args.kernel_type:
@@ -402,7 +417,7 @@ if ptype == 'ipca':
 	incremental_pca()
 	print "\nFINISHED. !"
 
-if ptype == 'my':
+if ptype == 'evd':
 	my_pca()
 	print "\nFINISHED. !"
 

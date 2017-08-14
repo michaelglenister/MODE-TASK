@@ -1,22 +1,20 @@
 #!/usr/bin/python
-#filename: pca.py
+#filename: internal_pca.py
 
 import os, sys
-import shlex, subprocess, time, re, argparse, traceback, math, matplotlib
-from optparse import OptionParser
-from time import sleep, gmtime, strftime
-from datetime import datetime
+import argparse
 import mdtraj as md
 import numpy as np
-from matplotlib import cm
-matplotlib.use('Agg')
 from sklearn.decomposition import PCA, KernelPCA, IncrementalPCA
 from sklearn.metrics import euclidean_distances
-from sklearn.manifold import MDS
-from sklearn import preprocessing
 from itertools import combinations
-from write_plot import write_plots, write_pcs
+from write_plot import write_plots, write_pcs, write_fig
+from traj_info import trajectory_info, get_cosine, print_kmo
+from welcome_msg import welcome_msg
 
+def main():
+	
+	return;
 #==============================================================================#
 #											Internal PCA MD 
 #
@@ -29,20 +27,9 @@ from write_plot import write_plots, write_pcs
 ##===============================================================================
 ##								 Welcome message
 ##===============================================================================
-print '\n\n'
-print '|=======================================================|'
-print '|\t\t\t\t\t\t\t|'
-print '|\t :-) >>-------> Internal PCA MD <-------<< (-:	|'
-print '|\t\t\t\t\t\t\t|'
-print '|\t\t\t\t\t\t\t|'
-print '|   This programe performs the PCA \t| \n|  on internal cordinates of a MD trajectory\t\t|'
-print '|\t\t\t\t\t\t\t|\n', '|\tAuthors:  Bilal Nizami\t\t\t\t|\n','|\tResearch Unit in Bioinformatics (RUBi)\t\t|\n', '|\tRhodes University, 2017\t\t\t\t|'
-print '|\tDistributed under GNU GPL 3.0\t\t\t|'
-print '|\t\t\t\t\t\t\t|'
-print '|\thttps://github.com/michaelglenister/NMA-TASK\t|'
-print '|\t\t\t\t\t\t\t|'
-print '|=======================================================|'
-print '\n'
+
+title='Internal PCA MD'
+welcome_msg(title)
 
 def set_option():
 	parser = argparse.ArgumentParser( usage='%(prog)s -t <MD trajectory> -p <topology file>')
@@ -50,10 +37,10 @@ def set_option():
 	
 	parser.add_argument("-t", "--trj", dest="trj", help="file name of the MD trajectory", action="store")
 	parser.add_argument("-p", "--top", dest="topology", help="topology file")      
-	parser.add_argument("-at", "--ag", dest="atm_grp", help="group of atom for PCA. Default is C alpha atoms. Other options are :"				  "all= all atoms, backbone = backbone atoms, CA= C alpha atoms, protein= protein's atoms")	
-	parser.add_argument("-ct", "--ref", dest="cordinate_type", help="nternal cordinate type. Options are: distance, angles, dihedral") 
+	parser.add_argument("-ag", "--ag", dest="atm_grp", help="group of atom for PCA. Default is C alpha atoms. Other options are :"				  "all= all atoms, backbone = backbone atoms, CA= C alpha atoms, protein= protein's atoms")	
+	parser.add_argument("-ct", "--ref", dest="cordinate_type", help="nternal cordinate type. Options are: distance, angles, phi and, psi") 
 	args = parser.parse_args()	
-	atm_name = args.atm_grp
+	
 	
 	#====================================================================
 	# if no arguments are passed
@@ -83,7 +70,7 @@ def set_option():
 	return args
 	
 args = set_option()
-
+atm_name = args.atm_grp
 #====================================================================
 # if no arguments are passed
 #====================================================================
@@ -104,7 +91,11 @@ if args.topology is None:
 
 traj = args.trj
 topology = args.topology
-pca_traj = md.load(traj, top=topology)
+#pca_traj = md.load(traj, top=topology)
+try:
+	pca_traj = md.load(traj, top=topology)
+except:
+	raise IOError('Could not open trajectory {0} for reading. \n' .format(trj))
 top = pca_traj.topology
 
 #==============================================
@@ -144,22 +135,11 @@ def get_trajectory():
 
 sele_grp = get_trajectory()
 
-# print trajectory informations
-def trajectory_info():
-	'Prints various information of MD trajectory'
-	print '\n\nTrajectory info:\n'
-	print "Total",pca_traj.n_frames,"frames read from", traj
-	print "MD time is from ", pca_traj.time[0],'to',pca_traj.time[-1],'ps'
-	print pca_traj.n_atoms, "atoms and ", pca_traj.n_residues, "residues in the trajectory"
-	print "Atom group selected for PCA:", atm_name, "\n"
-	
-		
-	print "Total", len(sele_grp), atm_name,'atoms selected for analysis\n'
-	
-	return;
+# print trajectory informations	
+trajectory_info(pca_traj, traj, atm_name, sele_grp)
 
-	
-trajectory_info()
+# print KMO 
+print_kmo(pca_traj, traj, atm_name, sele_grp)
 
 
 #===========================================================
@@ -212,10 +192,23 @@ def distance_pca(int_cord1):
 	
 	dpca = pca.fit(int_cord1)
 	dpca_reduced=dpca.transform(int_cord1)
+	
 	write_plots('dpca_projection', dpca_reduced)
 	write_pcs('dpca_pcs', dpca)
+	write_fig('dpca_projection', dpca_reduced)
+	
+	pc1_cos=get_cosine(dpca_reduced, 0)
+	print 'cosine content of first PC=',pc1_cos
+	pc2_cos=get_cosine(dpca_reduced, 1)
+	print 'cosine content of second PC=', pc2_cos
+	pc3_cos=get_cosine(dpca_reduced, 2)
+	print 'cosine content of 3rd PC=',pc3_cos
+	pc4_cos=get_cosine(dpca_reduced, 3)
+	print 'cosine content of 4th PC=', pc4_cos
 	return;
 
 int_cord=get_internal_cordinates()
 distance_pca(int_cord)
 
+if __name__=="__main__":
+	main()
