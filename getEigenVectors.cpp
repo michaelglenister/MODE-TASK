@@ -27,8 +27,8 @@ const std::string currentDateTime() {
 int main(int argc, char *argv[])
 {
 	//Init vars
-	string protomerVT, outdir = "output";
-	bool hasVt = false;
+	string protomerVT, totalRes, firstMode outdir = "output";
+	bool hasVt = false, hasRes = false, hasMode = false;
 
 	// Begin parameter handling
 	// Add more else if statements for further parameters
@@ -45,6 +45,16 @@ int main(int argc, char *argv[])
 			protomerVT = argv[i+1];
 			hasVt = true;
 		}
+	    	else if(strcmp(argv[i], "--total_residues") == 0)
+		{
+			totalRes = argv[i+1];
+			hasRes = true;
+		}
+	    	else if(strcmp(argv[i], "--first_mode") == 0)
+		{
+			firstMode = argv[i+1];
+			hasMode = true;
+		}
 		else if(strcmp(argv[i], "--outdir") == 0)
 		{
 			outdir = atof(argv[i+1]);
@@ -57,14 +67,24 @@ int main(int argc, char *argv[])
 		cout<<"A VT matrix file is required, use '-h' to view help"<<endl;
 		return -1;
 	}
+	else if(!hasRes)
+	{
+		cout<<"A total residue value is required, use '-h' to view help"<<endl;
+		return -1;
+	}
+	else if(!hasMode)
+	{
+		cout<<"A mode residue value is required, use '-h' to view help"<<endl;
+		return -1;
+	}
 
 	//string protomerVT = argv[1]; //Protomer3CG_VT.txt
 	string protomerMode = outdir + "/ProtomerMode.txt"; //argv[2]; //ProtomerMode617.txt
 	
 	// change these varaibles as required
-	int total = 627;
+	int total = atoi(totalRes.c_str());
 	//int mode1 = 12758;
-	int mode1 = 617;
+	int mode1 = atoi(totalRes.c_str());
 	//int mode1 = 12756;
 	//int mode1 = 12755;
 	//int mode1 = 12754;
