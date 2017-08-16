@@ -8,7 +8,7 @@ Takes a protomer structure and coarse grains to select a set amount of C-Beta
 
 **Command:** ::
 	
-	coarseGrain.py <options> --pdbFile <pdb file> --cg <int> --startingAtom <int> --protomerAtoms <int>
+	coarseGrain.py <options> --pdbFile <pdb file>
 
 **Inputs:**
 
@@ -44,7 +44,7 @@ ANM
 
 **Command:** ::
 
-	ANM <options> --pdb <pdb file> --cutoff <int>
+	ANM <options> --pdb <pdb file>
 
 **Inputs:**
 
@@ -82,7 +82,7 @@ Get eigen vectors
 
 **Command:** ::
 
-	getEigenVectors <options> 
+	getEigenVectors <options> --vt_values <text file>
 
 **Inputs:**
 
@@ -98,7 +98,7 @@ Get eigen vectors
 +------------------------+-----------------------------+
 | Output                 | Description                 |
 +========================+=============================+
-|                        |                             |
+| Protomer modes         |                             |
 |                        |                             |
 +------------------------+-----------------------------+
 
@@ -109,7 +109,7 @@ Takes two pdb models and determines the common residues
 
 **Command:** ::
 
-	commonResidues.py --fullCapsid <pdb file> --protomer <pdb file>
+	commonResidues.py <options> --fullCapsid <pdb file> --protomer <pdb file>
 
 **Inputs:**
 
@@ -128,8 +128,10 @@ Takes two pdb models and determines the common residues
 +------------------------+-----------------------------+
 | Output                 | Description                 |
 +========================+=============================+
-| PDB file               |                             |
-|                        |                             |
+| Common residues file   | Text file containing common |
+|                        | residues, this file is used |
+|                        | as input to the mean square |
+|                        | fluctuations script         |
 +------------------------+-----------------------------+
 
 Mean square fluctuation
@@ -144,7 +146,7 @@ level. But obviously must compare only the residues that are common in each mode
 
 **Command:** ::
 
-	meanSquareFluctuations.py --commonResidues <file> --pdbProtomer --totalModes --firstMode --lastMode --firstResidue --lastResidue --wMatrix --vtMatrix
+	meanSquareFluctuations.py <options> --commonResidues <text file> --pdbProtomer <PDB file> --wMatrix <text file> --vtMatrix <text file>
 
 **Inputs:**
 
@@ -175,8 +177,8 @@ level. But obviously must compare only the residues that are common in each mode
 +------------------------+-----------------------------+
 | Output                 | Description                 |
 +========================+=============================+
-|                        |                             |
-|                        |                             |
+| Beta values file       | Text file listing beta      |
+|                        | values for common residues  |
 +------------------------+-----------------------------+
 
 
@@ -187,7 +189,7 @@ Identifies Modes responsible for conformational change for a molecule wth 15 cop
 
 **Command:** ::
 
-	conformationMode.py 
+	conformationMode.py <options> --pdbAligned <PDB file> --pdbProtAligned <PDB file> --pdbSca <PDB file> --vtProtomer <text file>
 
 **Inputs:**
 
@@ -223,7 +225,7 @@ Creates a PDB for a multiple protomer structure, containing co-ords of an aligne
 
 **Command:** ::
 
-	getAligned.py 
+	getAligned.py <options> --pdbAligned <PDB file> --pdbSca <PDB file>
 
 **Inputs:**
 
@@ -242,18 +244,18 @@ Creates a PDB for a multiple protomer structure, containing co-ords of an aligne
 +------------------------+-----------------------------+
 | Output                 | Description                 |
 +========================+=============================+
-|                        |                             |
+| PDB file               |                             |
 |                        |                             |
 +------------------------+-----------------------------+
 
 Trajectory pentamer
 -------------------------------
 
-Makes a trajectory of 100 PDB files
+Makes a trajectory of 100 PDB files. The resulting output can be viewed in the tool VMD
 
 **Command:** ::
 
-	trajectoryPentamer.py 
+	trajectoryPentamer.py <options> --pdb <PDB file> --modeFile <text file>
 
 **Inputs:**
 
@@ -278,8 +280,12 @@ Makes a trajectory of 100 PDB files
 +------------------------+-----------------------------+
 | Output                 | Description                 |
 +========================+=============================+
+| PDB file               |                             |
 |                        |                             |
-|                        |                             |
++------------------------+-----------------------------+
+| Arrows file            | Text file to draw arrows in |
+|                        | the VMD visualizer          |
 +------------------------+-----------------------------+
 
 
+*Page created by: Michael Glenister*

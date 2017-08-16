@@ -150,7 +150,7 @@
 <h2>Coarse grain<a class="headerlink" href="#coarse-grain" title="Permalink to this headline">¶</a></h2>
 <p>Takes a protomer structure and coarse grains to select a set amount of C-Beta</p>
 <p><strong>Command:</strong></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">coarseGrain</span><span class="o">.</span><span class="n">py</span> <span class="o">&lt;</span><span class="n">options</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">pdbFile</span> <span class="o">&lt;</span><span class="n">pdb</span> <span class="n">file</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">cg</span> <span class="o">&lt;</span><span class="nb">int</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">startingAtom</span> <span class="o">&lt;</span><span class="nb">int</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">protomerAtoms</span> <span class="o">&lt;</span><span class="nb">int</span><span class="o">&gt;</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">coarseGrain</span><span class="o">.</span><span class="n">py</span> <span class="o">&lt;</span><span class="n">options</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">pdbFile</span> <span class="o">&lt;</span><span class="n">pdb</span> <span class="n">file</span><span class="o">&gt;</span>
 </pre></div>
 </div>
 <p><strong>Inputs:</strong></p>
@@ -213,7 +213,7 @@ Default: 1</td>
 </pre></div>
 </div>
 <p><strong>Command:</strong></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ANM</span> <span class="o">&lt;</span><span class="n">options</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">pdb</span> <span class="o">&lt;</span><span class="n">pdb</span> <span class="n">file</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">cutoff</span> <span class="o">&lt;</span><span class="nb">int</span><span class="o">&gt;</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ANM</span> <span class="o">&lt;</span><span class="n">options</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">pdb</span> <span class="o">&lt;</span><span class="n">pdb</span> <span class="n">file</span><span class="o">&gt;</span>
 </pre></div>
 </div>
 <p><strong>Inputs:</strong></p>
@@ -275,7 +275,7 @@ Default: 1</td>
 </pre></div>
 </div>
 <p><strong>Command:</strong></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">getEigenVectors</span> <span class="o">&lt;</span><span class="n">options</span><span class="o">&gt;</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">getEigenVectors</span> <span class="o">&lt;</span><span class="n">options</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">vt_values</span> <span class="o">&lt;</span><span class="n">text</span> <span class="n">file</span><span class="o">&gt;</span>
 </pre></div>
 </div>
 <p><strong>Inputs:</strong></p>
@@ -313,7 +313,7 @@ Default: 1</td>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td>&#160;</td>
+<tr class="row-even"><td>Protomer modes</td>
 <td>&#160;</td>
 </tr>
 </tbody>
@@ -323,7 +323,7 @@ Default: 1</td>
 <h2>Common residues<a class="headerlink" href="#common-residues" title="Permalink to this headline">¶</a></h2>
 <p>Takes two pdb models and determines the common residues</p>
 <p><strong>Command:</strong></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">commonResidues</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">fullCapsid</span> <span class="o">&lt;</span><span class="n">pdb</span> <span class="n">file</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">protomer</span> <span class="o">&lt;</span><span class="n">pdb</span> <span class="n">file</span><span class="o">&gt;</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">commonResidues</span><span class="o">.</span><span class="n">py</span> <span class="o">&lt;</span><span class="n">options</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">fullCapsid</span> <span class="o">&lt;</span><span class="n">pdb</span> <span class="n">file</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">protomer</span> <span class="o">&lt;</span><span class="n">pdb</span> <span class="n">file</span><span class="o">&gt;</span>
 </pre></div>
 </div>
 <p><strong>Inputs:</strong></p>
@@ -366,8 +366,11 @@ Default: 1</td>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td>PDB file</td>
-<td>&#160;</td>
+<tr class="row-even"><td>Common residues file</td>
+<td>Text file containing common
+residues, this file is used
+as input to the mean square
+fluctuations script</td>
 </tr>
 </tbody>
 </table>
@@ -380,7 +383,7 @@ to see if the additional coarse graining decreased the accuracy. If we obtain th
 each residue then in each model then we can say that the results are comparable regardless of the coarse graining
 level. But obviously must compare only the residues that are common in each model. hence we specify commonResidues</p>
 <p><strong>Command:</strong></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">meanSquareFluctuations</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">commonResidues</span> <span class="o">&lt;</span><span class="n">file</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">pdbProtomer</span> <span class="o">--</span><span class="n">totalModes</span> <span class="o">--</span><span class="n">firstMode</span> <span class="o">--</span><span class="n">lastMode</span> <span class="o">--</span><span class="n">firstResidue</span> <span class="o">--</span><span class="n">lastResidue</span> <span class="o">--</span><span class="n">wMatrix</span> <span class="o">--</span><span class="n">vtMatrix</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">meanSquareFluctuations</span><span class="o">.</span><span class="n">py</span> <span class="o">&lt;</span><span class="n">options</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">commonResidues</span> <span class="o">&lt;</span><span class="n">text</span> <span class="n">file</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">pdbProtomer</span> <span class="o">&lt;</span><span class="n">PDB</span> <span class="n">file</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">wMatrix</span> <span class="o">&lt;</span><span class="n">text</span> <span class="n">file</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">vtMatrix</span> <span class="o">&lt;</span><span class="n">text</span> <span class="n">file</span><span class="o">&gt;</span>
 </pre></div>
 </div>
 <p><strong>Inputs:</strong></p>
@@ -445,8 +448,9 @@ will use the last six modes</td>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td>&#160;</td>
-<td>&#160;</td>
+<tr class="row-even"><td>Beta values file</td>
+<td>Text file listing beta
+values for common residues</td>
 </tr>
 </tbody>
 </table>
@@ -455,7 +459,7 @@ will use the last six modes</td>
 <h2>Conformation mode<a class="headerlink" href="#conformation-mode" title="Permalink to this headline">¶</a></h2>
 <p>Identifies Modes responsible for conformational change for a molecule wth 15 copies of each atom</p>
 <p><strong>Command:</strong></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">conformationMode</span><span class="o">.</span><span class="n">py</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">conformationMode</span><span class="o">.</span><span class="n">py</span> <span class="o">&lt;</span><span class="n">options</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">pdbAligned</span> <span class="o">&lt;</span><span class="n">PDB</span> <span class="n">file</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">pdbProtAligned</span> <span class="o">&lt;</span><span class="n">PDB</span> <span class="n">file</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">pdbSca</span> <span class="o">&lt;</span><span class="n">PDB</span> <span class="n">file</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">vtProtomer</span> <span class="o">&lt;</span><span class="n">text</span> <span class="n">file</span><span class="o">&gt;</span>
 </pre></div>
 </div>
 <p><strong>Inputs:</strong></p>
@@ -519,7 +523,7 @@ file *</td>
 <h2>Get aligned<a class="headerlink" href="#get-aligned" title="Permalink to this headline">¶</a></h2>
 <p>Creates a PDB for a multiple protomer structure, containing co-ords of an aligned PDB structure</p>
 <p><strong>Command:</strong></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">getAligned</span><span class="o">.</span><span class="n">py</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">getAligned</span><span class="o">.</span><span class="n">py</span> <span class="o">&lt;</span><span class="n">options</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">pdbAligned</span> <span class="o">&lt;</span><span class="n">PDB</span> <span class="n">file</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">pdbSca</span> <span class="o">&lt;</span><span class="n">PDB</span> <span class="n">file</span><span class="o">&gt;</span>
 </pre></div>
 </div>
 <p><strong>Inputs:</strong></p>
@@ -562,7 +566,7 @@ file *</td>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td>&#160;</td>
+<tr class="row-even"><td>PDB file</td>
 <td>&#160;</td>
 </tr>
 </tbody>
@@ -570,9 +574,9 @@ file *</td>
 </div>
 <div class="section" id="trajectory-pentamer">
 <h2>Trajectory pentamer<a class="headerlink" href="#trajectory-pentamer" title="Permalink to this headline">¶</a></h2>
-<p>Makes a trajectory of 100 PDB files</p>
+<p>Makes a trajectory of 100 PDB files. The resulting output can be viewed in the tool VMD</p>
 <p><strong>Command:</strong></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">trajectoryPentamer</span><span class="o">.</span><span class="n">py</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">trajectoryPentamer</span><span class="o">.</span><span class="n">py</span> <span class="o">&lt;</span><span class="n">options</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">pdb</span> <span class="o">&lt;</span><span class="n">PDB</span> <span class="n">file</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">modeFile</span> <span class="o">&lt;</span><span class="n">text</span> <span class="n">file</span><span class="o">&gt;</span>
 </pre></div>
 </div>
 <p><strong>Inputs:</strong></p>
@@ -627,11 +631,16 @@ vectors</td>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td>&#160;</td>
+<tr class="row-even"><td>PDB file</td>
 <td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>Arrows file</td>
+<td>Text file to draw arrows in
+the VMD visualizer</td>
 </tr>
 </tbody>
 </table>
+<p><em>Page created by: Michael Glenister</em></p>
 </div>
 </div>
 

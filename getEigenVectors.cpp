@@ -27,7 +27,7 @@ const std::string currentDateTime() {
 int main(int argc, char *argv[])
 {
 	//Init vars
-	string protomerVT, totalRes, firstMode outdir = "output";
+	string protomerVT, totalRes, firstMode, outdir = "output";
 	bool hasVt = false, hasRes = false, hasMode = false;
 
 	// Begin parameter handling
@@ -45,12 +45,12 @@ int main(int argc, char *argv[])
 			protomerVT = argv[i+1];
 			hasVt = true;
 		}
-	    	else if(strcmp(argv[i], "--total_residues") == 0)
+	    else if(strcmp(argv[i], "--total_residues") == 0)
 		{
 			totalRes = argv[i+1];
 			hasRes = true;
 		}
-	    	else if(strcmp(argv[i], "--first_mode") == 0)
+	    else if(strcmp(argv[i], "--first_mode") == 0)
 		{
 			firstMode = argv[i+1];
 			hasMode = true;
