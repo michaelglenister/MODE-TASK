@@ -67,10 +67,7 @@ def main(args):
         first_mode = total_modes - 6
         last_mode = total_modes - 1
 
-    print "First mode: " + str(first_mode)
-    print "Last mode: " + str(last_mode)
     # Llama
-
     first_res = 0
     # Specify Residue Indexes
     # Get first residue number
@@ -79,6 +76,7 @@ def main(args):
             if first_res == 0:
                 info = line.split()
                 first_res = int(info[1].strip())
+
     res_range = range(first_res - 1, last_res)
     print "Residue range: " + str(res_range)
 

@@ -4,15 +4,26 @@ Installation
 Platform compatibility
 -------------------------------
 
-NMA-TASK is compatible with most platforms which are able to run Python 2.7 and G++
+NMA-TASK is compatible with most platforms which are able to run Python 2.7 and g++
 
 
 Install system dependencies
 -----------------------------
 
-**Ubuntu 16.04:** ::
+**Ubuntu 14.04:** ::
+	
+	sudo apt-get update
+	sudo apt-get install python-dev virtualenv virtualenvwrapper g++
 
-	sudo apt-get install virtualenvwrapper python-dev g++
+**OSX:** ::
+
+	brew update
+	brew install python gcc
+	pip install virtualenv virtualenvwrapper
+
+**Windows:**
+
+	Download and install python 2.7
 
 
 Install Python dependencies
