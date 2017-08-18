@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 #filename: internal_pca.py
 
 import os, sys

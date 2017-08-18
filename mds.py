@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 #filename: mds.py
 import os, sys
 import argparse
@@ -45,17 +45,16 @@ def get_options():
 	parser.add_argument("-ai", "--atom_indices",  dest="atom_indices",				help="group of atom for pairwise distance. Default is C alpha atoms. Other options are :"				  "all= all atoms, backbone = backbone atoms, alpha= C alpha atoms, heavy= all non hydrogen atoms, minimal=CA,CB,C,N,O atoms")
 
 	args = parser.parse_args()	
-	
+	if args.trj is None:
+		print 'ERROR: Missing trajectory argument.... :(  \nPlease see the help by running \n\nsystem_setup.py -h\n\n '
+		parser.print_help()
+		sys.exit(1)
+
 	if not os.path.exists(args.trj ):
 		print('\nERROR: {0} not found....:(  Please check the path or filename\n' .format(args.trj ))
 		#parser.print_help()
 		sys.exit(1)
 		
-	if args.trj is None:
-		print 'ERROR: Missing trajectory argument.... :(  \nPlease see the help by running \n\nsystem_setup.py -h\n\n '
-		parser.print_help()
-		sys.exit(1)
-	
 	if not os.path.exists(args.topology):
 		print('\nERROR: {0} not found....:(  Please check the path or filename\n' .format(args.topology ))
 		#parser.print_help()

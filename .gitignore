@@ -10,3 +10,5 @@ getEigenVectors
 *.pyc
 
 output/
+
+venv/

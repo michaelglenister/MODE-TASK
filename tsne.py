@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 #filename: tsne.py
 import os, sys
 import argparse
