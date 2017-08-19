@@ -16,7 +16,7 @@ def main(args):
     lines_empty = f.readlines()
     f.close()
 
-    f = open(args.pdbProtomerAligned, 'r')
+    f = open(args.pdbProtAligned, 'r')
     lines_full = f.readlines()
     f.close()
 
@@ -49,9 +49,9 @@ def main(args):
         for r in full_residues[ch]:
             if r in empty_residues[ch]:
                 common_residues[ch].append(r)
-    print full_residues
-    print empty_residues
-    print common_residues
+    # print full_residues
+    # print empty_residues
+    # print common_residues
 
     selected_full = {'A': [], 'B': [], 'C': [], 'D': []}
     empty_cords = []
@@ -97,8 +97,8 @@ def main(args):
         for j in range(len(empty_cords) / number_of_protomers):
             full = full_cords[i + (j * number_of_protomers)]
             empty = empty_cords[i + (j * number_of_protomers)]
-            print full
-            print empty
+            # print full
+            # print empty
             rx = empty[0] - full[0]
             ry = empty[1] - full[1]
             rz = empty[2] - full[2]
@@ -106,7 +106,7 @@ def main(args):
             delta_r.append(ry)
             delta_r.append(rz)
 
-    print len(delta_r)
+    # print len(delta_r)
 
     # Calculate the magnitude
     mag_d_r = 0
@@ -117,7 +117,7 @@ def main(args):
     # Get Eigenvectors for a mode
     # Calculate Indexes of vectors to be selected
     interface_index = []
-    f = open(args.pdb_sca, 'r')
+    f = open(args.pdbSca, 'r')
     nma = f.readlines()
     f.close()
     count = 0
@@ -134,10 +134,10 @@ def main(args):
                 count += 1
 
     # Mode range (Starting with 10 slowest modes)
-    #CG = 621
-    #Protomer = 2520
+    # CG = 621
+    # Protomer = 2520
     mode_range = range(0, 621)
-    f = open(args.vtProtomer, 'r')
+    f = open(args.vtMatrix, 'r')
     vectors = f.readlines()
     f.close()
 
@@ -159,20 +159,19 @@ def main(args):
         mag_mode = sqrt(mag_mode)
         # Calculate Dot Product
         if len(common_vector) == len(delta_r):
-            print "Vectors Match"
+            # print "Vectors Match"
             for i in range(len(common_vector)):
                 overlap += common_vector[i] * delta_r[i]
 
             overlap = overlap / (mag_d_r * mag_mode)
 
-            output.append("Mode: " + str(mode) +
-                          " Overlap: " + str(overlap) + '\n')
+            output.append("Mode: " + str(mode) + " Overlap: " + str(overlap) + '\n')
             overlay_list.append(overlap)
 
     overlay_list.sort()
     overlay_list.reverse()
 
-    w = open(args.output, 'w')
+    w = open(args.outdir + "/" + args.output, 'w')
     for out in output:
         w.write(out)
     w.write("Sorted Values:\n")
@@ -198,21 +197,23 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
     # standard arguments for logging
-    parser.add_argument("--silent", help="Turn off logging",
-                        action='store_true', default=False)
-    parser.add_argument(
-        "--log-file", help="Output log file (default: standard output)", default=None)
+    parser.add_argument("--silent", help="Turn off logging", action='store_true', default=False)
+    parser.add_argument("--log-file", help="Output log file (default: standard output)", default=None)
+    parser.add_argument("--outdir", help="Output directory", default="output")
 
     # custom arguments
-    parser.add_argument("--pdbAligned", help="")  # '4n43_aligned.pdb'
-    # missing pdb_sca args?
-    parser.add_argument("--pdbProtomerAligned", help="") # '3VBSProtomer_aligned3_SCA.pdb'
-    parser.add_argument("--pdbProtomer", help="")  # '3VBSProtomer3_SCA.pdb' used where?
-    parser.add_argument("--vtProtomer", help="")  # 'Protomer3CG_VT.txt'
-    parser.add_argument("--output", help="Output file",
-                        default="ProtomerCGrained.txt")  # 'Protomer3CG_VT.txt'
+    parser.add_argument("--pdbAligned", help="")
+    # missing pdbSca args?
+    parser.add_argument("--pdbProtAligned", help="")
+    parser.add_argument("--pdbSca", help="")
+    parser.add_argument("--vtMatrix", help="")  # note: change this from vtProtomer
+    parser.add_argument("--output", help="Output file", default="ProtomerCGrained.txt")
 
     args = parser.parse_args()
+
+    # Check if required directories exist
+    if not os.path.isdir(args.outdir):
+        os.makedirs(args.outdir)
 
     # Check if args supplied by user
     if len(sys.argv) > 1:

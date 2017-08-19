@@ -180,54 +180,58 @@ def get_rmsf(pca_traj, sele_grp, trj_eval):
 	
 	## write the RMSF mode file for first PC
 	
-	np.savetxt('pc1_rmsf.agr',np.average(B, axis=0))
-	rf = open('pc1_rmsf.agr', 'r')
+	np.savetxt('pc1_rmsd_mode.agr',np.average(B, axis=0))
+	rf = open('pc1_rmsd_mode.agr', 'r')
 	rf_cont = rf.read()
 	rf.close()
 	
 	my_time = strftime("%Y-%m-%d  %a  %H:%M:%S", gmtime())
 	title = '\tcreated by pca.py\t'
-	legends = '@    title "RMSD modes"\n\
+	subtitle='@    subtitle "Contribution of each residue to the PC"\
+	@    subtitle font 0\
+	@    subtitle size 1.000000\
+	@    subtitle color 1'
+	legends = '@    title "RMSD modes for PC1"\n\
 	@    xaxis  label "Residue"\n\
 	@    yaxis  label "RMSD"\n\
 	@	TYPE xy\n'
 	
-	pf = open('pc1_rmsf.agr', 'w')
-	pf.write('#'+title+'\ton\t'+my_time+'\n'+legends+'\n'+rf_cont)
+	pf = open('pc1_rmsd_mode.agr', 'w')
+	pf.write('#'+title+'\ton\t'+my_time+'\n'+legends+subtitle+'\n'+rf_cont)
 	pf.close()
 
 	## write the RMSF mode file for second PC
-	np.savetxt('pc2_rmsf.agr',np.average(C, axis=0))
-	rf = open('pc2_rmsf.agr', 'r')
+	np.savetxt('pc2_rmsd_mode.agr',np.average(C, axis=0))
+	rf = open('pc2_rmsd_mode.agr', 'r')
 	rf_cont = rf.read()
 	rf.close()
 	
 	my_time = strftime("%Y-%m-%d  %a  %H:%M:%S", gmtime())
 	title = '\tcreated by pca.py\t'
-	legends = '@    title "RMSD modes"\n\
+	legends = '@    title "RMSD modes for PC2"\n\
 	@    xaxis  label "Residue"\n\
 	@    yaxis  label "RMSD"\n\
 	@	TYPE xy\n'
 	
-	pf = open('pc2_rmsf.agr', 'w')
-	pf.write('#'+title+'\ton\t'+my_time+'\n'+legends+'\n'+rf_cont)
+	pf = open('pc2_rmsd_mode.agr', 'w')
+	pf.write('#'+title+'\ton\t'+my_time+'\n'+legends+subtitle+'\n'+rf_cont)
 	pf.close()
 	
 	## write the RMSF mode file for third PC
-	np.savetxt('pc3_rmsf.agr',np.average(D, axis=0))
-	rf = open('pc3_rmsf.agr', 'r')
+	np.savetxt('pc3_rmsd_mode.agr',np.average(D, axis=0))
+	rf = open('pc3_rmsd_mode.agr', 'r')
 	rf_cont = rf.read()
 	rf.close()
 	
 	my_time = strftime("%Y-%m-%d  %a  %H:%M:%S", gmtime())
 	title = '\tcreated by pca.py\t'
-	legends = '@    title "RMSD modes"\n\
+	legends = '@    title "RMSD modes for PC3"\n\
 	@    xaxis  label "Residue"\n\
 	@    yaxis  label "RMSD"\n\
 	@	TYPE xy\n'
 	
-	pf = open('pc3_rmsf.agr', 'w')
-	pf.write('#'+title+'\ton\t'+my_time+'\n'+legends+'\n'+rf_cont)
+	pf = open('pc3_rmsd_mode.agr', 'w')
+	pf.write('#'+title+'\ton\t'+my_time+'\n'+legends+subtitle+'\n'+rf_cont)
 	pf.close()
 	
 	return;

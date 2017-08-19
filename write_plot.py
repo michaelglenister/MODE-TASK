@@ -16,10 +16,16 @@ def write_plots(file_name, pca):
 	'function to write pca plots. takes name of the file to write and pca object name'
 	my_time = strftime("%Y-%m-%d  %a  %H:%M:%S", gmtime())
 	title = '\tcreated by pca.py\t'
-	legends = '@    title "Projection of PC"\n\
+	legends12 = '@    title "Projection of PC"\n\
 	@    xaxis  label "PC1"\n\
-	@    yaxis  label "PC2"\n\
-	@	TYPE xy\n\
+	@    yaxis  label "PC2"\n'
+	legends13 = '@    title "Projection of PC"\n\
+	@    xaxis  label "PC1"\n\
+	@    yaxis  label "PC3"\n'
+	legends23 = '@    title "Projection of PC"\n\
+	@    xaxis  label "PC2"\n\
+	@    yaxis  label "PC3"\n'
+	other='@	TYPE xy\n\
 	@    s0 line type 0\n\
 	@    s0 line linestyle 1\n\
 	@    s0 line linewidth 1.0\n\
@@ -54,7 +60,7 @@ def write_plots(file_name, pca):
 	pf_cont = pf.read()
 	pf.close()
 	pf = open(fname, 'w')
-	pf.write('#'+title+'\ton\t'+my_time+'\n'+legends+'\n'+pf_cont)
+	pf.write('#'+title+'\ton\t'+my_time+'\n'+legends12+other+'\n'+pf_cont)
 	pf.close()
 	
 	# plot 1 and 3 PC
@@ -65,7 +71,7 @@ def write_plots(file_name, pca):
 	pf_cont = pf.read()
 	pf.close()
 	pf = open(fname, 'w')
-	pf.write('#'+title+'\ton\t'+my_time+'\n'+legends+'\n'+pf_cont)
+	pf.write('#'+title+'\ton\t'+my_time+'\n'+legends13+other+'\n'+pf_cont)
 	pf.close()
 	
 	# plot 2 and 3 PC
@@ -76,7 +82,7 @@ def write_plots(file_name, pca):
 	pf_cont = pf.read()
 	pf.close()
 	pf = open(fname, 'w')
-	pf.write('#'+title+'\ton\t'+my_time+'\n'+legends+'\n'+pf_cont)
+	pf.write('#'+title+'\ton\t'+my_time+'\n'+legends23+other+'\n'+pf_cont)
 	pf.close()
 	
 	
@@ -104,7 +110,7 @@ def write_fig(file_name, pca):
 	fig=plt.figure()
 	plt.scatter(pca[:,0], pca[:,2], marker='x', c=col)
 	plt.xlabel('PC1')
-	plt.ylabel('PC2')
+	plt.ylabel('PC3')
 	plt.title('Cartesian coordinate PCA')
 	cbar = plt.colorbar()
 	cbar.set_label('Time [ps]')
@@ -114,8 +120,8 @@ def write_fig(file_name, pca):
 	fname = file_name+'2_3'+'.png'
 	fig=plt.figure()
 	plt.scatter(pca[:,1], pca[:,2], marker='x', c=col)
-	plt.xlabel('PC1')
-	plt.ylabel('PC2')
+	plt.xlabel('PC2')
+	plt.ylabel('PC3')
 	plt.title('Cartesian coordinate PCA')
 	cbar = plt.colorbar()
 	cbar.set_label('Time [ps]')

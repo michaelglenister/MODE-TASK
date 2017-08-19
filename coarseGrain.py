@@ -11,15 +11,10 @@ import math
 
 
 def main(args):
-    output = args.outdir + "/" + args.pdbFile[args.pdbFile.rfind('/') + 1:args.pdbFile.index('.')]
-    f = open(args.pdbFile, 'r')
+    pdb_file = args.pdbFile
+    f = open(pdb_file, 'r')
     lines = f.readlines()
     f.close()
-
-    # Get Info to rewrite PDB
-    header = []
-    atomLines = []
-    end = []
 
     # get index of first atom
     for i in range(len(lines)):
@@ -28,14 +23,12 @@ def main(args):
             break
     header = lines[0:index_atom]
     all_atoms = lines[index_atom:]
-    number_of_protomers = 0
-    macro_molecule = False
+
     chain_dics = {}
     number_protomer_atoms = 0
     c_beta_atoms = []
-    change = False
+
     for atom in all_atoms:
-        cbeta = []
         if atom.startswith("ATOM"):
             info = atom.split()
             chain = info[4]
@@ -50,8 +43,8 @@ def main(args):
                     if chain1 not in chain_dics:
                         chain_dics[chain1] = 1
                     else:
+                        # Is macro molecule
                         chain_dics[chain1] += 1
-                        macro_molecule = True
                     chain1 = chain
                 c_beta_atoms.append(atom)
         if atom.startswith("END"):
@@ -61,11 +54,11 @@ def main(args):
                 chain_dics[chain1] = 1
 
     # print number_protomer_atoms
-    # print chain_dics
+
     number_of_protomers = chain_dics[chain1]
 
     # Set level of coarsegrain
-    c_g = args.cg  # parameter
+    c_g = args.cg
 
     # Read in all cbeta atoms for
     cbetas = []
@@ -86,7 +79,7 @@ def main(args):
     starting_atom_i = starting_atom - 1  # Index for starting atom
     index_of_selected_atoms.append(starting_atom_i)
 
-    number_protomer_atoms = args.protomerAtoms  # parameter
+    #number_protomer_atoms = args.protomerAtoms
     protomer_c_betas = cbetas[0:number_protomer_atoms]
     coords_start = protomer_c_betas[starting_atom_i]
     distances_from_start = []
@@ -144,7 +137,6 @@ def main(args):
     # print index_of_selected_atoms
     print "No. atoms selected per protomer: " + str(len(index_of_selected_atoms))
     print "No. atoms selected per macro molecule: " + str(len(index_of_selected_atoms) * number_of_protomers)
-    # print "No. atoms selected per macro molecule: " + str(len(index_of_selected_atoms) * 60)
 
     # for a in distribution:
     # print a
@@ -167,7 +159,8 @@ def main(args):
         ter = "TER" + " " * 3 + " " * (5 - len(str(count))) + str(count) + " " * 6 + a.split(
         )[3] + " " + a.split()[4] + " " + " " * (3 - len(a.split()[5])) + a.split()[5] + " \n"
         selected_c_beta_lines.append(ter)
-    w = open(output + str(c_g) + "_SCA.pdb", 'w')
+
+    w = open(args.outdir + "/" + pdb_file[pdb_file.rfind("/"):pdb_file.find(".")] + str(c_g) + "_SCA.pdb", 'w')
     w.writelines(header)
     w.writelines(selected_c_beta_lines)
     w.write("END")
@@ -192,24 +185,22 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
     # standard arguments for logging and output
-    parser.add_argument("--silent", help="Turn off logging",
-                        action='store_true', default=False)
-    parser.add_argument(
-        "--log-file", help="Output log file (default: standard output)", default=None)
-    parser.add_argument(
-        "--outdir", help="Output directory", default="output")
+    parser.add_argument("--silent", help="Turn off logging", action='store_true', default=False)
+    parser.add_argument("--log-file", help="Output log file (default: standard output)", default=None)
+    parser.add_argument("--outdir", help="Output directory", default="output")
 
     # custom arguments
     # parser.add_argument("--output", help="")#output = "3VBSPent"
     parser.add_argument("--pdbFile", help="PDB input file")  # 3VBSPent.pdb
-    parser.add_argument(
-        "--cg", help="Course grain level [int]", default=4, type=int)
-    parser.add_argument(
-        "--startingAtom", help="Residue number of starting atoms [int]", default=1, type=int)
-    parser.add_argument("--protomerAtoms",
-                        help="", default=842, type=int)
+    parser.add_argument("--cg", help="Course grain level [int]", default=4, type=int)
+    parser.add_argument("--startingAtom", help="Residue number of starting atoms [int]", default=1, type=int)
+    # parser.add_argument("--protomerAtoms", help="", default=0, type=int)
 
     args = parser.parse_args()
+
+    # Check if required directories exist
+    if not os.path.isdir(args.outdir):
+        os.makedirs(args.outdir)
 
     # Check if args supplied by user
     if len(sys.argv) > 1:

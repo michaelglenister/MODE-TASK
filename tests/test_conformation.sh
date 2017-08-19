@@ -1,0 +1,11 @@
+#!/bin/bash
+
+file="input_pdb"
+while IFS= read line
+do
+	prot=${line}
+done <${file}
+
+cd ..
+
+./conformationMode.py --pdbAligned tests/${prot}.pdb --pdbProtAligned output/${prot:0:4}_SCA.pdb --pdbSca output/${prot}4_SCA.pdb --vtMatrix output/VT_values.txt

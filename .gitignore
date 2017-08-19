@@ -1,10 +1,12 @@
 
 ANM
 
+getEigenVectors
+
 *.txt
 
 *.odt
 
 *.pyc
 
-getEigenVectors
+output/

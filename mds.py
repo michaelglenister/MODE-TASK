@@ -6,7 +6,7 @@ import mdtraj as md
 import numpy as np
 from sklearn.metrics import euclidean_distances
 from sklearn.manifold import MDS
-from write_plot import write_plots, write_pcs
+from write_plot import write_plots, write_pcs, write_fig
 from traj_info import trajectory_info, get_internal_cordinates, get_trajectory, get_cosine, print_kmo
 from welcome_msg import welcome_msg
 
@@ -151,7 +151,7 @@ def mds(input, type):
 		
 		# write PC plots
 		write_plots('nmds_projection', npos)
-		
+		write_fig('nmds_projection', npos)
 		# cosine content 
 		
 		pc1_cos=get_cosine(npos, 0)
@@ -170,7 +170,7 @@ def mds(input, type):
 		
 		# write PC plots
 		write_plots('mmds_projection', mpos)
-		
+		write_fig('mmds_projection', mpos)
 		# cosine content 
 		
 		pc1_cos=get_cosine(mpos, 0)

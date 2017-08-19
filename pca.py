@@ -358,7 +358,7 @@ def my_pca():
 	j = 0
 	eigv = []
 	n_comp=100
-	print trj_evec.real.shape
+	#print trj_evec.real.shape
 	pca = trj_evec.real[:,0:n_comp]    ## keep first 100 eigenvectors
 	for i in trj_eval.real[0:n_comp]:
 		eigv.append(i)
@@ -367,7 +367,7 @@ def my_pca():
 	#write_plots('variation', variation)
 	#========================================================
 	# transform the input data into choosen pc
-	print pca.shape
+	#print pca.shape
 	arr_transformed = pca.T.dot(arr.T)
 	
 	write_plots('pca_projection', arr_transformed)

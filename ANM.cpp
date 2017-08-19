@@ -20,8 +20,10 @@
 #include <ap.cpp>
 #include <vector>
 
+#include <stdio.h>
+#include <time.h>
 
-// TO GENERALISE THIS WE MUST JUST TAKE A FILE NAME AS A PARAMETER AND HAVE GENERAL OUTPUT FILE NAMES.
+
 using namespace std;
 using namespace alglib;
 
@@ -86,8 +88,8 @@ vector< vector<double> > getForceConstants(vector<double> atom1,vector<double> a
 	
 	double dv2ka;
 	
-	//if outside cutoff or atom1=atom2			
-	if (dist2>cutoff)//parameter 
+	//if outside cutoff or atom1=atom2
+	if (dist2>cutoff)//parameter
 	{
 		for(int i=0;i<3;i++)
 		{		
@@ -211,14 +213,24 @@ vector< vector<double> > getHessian(vector< vector<double> > C, double cutoff)//
 	return Hessian;
 }// getHessian
 
+// Get current date/time, format is YYYY-MM-DD HH:mm:ss
+const std::string currentDateTime() {
+    time_t     now = time(0);
+    struct tm  tstruct;
+    char       buf[80];
+    tstruct = *localtime(&now);
+
+    strftime(buf, sizeof(buf), "%Y-%m-%d %X", &tstruct);
+
+    return buf;
+}
 
 int main(int argc, char *argv[])
 {	
 	//Init vars
-	double cutoff;
-	string pdbInput;
-	bool hasPdb = false, hasCutoff = false;
-	string temp;
+	double cutoff = 24;
+	string pdbInput, outdir = "output";
+	bool hasPdb = false;
 
 	// Begin parameter handling
 	// Add more else if statements for further parameters
@@ -238,7 +250,12 @@ int main(int argc, char *argv[])
 		else if(strcmp(argv[i], "--cutoff") == 0)
 		{
 			cutoff = atof(argv[i+1]);
-			hasCutoff = true;
+			//hasCutoff = true;
+		}
+		else if(strcmp(argv[i], "--outdir") == 0)
+		{
+			outdir = atof(argv[i+1]);
+			//hasOutdir = true;
 		}
     }
 	
@@ -247,29 +264,31 @@ int main(int argc, char *argv[])
 		cout<<"A PDB file is required, use '-h' to view help"<<endl;
 		return -1;
 	}
-
-	if(!hasCutoff)
-	{
-		cutoff = 24;
-		cout<<"Using a default cutoff of " << cutoff <<endl;
-	}
 	
 	cutoff = cutoff * cutoff;
-	string eigenvalueMatrixFile = pdbInput.substr(0,4) + "_W.txt"; //4BIP_W.txt
-	string eigenvalueVTFile = pdbInput.substr(0,4) + "_VT.txt"; //4BIP_VT.txt
-	string eigenvalueUFile = pdbInput.substr(0,4) + "_U.txt"; //4BIP_U.txt
+	/*string eigenvalueMatrixFile = outdir + "/" + pdbInput.substr(pdbInput.find_last_of("/\\")+1, 4) + "_W.txt";
+	string eigenvalueVTFile = outdir + "/" + pdbInput.substr(pdbInput.find_last_of("/\\")+1, 4) + "_VT.txt";
+	string eigenvalueUFile = outdir + "/" + pdbInput.substr(pdbInput.find_last_of("/\\")+1, 4) + "_U.txt";*/
 
-	cout<<"Output files will be:"<<endl;
-	cout<<eigenvalueMatrixFile<<endl;
-	cout<<eigenvalueVTFile<<endl;
-	cout<<eigenvalueUFile<<endl;
-	cout<<cutoff<<endl;
-
+	string eigenvalueMatrixFile = outdir + "/W_values.txt";
+	string eigenvalueVTFile = outdir + "/VT_values.txt";
+	string eigenvalueUFile = outdir + "/U_values.txt";
+	
 	// End parameter handling
+
+	// Start cronometer
+	const int ONE_HOUR = 60 * 60;
+	const int ONE_MINUE = 60;
+
+	int hour;
+	int min;
+	int sec;
+	std::cout << "Started at: " << currentDateTime() << std::endl;
+	clock_t tStart = clock();
+
 
 	vector< vector<double> > C = getCoOrds(pdbInput);
 	vector< vector<double> > Hessian = getHessian(C, cutoff);
-
 
 	int size = Hessian.size();
 	alglib::real_2d_array Hes;
@@ -334,6 +353,34 @@ int main(int argc, char *argv[])
         outputFileU<<endl;
 	}// for vt
 	outputFileU.close();
+
+
+	// End cronometer
+	std::cout << "Completed at: " << currentDateTime() << std::endl;
+	int time_target=(clock() - tStart)/CLOCKS_PER_SEC;
+
+	hour=time_target/ONE_HOUR;
+	time_target-=hour*ONE_HOUR;
+	min=time_target/ONE_MINUE;
+	time_target-=min*ONE_HOUR;
+	sec=time_target;
+	if (min<10 && sec<10)
+	{
+		printf("- Total time: %d:0%d:0%d\n",hour,min,sec);
+	}
+	else if (min<10)
+	{
+		printf("- Total time: %d:0%d:%d\n",hour,min,sec);
+	}
+	else if (sec<10)
+	{
+		printf("- Total time: %d:%d:0%d\n",hour,min,sec);
+	}
+	else
+	{
+		printf("- Total time: %d:%d:%d\n",hour,min,sec);
+	}
+
 
 	return 0;
 }//main

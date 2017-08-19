@@ -18,7 +18,7 @@ Install system dependencies
 Install Python dependencies
 --------------------------------
 
-It is recommended to create a Python virtual environment for installing and managing dependencies:
+It is recommended to create a Python virtual environment for installing and managing dependencies::
 
 	virtualenv venv
 	source venv/bin/activate
@@ -29,7 +29,6 @@ It is recommended to create a Python virtual environment for installing and mana
 	pip install mdtraj
 
 
-
 Download the project
 -------------------------------
 
@@ -38,6 +37,6 @@ NMA-TASK can be cloned from it's GitHub repository ::
 	git clone https://github.com/RUBi-ZA/NMA-TASK.git
 	cd NMA-TASK
 
-Always activate the virtual environment you created in the previous step when using NMA-TASK. with:
+Activate the virtual environment you created in the previous step when using NMA-TASK. with::
 
 	source venv/bin/activate
