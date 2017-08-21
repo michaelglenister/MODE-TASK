@@ -102,7 +102,7 @@ def set_option():
 	if args.svd_solver != None and args.pca_type != 'svd':
 		print 'WARNING: -st', args.svd_solver, 'is meaningless with -pt', args.pca_type, '. Flag -st is being ignored!'
 	return args
-	
+
 args = set_option()
 atm_name = args.atm_grp
 #=======================================
@@ -134,7 +134,8 @@ if ref:
 		ref = md.load(args.reference)
 	except:
 			raise IOError('Could not open reference structure {0} for reading. \n' .format(args.reference))
-	
+
+print 'Reading trajectory ', args.trj, '...' 
 try:
 	pca_traj = md.load(traj, top=topology)
 except:

@@ -187,13 +187,17 @@ def get_rmsf(pca_traj, sele_grp, trj_eval, out_dir):
 	
 	my_time = strftime("%Y-%m-%d  %a  %H:%M:%S", gmtime())
 	title = '\tcreated by pca.py\t'
+	subtitle='@    subtitle "Contribution of each residue to the PC"\
+	@    subtitle font 0\
+	@    subtitle size 1.000000\
+	@    subtitle color 1'
 	legends = '@    title "RMSD modes"\n\
 	@    xaxis  label "Residue"\n\
 	@    yaxis  label "RMSD"\n\
 	@	TYPE xy\n'
 	
 	pf = open(pc1_rmsf_fname, 'w')
-	pf.write('#'+title+'\ton\t'+my_time+'\n'+legends+'\n'+rf_cont)
+	pf.write('#'+title+'\ton\t'+my_time+'\n'+legends+subtitle+'\n'+rf_cont)
 	pf.close()
 
 	## write the RMSF mode file for second PC
@@ -211,7 +215,7 @@ def get_rmsf(pca_traj, sele_grp, trj_eval, out_dir):
 	@	TYPE xy\n'
 	
 	pf = open(pc2_rmsf_fname, 'w')
-	pf.write('#'+title+'\ton\t'+my_time+'\n'+legends+'\n'+rf_cont)
+	pf.write('#'+title+'\ton\t'+my_time+'\n'+legends+subtitle+'\n'+rf_cont)
 	pf.close()
 	
 	## write the RMSF mode file for third PC
@@ -229,7 +233,7 @@ def get_rmsf(pca_traj, sele_grp, trj_eval, out_dir):
 	@	TYPE xy\n'
 	
 	pf = open(pc3_rmsf_fname, 'w')
-	pf.write('#'+title+'\ton\t'+my_time+'\n'+legends+'\n'+rf_cont)
+	pf.write('#'+title+'\ton\t'+my_time+'\n'+legends+subtitle+'\n'+rf_cont)
 	pf.close()
 	
 	return;
