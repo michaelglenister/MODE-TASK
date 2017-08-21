@@ -12,3 +12,5 @@ getEigenVectors
 output/
 
 venv/
+
+docs/build/
