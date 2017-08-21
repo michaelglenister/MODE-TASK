@@ -2,4 +2,4 @@
 
 cd ..
 
-./tsne.py
+./tsne.py --trj tests/pca_test_trj.xtc --top tests/complex.pdb
