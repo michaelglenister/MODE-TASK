@@ -36,7 +36,8 @@ def set_option():
 	#"Usage: pca.py -t <MD trajectory> -p <topology file>  -a <atom group >"
 	
 	parser.add_argument("-t", "--trj", dest="trj", help="file name of the MD trajectory", action="store")
-	parser.add_argument("-p", "--top", dest="topology", help="topology file")      
+	parser.add_argument("-p", "--top", dest="topology", help="topology file")   
+	parser.add_argument("-out", "--out", dest="out_dir", help="Name of the output directory. Default is out")	
 	parser.add_argument("-ag", "--ag", dest="atm_grp", help="group of atom for PCA. Default is C alpha atoms. Other options are :"				  "all= all atoms, backbone = backbone atoms, CA= C alpha atoms, protein= protein's atoms")	
 	parser.add_argument("-ct", "--ref", dest="cordinate_type", help="nternal cordinate type. Options are: distance, angles, phi and, psi") 
 	args = parser.parse_args()	
@@ -45,6 +46,10 @@ def set_option():
 	#====================================================================
 	# if no arguments are passed
 	#====================================================================
+	if args.out_dir == None:
+		out=args.trj
+		args.out_dir=out
+		
 	if args.trj is None: 
 		print 'ERROR: Missing trajectory argument.... :(  \nPlease see the help by running \n\nsystem_setup.py -h\n\n '
 		parser.print_help()
@@ -97,6 +102,19 @@ try:
 except:
 	raise IOError('Could not open trajectory {0} for reading. \n' .format(trj))
 top = pca_traj.topology
+
+# take the input trj name for output directory
+out_dir=args.out_dir
+out_dir=out_dir.split('/')
+out_dir=out_dir[-1]
+out_dir='out_'+out_dir
+
+if not os.path.exists(out_dir):
+    os.makedirs(out_dir)
+else:
+	print out_dir, 'already exist. Can not overwrite the output directory!\n'
+	sys.exit(1)
+print 'Results will be written in ', out_dir
 
 #==============================================
 #
@@ -193,9 +211,9 @@ def distance_pca(int_cord1):
 	dpca = pca.fit(int_cord1)
 	dpca_reduced=dpca.transform(int_cord1)
 	
-	write_plots('dpca_projection', dpca_reduced)
-	write_pcs('dpca_pcs', dpca)
-	write_fig('dpca_projection', dpca_reduced)
+	write_plots('dpca_projection', dpca_reduced, out_dir)
+	write_pcs('dpca_pcs', dpca, out_dir)
+	write_fig('dpca_projection', dpca_reduced, out_dir)
 	
 	pc1_cos=get_cosine(dpca_reduced, 0)
 	print 'cosine content of first PC=',pc1_cos

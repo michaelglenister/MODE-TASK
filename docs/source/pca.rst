@@ -30,6 +30,9 @@ To see the all the availaible options run the following command:
 | Topology file *        | File       |``-p``              | Topology file               |
 |                        |            |                    | (.gro, .pdb etc)            |
 +------------------------+------------+--------------------+-----------------------------+
+| Output directory       | string     |``-out``            | Name of the output directory|
+|                        |            |                    | . Default is out            |
++------------------------+------------+--------------------+-----------------------------+
 | Atom group             | String     |``-ag``             | group of atom for PCA.      |
 |                        |            |                    | Default is C-alpha atoms.   |
 | 			 |	      | 		   | Other options are:          |
@@ -186,6 +189,9 @@ User can also performs the PCA on internal cordinates of a MD trajectory. Option
 | Topology file *        | File       |``-p``              | Topology file               |
 |                        |            |                    | (.gro, .pdb etc)            |
 +------------------------+------------+--------------------+-----------------------------+
+| Output directory       | string     |``-out``            | Name of the output directory|
+|                        |            |                    | . Default is out            |
++------------------------+------------+--------------------+-----------------------------+
 | Atom group             | String     |``-ag``             | group of atom for PCA.      |
 |                        |            |                    | Default is C-alpha atoms.   |
 | 			 |	      | 		   | Other options are:          |
@@ -258,6 +264,9 @@ MDS is a tool to visualize the similarity or dissimilarity in a dataset. Two typ
 +------------------------+------------+--------------------+-----------------------------+
 | Topology file *        | File       |``-p``              | Topology file               |
 |                        |            |                    | (.gro, .pdb etc)            |
++------------------------+------------+--------------------+-----------------------------+
+| Output directory       | string     |``-out``            | Name of the output directory|
+|                        |            |                    | . Default is out            |
 +------------------------+------------+--------------------+-----------------------------+
 | Atom group             | String     |``-ag``             | group of atom for PCA.      |
 |                        |            |                    | Default is C-alpha atoms.   |
@@ -347,6 +356,9 @@ t-SNE (t-distributed Stochastic Neighbor Embedding) is a tool for dimentionality
 +------------------------+------------+--------------------+-----------------------------+
 | Topology file *        | File       |``-p``              | Topology file               |
 |                        |            |                    | (.gro, .pdb etc)            |
++------------------------+------------+--------------------+-----------------------------+
+| Output directory       | string     |``-out``            | Name of the output directory|
+|                        |            |                    | . Default is out            |
 +------------------------+------------+--------------------+-----------------------------+
 | Atom group             | String     |``-ag``             | group of atom for PCA.      |
 |                        |            |                    | Default is C-alpha atoms.   |
