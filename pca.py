@@ -364,7 +364,35 @@ def my_pca():
 		eigv.append(i)
 		variation.append(i/tot_var)
 		j +=1
-	#write_plots('variation', variation)
+	
+	# write PC plot 
+	np.savetxt('pca_variance.agr', variation)
+	ef = open('pca_variance.agr', 'r')
+	ef_cont = ef.read()
+	ef.close()
+	title = '\tcreated by pca.py\t'
+	my_time = strftime("%Y-%m-%d  %a  %H:%M:%S", gmtime())
+	legends = '@    title "explained_variance of PCs"\n\
+	@    xaxis  label "PCs"\n\
+	@    yaxis  label "% Variance"\n\
+	@	TYPE xy\n\
+	@    s0 symbol 1\n\
+	@    s0 symbol size 0.250000\n\
+	@    s0 symbol color 1\n\
+	@    s0 symbol pattern 1\n\
+	@    s0 symbol fill color 1\n\
+	@    s0 symbol fill pattern 1\n\
+	@    s0 symbol linewidth 1.0\n\
+	@    s0 symbol linestyle 1\n\
+	@    s0 symbol char 25\n\
+	@	s0 symbol fill color 2\n\
+	@	s0 symbol color 2\n\
+	@    s0 symbol char font 0\n\
+	@    s0 symbol skip 0\n'
+	
+	ef = open('pca_variance.agr', 'w')
+	ef.write('#'+title+'\ton\t'+my_time+'\n'+legends+'\n'+ef_cont+'\n')
+	ef.close()
 	#========================================================
 	# transform the input data into choosen pc
 	print pca.shape
