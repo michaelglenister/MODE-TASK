@@ -45,7 +45,8 @@ def set_option():
 	#"Usage: pca.py -t <MD trajectory> -p <topology file>  -a <atom group >"
 	
 	parser.add_argument("-t", "--trj", dest="trj", help="file name of the MD trajectory", action="store")
-	parser.add_argument("-p", "--top", dest="topology", help="topology file")      
+	parser.add_argument("-p", "--top", dest="topology", help="topology file")     
+	parser.add_argument("-out", "--out", dest="out_dir", help="Name of the output directory. Default is out")
 	parser.add_argument("-ag", "--ag", dest="atm_grp", help="group of atom for PCA. Default is C alpha atoms. Other options are :"				  "all= all atoms, backbone = backbone atoms, CA= C alpha atoms, protein= protein's atoms")	
 	parser.add_argument("-r", "--ref", dest="reference", help="reference structure for RMSD") 
 	parser.add_argument("-pt", "--pca_type", dest="pca_type", help="PCA method. Default is svd (Single Value Decomposition) PCA. Options are:\
@@ -60,6 +61,11 @@ def set_option():
 	#====================================================================
 	# if no arguments are passed
 	#====================================================================
+	
+	if args.out_dir == None:
+		out=args.trj
+		args.out_dir=out
+		
 	if args.trj is None: 
 		print 'ERROR: Missing trajectory argument.... :(  \nPlease see the help by running \n\nsystem_setup.py -h\n\n '
 		parser.print_help()
@@ -69,7 +75,7 @@ def set_option():
 		print 'ERROR: Missing topology.... :( \nPlease see the help by running \n\nsystem_setup.py -h\n\n '
 		parser.print_help()
 		sys.exit(1)
-	
+		
 	if not os.path.exists(args.trj ):
 		print('\nERROR: {0} not found....:(  Please check the path\n' .format(args.trj ))
 		parser.print_help()
@@ -106,6 +112,19 @@ traj = args.trj
 topology = args.topology
 ref = args.reference
 ptype=args.pca_type
+
+# take the input trj name for output directory
+out_dir=args.out_dir
+out_dir=out_dir.split('/')
+out_dir=out_dir[-1]
+out_dir='out_'+out_dir
+
+if not os.path.exists(out_dir):
+    os.makedirs(out_dir)
+else:
+	print out_dir, 'already exist. Can not overwrite the output directory!\n'
+	sys.exit(1)
+print 'Results will be written in ', out_dir
 comp = args.comp
 n_eivec=5
 ## read the reference structure
@@ -183,8 +202,9 @@ def get_rmsd():
 	rmsd = md.rmsd(pca_traj, ref, 0, atom_indices=sele_grp)
 	print "RMSD written to rmsd.agr \n "
 	## write the RMSD file
-	np.savetxt('rmsd.agr', rmsd)
-	rf = open('rmsd.agr', 'r')
+	rmsd_fname=out_dir+'/rmsd.agr'
+	np.savetxt(rmsd_fname, rmsd)
+	rf = open(rmsd_fname, 'r')
 	rf_cont = rf.read()
 	rf.close()
 	
@@ -195,7 +215,7 @@ def get_rmsd():
 	@    yaxis  label "RMSD"\n\
 	@	TYPE xy\n'
 	
-	pf = open('rmsd.agr', 'w')
+	pf = open(rmsd_fname, 'w')
 	pf.write('#'+title+'\ton\t'+my_time+'\n'+legends+'\n'+rf_cont)
 	pf.close()
 	return;
@@ -220,17 +240,17 @@ def svd_pca(svd):
 	pca_sele_traj_reduced = pca_sele_traj.transform(sele_traj_reshaped_scaled)
 	
 	print "Trace of the covariance matrix is: ", np.trace(pca_sele_traj.get_covariance())
-	print "Wrote covariance matrix..."
-	np.savetxt('cov.dat', pca_sele_traj.get_covariance())
+	#print "Wrote covariance matrix..."
+	#np.savetxt('cov.dat', pca_sele_traj.get_covariance())
 	print pca_sele_traj.components_.shape
 
 	# write the plots 
 	
-	write_plots('pca_projection', pca_sele_traj_reduced)
-	write_fig('pca_projection', pca_sele_traj_reduced)
+	write_plots('pca_projection', pca_sele_traj_reduced, out_dir)
+	write_fig('pca_projection', pca_sele_traj_reduced, out_dir)
 
 	#write the pcs variance
-	write_pcs('pca_variance', pca_sele_traj)
+	write_pcs('pca_variance', pca_sele_traj, out_dir)
 	
 	pc1_cos=get_cosine(pca_sele_traj_reduced, 0)
 	print 'cosine content of first PC=',pc1_cos
@@ -262,11 +282,12 @@ def my_kernelPCA(kernel):
 	kpca_reduced = kpca.transform(sele_traj_reshaped_scaled)
 	
 	#write plots
-	write_plots('kpca_projection', kpca_reduced)
-	write_fig('kpca_projection', kpca_reduced)
+	write_plots('kpca_projection', kpca_reduced, out_dir)
+	write_fig('kpca_projection', kpca_reduced, out_dir)
 
 	#write variance
-	np.savetxt('kpca_variance', kpca.lambdas_)
+	kpca_variance_fname=out_dir+'/kpca_variance'
+	np.savetxt(kpca_variance_fname, kpca.lambdas_)
 	
 	pc1_cos=get_cosine(kpca_reduced, 0)
 	print 'cosine content of first PC=',pc1_cos
@@ -301,8 +322,8 @@ def incremental_pca():
 	ipca_reduced=ipca.transform(sele_traj_reshaped_scaled)
 	
 	#write plots
-	write_plots('ipca_projection', ipca_reduced)
-	write_fig('ipca_projection', ipca_reduced)
+	write_plots('ipca_projection', ipca_reduced, out_dir)
+	write_fig('ipca_projection', ipca_reduced, out_dir)
 	#write variance
 	#np.savetxt('ipca_variance', kpca.lambdas_)
 	pc1_cos=get_cosine(ipca_reduced, 0)
@@ -358,7 +379,7 @@ def my_pca():
 	j = 0
 	eigv = []
 	n_comp=100
-	print trj_evec.real.shape
+	#print trj_evec.real.shape
 	pca = trj_evec.real[:,0:n_comp]    ## keep first 100 eigenvectors
 	for i in trj_eval.real[0:n_comp]:
 		eigv.append(i)
@@ -366,8 +387,9 @@ def my_pca():
 		j +=1
 	
 	# write PC plot 
-	np.savetxt('pca_variance.agr', variation)
-	ef = open('pca_variance.agr', 'r')
+	pca_variance_fname=out_dir+'/pca_variance.agr'
+	np.savetxt(pca_variance_fname, variation)
+	ef = open(pca_variance_fname, 'r')
 	ef_cont = ef.read()
 	ef.close()
 	title = '\tcreated by pca.py\t'
@@ -390,19 +412,19 @@ def my_pca():
 	@    s0 symbol char font 0\n\
 	@    s0 symbol skip 0\n'
 	
-	ef = open('pca_variance.agr', 'w')
+	ef = open(pca_variance_fname, 'w')
 	ef.write('#'+title+'\ton\t'+my_time+'\n'+legends+'\n'+ef_cont+'\n')
 	ef.close()
 	#========================================================
 	# transform the input data into choosen pc
-	print pca.shape
+	#print pca.shape
 	arr_transformed = pca.T.dot(arr.T)
 	
-	write_plots('pca_projection', arr_transformed)
-	write_fig('pca_projection', arr_transformed)
+	write_plots('pca_projection', arr_transformed, out_dir)
+	write_fig('pca_projection', arr_transformed, out_dir)
 	
 	## RMSF 
-	get_rmsf(pca_traj, sele_grp, trj_eval)
+	get_rmsf(pca_traj, sele_grp, trj_eval, out_dir)
 	
 	pc1_cos=get_cosine(arr_transformed, 0)
 	print 'cosine content of first PC=',pc1_cos

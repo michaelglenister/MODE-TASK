@@ -6,7 +6,7 @@ import mdtraj as md
 import numpy as np
 from sklearn.metrics import euclidean_distances
 from sklearn.manifold import MDS
-from write_plot import write_plots, write_pcs
+from write_plot import write_plots, write_pcs, write_fig
 from traj_info import trajectory_info, get_internal_cordinates, get_trajectory, get_cosine, print_kmo
 from welcome_msg import welcome_msg
 
@@ -38,13 +38,19 @@ def get_options():
 	
 	parser.add_argument("-t", "--trj", dest="trj",				help="file name of the MD trajectory")
 	parser.add_argument("-p", "--top", dest="topology",				help="topology file")
+	parser.add_argument("-out", "--out", dest="out_dir", help="Name of the output directory. Default is out")
 	parser.add_argument("-mt", "--mds_type", dest="mds_type",				help="Type of MDS. Options are nm=non-metric, metric=metric")
 	parser.add_argument("-dt", "--dissimilarity_type",  dest="dissimilarity_type",				help="Type of dissimilarity matrix to use. euc = Euclidean distance between internal cordinates, rmsd= pairwise RMSD. Default is rmsd")
 	parser.add_argument("-ag", "--ag", dest="atm_grp", help="group of atom for MDS. Default is C alpha atoms. Other options are :"				  "all= all atoms, backbone = backbone atoms, CA= C alpha atoms, protein= protein's atoms")	
 	parser.add_argument("-ict", "--cordinate_type",  dest="cordinate_type",				help="Internal cordinates type. Default is pairwise distance")
 	parser.add_argument("-ai", "--atom_indices",  dest="atom_indices",				help="group of atom for pairwise distance. Default is C alpha atoms. Other options are :"				  "all= all atoms, backbone = backbone atoms, alpha= C alpha atoms, heavy= all non hydrogen atoms, minimal=CA,CB,C,N,O atoms")
 
-	args = parser.parse_args()	
+	args = parser.parse_args()
+	
+	if args.out_dir == None:
+		out=args.trj
+		args.out_dir=out
+		
 	if args.trj is None:
 		print 'ERROR: Missing trajectory argument.... :(  \nPlease see the help by running \n\nsystem_setup.py -h\n\n '
 		parser.print_help()
@@ -116,6 +122,18 @@ atm_name=args.atm_grp
 sele_grp = get_trajectory(atm_name, top)
 atom_indices=args.atom_indices
 
+# take the input trj name for output directory
+out_dir=args.out_dir
+out_dir=out_dir.split('/')
+out_dir=out_dir[-1]
+out_dir='out_'+out_dir
+
+if not os.path.exists(out_dir):
+    os.makedirs(out_dir)
+else:
+	print out_dir, 'already exist. Can not overwrite the output directory!\n'
+	sys.exit(1)
+print 'Results will be written in ', out_dir
 ## =============================
 # print trajectory info
 #===================================
@@ -149,8 +167,8 @@ def mds(input, type):
 		npos=nmds.fit_transform(input)
 		
 		# write PC plots
-		write_plots('nmds_projection', npos)
-		
+		write_plots('nmds_projection', npos, out_dir)
+		write_fig('nmds_projection', npos, out_dir)
 		# cosine content 
 		
 		pc1_cos=get_cosine(npos, 0)
@@ -168,8 +186,8 @@ def mds(input, type):
 		mpos = mmds.fit_transform(input)
 		
 		# write PC plots
-		write_plots('mmds_projection', mpos)
-		
+		write_plots('mmds_projection', mpos, out_dir)
+		write_fig('mmds_projection', mpos, out_dir)
 		# cosine content 
 		
 		pc1_cos=get_cosine(mpos, 0)

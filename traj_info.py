@@ -153,7 +153,7 @@ def print_kmo(pca_traj, traj, atm_name, sele_grp):
 	get_kmo(cov_mat)
 	return;
 	
-def get_rmsf(pca_traj, sele_grp, trj_eval):
+def get_rmsf(pca_traj, sele_grp, trj_eval, out_dir):
 	'calculates the RMSD mode'
 	pca_traj.superpose(pca_traj, 0, atom_indices=sele_grp) 			# Superpose each conformation in the trajectory upon first frame
 	sele_trj = pca_traj.xyz[:,sele_grp,:]												# select cordinates of selected atom groups
@@ -179,9 +179,9 @@ def get_rmsf(pca_traj, sele_grp, trj_eval):
 			k=k+1
 	
 	## write the RMSF mode file for first PC
-	
-	np.savetxt('pc1_rmsf.agr',np.average(B, axis=0))
-	rf = open('pc1_rmsf.agr', 'r')
+	pc1_rmsf_fname=out_dir+'/pc1_rmsf.agr'
+	np.savetxt(pc1_rmsf_fname,np.average(B, axis=0))
+	rf = open(pc1_rmsf_fname, 'r')
 	rf_cont = rf.read()
 	rf.close()
 	
@@ -192,13 +192,14 @@ def get_rmsf(pca_traj, sele_grp, trj_eval):
 	@    yaxis  label "RMSD"\n\
 	@	TYPE xy\n'
 	
-	pf = open('pc1_rmsf.agr', 'w')
+	pf = open(pc1_rmsf_fname, 'w')
 	pf.write('#'+title+'\ton\t'+my_time+'\n'+legends+'\n'+rf_cont)
 	pf.close()
 
 	## write the RMSF mode file for second PC
-	np.savetxt('pc2_rmsf.agr',np.average(C, axis=0))
-	rf = open('pc2_rmsf.agr', 'r')
+	pc2_rmsf_fname=out_dir+'/pc2_rmsf.agr'
+	np.savetxt(pc2_rmsf_fname, np.average(C, axis=0))
+	rf = open(pc2_rmsf_fname, 'r')
 	rf_cont = rf.read()
 	rf.close()
 	
@@ -209,13 +210,14 @@ def get_rmsf(pca_traj, sele_grp, trj_eval):
 	@    yaxis  label "RMSD"\n\
 	@	TYPE xy\n'
 	
-	pf = open('pc2_rmsf.agr', 'w')
+	pf = open(pc2_rmsf_fname, 'w')
 	pf.write('#'+title+'\ton\t'+my_time+'\n'+legends+'\n'+rf_cont)
 	pf.close()
 	
 	## write the RMSF mode file for third PC
-	np.savetxt('pc3_rmsf.agr',np.average(D, axis=0))
-	rf = open('pc3_rmsf.agr', 'r')
+	pc3_rmsf_fname=out_dir+'/pc3_rmsf.agr'
+	np.savetxt(pc3_rmsf_fname,np.average(D, axis=0))
+	rf = open(pc3_rmsf_fname, 'r')
 	rf_cont = rf.read()
 	rf.close()
 	
@@ -226,7 +228,7 @@ def get_rmsf(pca_traj, sele_grp, trj_eval):
 	@    yaxis  label "RMSD"\n\
 	@	TYPE xy\n'
 	
-	pf = open('pc3_rmsf.agr', 'w')
+	pf = open(pc3_rmsf_fname, 'w')
 	pf.write('#'+title+'\ton\t'+my_time+'\n'+legends+'\n'+rf_cont)
 	pf.close()
 	

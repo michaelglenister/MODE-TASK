@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 #==============================================================================#
 
 ## write plots
-def write_plots(file_name, pca):
+def write_plots(file_name, pca, out_dir):
 	'function to write pca plots. takes name of the file to write and pca object name'
 	my_time = strftime("%Y-%m-%d  %a  %H:%M:%S", gmtime())
 	title = '\tcreated by pca.py\t'
@@ -48,7 +48,7 @@ def write_plots(file_name, pca):
 	# plot 1 and 2 PC
 	
 	pca1=pca[:,[0,1]]
-	fname = file_name+'1_2'+'.agr'
+	fname = out_dir+'/'+file_name+'1_2'+'.agr'
 	np.savetxt(fname, pca1)
 	pf = open(fname, 'r')
 	pf_cont = pf.read()
@@ -59,7 +59,7 @@ def write_plots(file_name, pca):
 	
 	# plot 1 and 3 PC
 	pca1=pca[:,[0,2]]
-	fname = file_name+'1_3'+'.agr'
+	fname = out_dir+'/'+file_name+'1_3'+'.agr'
 	np.savetxt(fname, pca1)
 	pf = open(fname, 'r')
 	pf_cont = pf.read()
@@ -70,7 +70,7 @@ def write_plots(file_name, pca):
 	
 	# plot 2 and 3 PC
 	pca1=pca[:,[1,2]]
-	fname = file_name+'2_3'+'.agr'
+	fname = out_dir+'/'+file_name+'2_3'+'.agr'
 	np.savetxt(fname, pca1)
 	pf = open(fname, 'r')
 	pf_cont = pf.read()
@@ -82,13 +82,13 @@ def write_plots(file_name, pca):
 	
 	return;
 
-def write_fig(file_name, pca):
+def write_fig(file_name, pca, out_dir):
 	#========================================
 	# coloured png using matplotlib
 	#=================================================
 	## # plot 1 and 2 PC
 	
-	fname = file_name+'1_2'+'.png'
+	fname = out_dir+'/'+file_name+'1_2'+'.png'
 	fig=plt.figure()
 	col=range(1,len(pca[:,0])+1) # color map to the number of frames in trajectory 
 	plt.scatter(pca[:,0], pca[:,1], marker='x', c=col)
@@ -100,7 +100,7 @@ def write_fig(file_name, pca):
 	fig.savefig(fname)
 	
 	## # plot 1 and 3 PC
-	fname = file_name+'1_3'+'.png'
+	fname = out_dir+'/'+file_name+'1_3'+'.png'
 	fig=plt.figure()
 	plt.scatter(pca[:,0], pca[:,2], marker='x', c=col)
 	plt.xlabel('PC1')
@@ -111,7 +111,7 @@ def write_fig(file_name, pca):
 	fig.savefig(fname)
 	
 	## # plot 2 and 3 PC
-	fname = file_name+'2_3'+'.png'
+	fname = out_dir+'/'+file_name+'2_3'+'.png'
 	fig=plt.figure()
 	plt.scatter(pca[:,1], pca[:,2], marker='x', c=col)
 	plt.xlabel('PC1')
@@ -123,16 +123,15 @@ def write_fig(file_name, pca):
 	return;
 
 ## write PCs 
-def write_pcs(file_name, pca):
+def write_pcs(file_name, pca, out_dir):
 	'write PCs and explained_variance_ratio_. takes name of the file to write and pca object name'
 	fname = ''
-	fname = file_name+'.agr'
+	fname = out_dir+'/'+file_name+'.agr'
 	#print type(pca)
 	e_ratio = pca.explained_variance_ratio_
 	e_ratio = e_ratio*100   # to make it percent
 	
 	np.savetxt(fname, e_ratio)
-	
 	ef = open(fname, 'r')
 	ef_cont = ef.read()
 	ef.close()
