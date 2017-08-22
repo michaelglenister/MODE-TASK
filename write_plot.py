@@ -2,10 +2,12 @@
 #filename: pca.py
 import numpy as np
 from time import sleep, gmtime, strftime
-import matplotlib.pyplot as plt
-import matplotlib
 
+import matplotlib
 matplotlib.use('Agg')
+
+import matplotlib.pyplot as plt
+
 
 #==============================================================================#
 #											
