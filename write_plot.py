@@ -3,6 +3,10 @@
 import numpy as np
 from time import sleep, gmtime, strftime
 import matplotlib.pyplot as plt
+import matplotlib
+
+matplotlib.use('Agg')
+
 #==============================================================================#
 #											
 #			This programe is the part of PCA MD. It writes the PCA plots in xmgrace formatted .agr file 
