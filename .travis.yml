@@ -31,7 +31,6 @@ install:
   - pip install scipy==0.19.1
   - pip install matplotlib==2.0.2
   - pip install mdtraj==1.8.0
-  - sudo apt install python-tk
 
 script: 
   - cd tests
