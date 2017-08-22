@@ -11,39 +11,49 @@ import math
 
 
 def main(args):
-    protein_name = args.pdbSca
+    protein_name = args.pdbCG
     protein_name = protein_name[protein_name.rfind("/") + 1:protein_name.rfind("/") + 5]
     f = open(args.pdbAligned, 'r')
     lines = f.readlines()
     f.close()
 
-    f = open(args.pdbSca, 'r')
+    f = open(args.pdbCG, 'r')
     cg_lines = f.readlines()
     f.close()
-    index_of_ter = 210
+
 
     coarse_grained = []
-    for atom in cg_lines[0:index_of_ter]:
+
+    cg_atoms = []
+    for atom in cg_lines:
         if atom.startswith("ATOM"):
             info = atom.split()
-            # first = info[0].strip() # Unused var for now
             res = info[3]
             atom_type = info[2]
             chain = info[4]
             res_num = info[5]
-            for line in lines:
-                if line.startswith("ATOM"):
-                    info2 = line.split()
-                    res2 = info2[3]
-                    atom_type2 = info2[2]
-                    chain2 = info2[4]
-                    res_num2 = info2[5]
-                    if res == res2 and atom_type == atom_type2 and chain == chain2 and res_num == res_num2:
-                        coarse_grained.append(line)
+	    atomInfo = res+'-'+atom_type+'-'+chain+'-'+res_num
+	    if atomInfo in cg_atoms:
+		break
+	    else:
+                cg_atoms.append(res+'-'+atom_type+'-'+chain+'-'+res_num)
+	  
+
+    for cgA in cg_atoms:
+        for line in lines:
+            if line.startswith("ATOM"):
+                info2 = line.split()
+                res2 = info2[3]
+                atom_type2 = info2[2]
+                chain2 = info2[4]
+                res_num2 = info2[5]
+	        atomInfo = res2+'-'+atom_type2+'-'+chain2+'-'+res_num2
+                if cgA == atomInfo:
+                    coarse_grained.append(line)
 
     # print len(coarse_grained)
 
-    w = open(args.outdir + "/" + protein_name + "_SCA.pdb", 'w')
+    w = open(args.outdir + "/" + args.output, 'w')
     w.writelines(coarse_grained)
     w.write("END")
     w.close()
@@ -71,8 +81,9 @@ if __name__ == "__main__":
     parser.add_argument("--outdir", help="Output directory", default="output")
 
     # custom arguments
-    parser.add_argument("--pdbAligned", help="") # '3VBSFull_Aligned.pdb'
-    parser.add_argument("--pdbSca", help="")  # '3VBSFull3_SCA.pdb'
+    parser.add_argument("--pdbAligned", help="") 
+    parser.add_argument("--pdbCG", help="")
+    parser.add_argument("--output", help="")   
 
     args = parser.parse_args()
 

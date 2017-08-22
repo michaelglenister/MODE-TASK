@@ -28,6 +28,7 @@ int main(int argc, char *argv[])
 {
 	//Init vars
 	string protomerVT, totalRes, firstMode, outdir = "output";
+	int direction = 1; //direction of overlap correction - 1 is default - user will determine this from Conformational Analysis
 	bool hasVt = false, hasRes = false, hasMode = false;
 
 	// Begin parameter handling
@@ -40,24 +41,29 @@ int main(int argc, char *argv[])
 			cout<<"Help"<<endl;
 			return -1;
 		}
-		else if(strcmp(argv[i], "--vt_values") == 0)
+		else if(strcmp(argv[i], "--vt") == 0)
 		{
 			protomerVT = argv[i+1];
 			hasVt = true;
 		}
-	    else if(strcmp(argv[i], "--total_residues") == 0)
-		{
-			totalRes = argv[i+1];
-			hasRes = true;
-		}
-	    else if(strcmp(argv[i], "--first_mode") == 0)
+	    else if(strcmp(argv[i], "--mode") == 0)
 		{
 			firstMode = argv[i+1];
 			hasMode = true;
 		}
 		else if(strcmp(argv[i], "--outdir") == 0)
 		{
-			outdir = atof(argv[i+1]);
+			outdir = argv[i+1];
+			//hasOutdir = true;
+		}
+
+		else if(strcmp(argv[i], "--direction") == 0)
+		{
+			direction = atof(argv[i+1]);
+			if (direction!=1&&direction!=-1)
+			{	
+				direction =1;
+				cout<< "\n***********************************\nWARNING DEFAULT DIRECTION = 1 HAS BEEN USED\nDirection must be specified as -1 or 1\n***********************************\n"<<endl;}//if
 			//hasOutdir = true;
 		}
     }
@@ -67,29 +73,20 @@ int main(int argc, char *argv[])
 		cout<<"A VT matrix file is required, use '-h' to view help"<<endl;
 		return -1;
 	}
-	else if(!hasRes)
-	{
-		cout<<"A total residue value is required, use '-h' to view help"<<endl;
-		return -1;
-	}
 	else if(!hasMode)
 	{
-		cout<<"A mode residue value is required, use '-h' to view help"<<endl;
+		cout<<"A mode value is required, use '-h' to view help"<<endl;
 		return -1;
 	}
 
-	//string protomerVT = argv[1]; //Protomer3CG_VT.txt
-	string protomerMode = outdir + "/ProtomerMode.txt"; //argv[2]; //ProtomerMode617.txt
-	
-	// change these varaibles as required
-	int total = atoi(totalRes.c_str());
-	//int mode1 = 12758;
-	int mode1 = atoi(totalRes.c_str());
-	//int mode1 = 12756;
-	//int mode1 = 12755;
-	//int mode1 = 12754;
 
-	int direction = 1; //direction of overlap correction
+	
+	string protomerMode = outdir + "/EVectors"+firstMode.c_str()+".txt"; 
+	
+	int total = atoi(totalRes.c_str());
+	int mode1 = atoi(firstMode.c_str())-1;
+	
+
 
 	// End parameter handling
 
@@ -104,18 +101,38 @@ int main(int argc, char *argv[])
 	clock_t tStart = clock();
 
 	
+	
+	ifstream mfile (protomerVT.c_str());
+
+	string lineC;
+	total = 0;
+	while (!mfile.eof())
+	{
+		getline (mfile,lineC);
+
+		if(!lineC.empty())
+		{
+			total++;
+		}
+	}//while
+	
+	
+	mfile.close();
+	mfile.clear();
+
+	ifstream afile (protomerVT.c_str());
 	double eigenVectors[total/3][3];
 	int vectorIndex = 0;
-	ifstream mfile (protomerVT.c_str());
 	string line;
 	string element;
+	
 	double ve;
 
 	int countLines = 0;
 
-	while (!mfile.eof())
+	while (!afile.eof())
 	{
-		getline (mfile,line);
+		getline (afile,line);
 
 		if(!line.empty())
 		{
@@ -136,8 +153,8 @@ int main(int argc, char *argv[])
 			break;
 		}//if
 	}//while
-	mfile.close();
-
+	afile.close();
+	afile.clear();
 	//convert all vectors to unit vectors
 	double magnitude;
 
@@ -149,7 +166,7 @@ int main(int argc, char *argv[])
 			magnitude = magnitude+(eigenVectors[i][j]*eigenVectors[i][j]);
 		}//for j1
 
-		// cout<<magnitude<<endl;
+		
 		magnitude = sqrt(magnitude);
 
 		for (int j= 0; j<3; j++)
