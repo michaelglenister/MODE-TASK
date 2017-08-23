@@ -15,7 +15,7 @@ Takes a protomer structure and coarse grains to select a set amount of C-Beta
 +------------------------+------------+--------------------+-----------------------------+
 | Input (*\*required*)   | Input type | Flag               | Description                 |
 +========================+============+====================+=============================+
-| PDB file *        	 | File       |``--pdbFile``       | PDB input file              |
+| PDB file *        	 | File       |``--pdb``           | PDB input file              |
 |                        |            |                    |                             |
 +------------------------+------------+--------------------+-----------------------------+
 | Course grain level     | Integer    |``--cg``            | Default: 4                  |
@@ -24,6 +24,10 @@ Takes a protomer structure and coarse grains to select a set amount of C-Beta
 | Starting atom          | Integer    |``--startingAtom``  | Residue number of the    	 |
 |                        |            |                    | starting atom.              |
 |                        |            |                    | Default: 1                  |
++------------------------+------------+--------------------+-----------------------------+
+| Output file            | File       |``--output``        | Specify a name for the PDB	 |
+|                        |            |                    | output file.                |
+|                        |            |                    | Default: ComplexCG.pdb      |
 +------------------------+------------+--------------------+-----------------------------+
 
 **Outputs:**
@@ -78,19 +82,26 @@ Get eigen vectors
 
 **Compile:** ::
 
-	g++ -I cpp/src/ getEigenVectors.cpp -o getEigenVectors
+	g++ -I cpp/input/ getEigenVectors.cpp -o getEigenVectors
 
 **Command:** ::
 
-	getEigenVectors <options> --vt_values <text file>
+	getEigenVectors <options> --vt <text file>
 
 **Inputs:**
 
 +------------------------+------------+--------------------+-----------------------------+
 | Input (*\*required*)   | Input type | Flag               | Description                 |
 +========================+============+====================+=============================+
-| VT matrix file *    	 | File       |``--vt_values``     | VT values from ANM script   |
+| VT matrix file *    	 | File       |``--vt``            | VT values from ANM script   |
 |                        |            |                    |                             |
++------------------------+------------+--------------------+-----------------------------+
+| Mode index *           | Integer    |``--mode``          | Specify the index of the    |
+|                        |            |                    | mode you wish to target     |
++------------------------+------------+--------------------+-----------------------------+
+| Direction              | Boolean    |``--direction``     | Direction of overlap        |
+|                        | integer    |                    | correction                  |
+|                        | (1 or -1)  |                    |                             |
 +------------------------+------------+--------------------+-----------------------------+
 
 **Outputs:**
@@ -98,28 +109,28 @@ Get eigen vectors
 +------------------------+-----------------------------+
 | Output                 | Description                 |
 +========================+=============================+
-| Protomer modes         |                             |
-|                        |                             |
+| Eigen vectors file     | Text file containing a      |
+|                        | list of eigen vectors       |
 +------------------------+-----------------------------+
 
 Common residues
 -------------------------------
 
-Takes two pdb models and determines the common residues
+Extracts the common residues between two pdb models such as two protein conformations
 
 **Command:** ::
 
-	commonResidues.py <options> --fullCapsid <pdb file> --protomer <pdb file>
+	commonResidues.py <options> --conf1 <pdb file> --conf2 <pdb file>
 
 **Inputs:**
 
 +------------------------+------------+--------------------+-----------------------------+
 | Input (*\*required*)   | Input type | Flag               | Description                 |
 +========================+============+====================+=============================+
-| Full capsid file *     | File       |``--fullCapsid``    |                             |
+| Conformation PDB *     | File       |``--conf1``         | Path to first PDB file      |
 |                        |            |                    |                             |
 +------------------------+------------+--------------------+-----------------------------+
-| Protomer file *        | File       |``--protomer``	   |                             |
+| Conformation PDB *     | File       |``--conf2``	       | Path to second PDB file     |
 |                        |            |                    |                             |
 +------------------------+------------+--------------------+-----------------------------+
 
@@ -146,18 +157,20 @@ level. But obviously must compare only the residues that are common in each mode
 
 **Command:** ::
 
-	meanSquareFluctuations.py <options> --commonResidues <text file> --pdbProtomer <PDB file> --wMatrix <text file> --vtMatrix <text file>
+	meanSquareFluctuations.py <options> --pdb <PDB file> --wMatrix <text file> --vtMatrix <text file>
 
 **Inputs:**
 
 +------------------------+------------+--------------------+-----------------------------+
 | Input (*\*required*)   | Input type | Flag               | Description                 |
 +========================+============+====================+=============================+
-| Common residue file *  | File       |``--commonResidues``|                             |
+| PDB file *             | File       |``--pdb``           |                             |
 |                        |            |                    |                             |
 +------------------------+------------+--------------------+-----------------------------+
-| Protomer PDB file *    | File       |``--pdbProtomer``   |                             |
-|                        |            |                    |                             |
+| Conformation PDB       | File       |``--pdfConf2``      | When assigned, caclulates   |
+|                        |            |                    | mean square fluctautions    |
+|                        |            |                    | based on in common residues |
+|                        |            |                    | between the two proteins    |
 +------------------------+------------+--------------------+-----------------------------+
 | First mode             | Integer    |``--firstMode``	   | When unassigned the script  |
 |                        |            |                    | will use the last six modes |
@@ -189,24 +202,28 @@ Identifies Modes responsible for conformational change for a molecule wth 15 cop
 
 **Command:** ::
 
-	conformationMode.py <options> --pdbAligned <PDB file> --pdbProtAligned <PDB file> --pdbSca <PDB file> --vtProtomer <text file>
+	conformationMode.py <options> --pdbConfAligned <PDB file> --pdbProtAligned <PDB file> --pdbANM <PDB file> --vtProtomer <text file>
 
 **Inputs:**
 
 +------------------------+------------+--------------------+-----------------------------+
 | Input (*\*required*)   | Input type | Flag               | Description                 |
 +========================+============+====================+=============================+
-| Aligned PDB file *     | File       |``--pdbAligned``    |                             |
+| Aligned PDB file *     | File       |``--pdbConfAligned``|                             |
 |                        |            |                    |                             |
 +------------------------+------------+--------------------+-----------------------------+
 | Aligned protomer PDB   | File       |``--pdbProtAligned``|                             |
 | file *                 |            |                    |                             |
 +------------------------+------------+--------------------+-----------------------------+
-| PDB *                  | File       |``--pdbSca``        |                             |
+| PDB *                  | File       |``--pdbANM``        |                             |
 |                        |            |                    |                             |
 +------------------------+------------+--------------------+-----------------------------+
-| VT matrix file *       | File       |``--vtProtomer``    | VT values from ANM script   |
+| VT matrix file *       | File       |``--vtMatrix``      | VT values from ANM script   |
 |                        |            |                    |                             |
++------------------------+------------+--------------------+-----------------------------+
+| Output file            | File       |``--output``        | Specify a name for the PDB	 |
+|                        |            |                    | output file. Default:       |
+|                        |            |                    | ModesOfConfChange.pdb       |
 +------------------------+------------+--------------------+-----------------------------+
 
 **Outputs:**
@@ -218,14 +235,14 @@ Identifies Modes responsible for conformational change for a molecule wth 15 cop
 |                        |                             |
 +------------------------+-----------------------------+
 
-Get aligned
+Get aligned coarse grained
 -------------------------------
 
 Creates a PDB for a multiple protomer structure, containing co-ords of an aligned PDB structure
 
 **Command:** ::
 
-	getAligned.py <options> --pdbAligned <PDB file> --pdbSca <PDB file>
+	getAlignedCG.py <options> --pdbAligned <PDB file> --pdbCG <PDB file>
 
 **Inputs:**
 
@@ -235,8 +252,12 @@ Creates a PDB for a multiple protomer structure, containing co-ords of an aligne
 | Aligned PDB file *     | File       |``--pdbAligned``    |                             |
 |                        |            |                    |                             |
 +------------------------+------------+--------------------+-----------------------------+
-| PDB *                  | File       |``--pdbSca``        |                             |
-|                        |            |                    |                             |
+| PDB *                  | File       |``--pdbCG``         | Coarse grained PDB from     |
+|                        |            |                    | the coarseGrain.py script   |
++------------------------+------------+--------------------+-----------------------------+
+| Output file            | File       |``--output``        | Specify a name for the PDB	 |
+|                        |            |                    | output file. Default:       |
+|                        |            |                    | aligned.pdb                 |
 +------------------------+------------+--------------------+-----------------------------+
 
 **Outputs:**
@@ -255,7 +276,7 @@ Makes a trajectory of 100 PDB files. The resulting output can be viewed in the t
 
 **Command:** ::
 
-	trajectoryPentamer.py <options> --pdb <PDB file> --modeFile <text file>
+	visualiseVector.py <options> --pdb <PDB file> --vectorFile <text file>
 
 **Inputs:**
 
@@ -265,17 +286,16 @@ Makes a trajectory of 100 PDB files. The resulting output can be viewed in the t
 | Coarse grained PDB     | File       |``--pdb``           |                             |
 | file *                 |            |                    |                             |
 +------------------------+------------+--------------------+-----------------------------+
-|                        | File       |``--modeF``         |                             |
+|                        | File       |``--mode``          |                             |
 |                        |            |                    |                             |
 +------------------------+------------+--------------------+-----------------------------+
-|                        | File       |``--modeL``         |                             |
-|                        |            |                    |                             |
-+------------------------+------------+--------------------+-----------------------------+
-| Mode file *            | File       |``--modeFile``      | File containing eigen       |
+| Vector file *          | File       |``--vectorFile``    | File containing eigen       |
 |                        |            |                    | vectors                     |
 +------------------------+------------+--------------------+-----------------------------+
 
 **Outputs:**
+
+Outputs are generated in output/VISUALISE directory by default.
 
 +------------------------+-----------------------------+
 | Output                 | Description                 |
