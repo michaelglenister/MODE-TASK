@@ -133,9 +133,9 @@ out_dir='out_'+out_dir
 
 if not os.path.exists(out_dir):
     os.makedirs(out_dir)
-else:
-	print out_dir, 'already exist. Can not overwrite the output directory!\n'
-	sys.exit(1)
+#else:
+#	print out_dir, 'already exist. Can not overwrite the output directory!\n'
+#	sys.exit(1)
 print 'Results will be written in ', out_dir
 ## =============================
 # print trajectory info

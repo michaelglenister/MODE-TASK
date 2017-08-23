@@ -8,23 +8,24 @@ from utils import *
 
 
 def main(args):
+
     # Takes two pdb models and determines the common residues
     #####################################
-    f = open(args.fullCapsid, 'r')
-    lines_empty = f.readlines()
+    f = open(args.conf1, 'r')
+    lines_c1 = f.readlines()
     f.close()
 
-    f = open(args.protomer, 'r')
-    lines_full = f.readlines()
+    f = open(args.conf2, 'r')
+    lines_c2 = f.readlines()
     f.close()
     #####################################
 
-    empty_residues = {}
-    full_residues = {}
+    c1_residues = {}
+    c2_residues = {}
 
     common_residues = {'A': [], 'B': [], 'C': [], 'D': []}
 
-    for line in lines_empty:
+    for line in lines_c1:
         if line.startswith("ATOM"):
             info = line.split()
             atype = info[2].strip()
@@ -32,12 +33,12 @@ def main(args):
             chain = info[4].strip()
             res = int(info[5].strip())
             if atype == "CB" or (atype == "CA" and res_type == "GLY"):
-                if chain not in empty_residues:
-                    empty_residues[chain] = [res]
+                if chain not in c1_residues:
+                    c1_residues[chain] = [res]
                 else:
-                    if res not in empty_residues[chain]:
-                        empty_residues[chain].append(res)
-    for line in lines_full:
+                    if res not in c1_residues[chain]:
+                        c1_residues[chain].append(res)
+    for line in lines_c2:
         if line.startswith("ATOM"):
             info = line.split()
             atype = info[2].strip()
@@ -45,16 +46,22 @@ def main(args):
             chain = info[4].strip()
             res = int(info[5].strip())
             if atype == "CB" or (atype == "CA" and res_type == "GLY"):
-                if chain not in full_residues:
-                    full_residues[chain] = [res]
+                if chain not in c2_residues:
+                    c2_residues[chain] = [res]
                 else:
-                    if res not in full_residues[chain]:
-                        full_residues[chain].append(res)
+                    if res not in c2_residues[chain]:
+                        c2_residues[chain].append(res)
 
-    for ch in full_residues:
-        for r in full_residues[ch]:
-            if r in empty_residues[ch]:
-                common_residues[ch].append(r)
+    for ch in c2_residues:
+        for r in c2_residues[ch]:
+	    if ch in c1_residues:
+                if r in c1_residues[ch]:
+                    if ch in common_residues:
+                    	common_residues[ch].append(r)
+		    else:
+			common_residues[ch] = [r]
+	    else:
+		break
 
     w = open(args.outdir + "/common_residues", 'w')
     w.write(str(common_residues))
@@ -85,8 +92,8 @@ if __name__ == "__main__":
     parser.add_argument("--outdir", help="Output directory", default="output")
 
     # custom arguments
-    parser.add_argument("--fullCapsid", help="")  # '3VBSFull4_SCA.pdb'
-    parser.add_argument("--protomer", help="")  # '3VBSProtomer3_SCA.pdb'
+    parser.add_argument("--conf1", help="commonResidues.py extracts the common residues between two PDB files eg, two protein conformations, two PDB of different Coarse grained resolution\n--conf1 takes the path to the first of two pdb files")  
+    parser.add_argument("--conf2", help="commonResidues.py extracts the common residues between two PDB files eg, two protein conformations, two PDB of different Coarse grained resolution\n--conf2 takes the path to the second of two pdb files")  
 
     args = parser.parse_args()
 

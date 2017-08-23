@@ -8,4 +8,4 @@ done <${file}
 
 cd ..
 
-./conformationMode.py --pdbAligned tests/${prot}.pdb --pdbProtAligned output/${prot:0:4}_SCA.pdb --pdbSca output/${prot}4_SCA.pdb --vtMatrix output/VT_values.txt
+./conformationMode.py --pdbConfAligned tests/${prot}.pdb --pdbProtAligned output/ComplexCG.pdb --pdbANM output/ComplexCG.pdb --vtMatrix output/VT_values.txt

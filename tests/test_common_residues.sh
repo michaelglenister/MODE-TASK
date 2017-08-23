@@ -8,4 +8,4 @@ done <${file}
 
 cd ..
 
-./commonResidues.py --fullCapsid tests/${prot}.pdb --protomer output/${prot}4_SCA.pdb
+./commonResidues.py --conf1 tests/${prot}.pdb --conf2 output/ComplexCG.pdb

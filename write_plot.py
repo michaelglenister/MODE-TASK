@@ -2,7 +2,13 @@
 #filename: pca.py
 import numpy as np
 from time import sleep, gmtime, strftime
+
+import matplotlib
+matplotlib.use('Agg')
+
 import matplotlib.pyplot as plt
+
+
 #==============================================================================#
 #											
 #			This programe is the part of PCA MD. It writes the PCA plots in xmgrace formatted .agr file 

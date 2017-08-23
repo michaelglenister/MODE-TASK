@@ -11,7 +11,7 @@ import math
 
 
 def main(args):
-    pdb_file = args.pdbFile
+    pdb_file = args.pdb
     f = open(pdb_file, 'r')
     lines = f.readlines()
     f.close()
@@ -34,7 +34,7 @@ def main(args):
             chain = info[4]
             res = info[3]
             atom_type = info[2]
-            if atom_type == "CB" or (atom_type == "CA" and res == "GLY"):
+            if atom_type == "CB" or (atom_type == "CA" and res == "GLY"): #Give user the option for C-aplhas or C-betas
                 if number_protomer_atoms == 0:
                     chain1 = chain
                 if chain not in chain_dics:
@@ -135,8 +135,8 @@ def main(args):
             distribution[atom_index] = local_distribution
 
     # print index_of_selected_atoms
-    print "No. atoms selected per protomer: " + str(len(index_of_selected_atoms))
-    print "No. atoms selected per macro molecule: " + str(len(index_of_selected_atoms) * number_of_protomers)
+    print "No. atoms selected per unit: " + str(len(index_of_selected_atoms)) +" from " +str(number_protomer_atoms)+' orignal residues'
+    print "No. atoms selected per macromolecule: " + str(len(index_of_selected_atoms) * number_of_protomers)+ " from " +str(number_protomer_atoms* number_of_protomers)+' orignal residues'
 
     # for a in distribution:
     # print a
@@ -160,7 +160,11 @@ def main(args):
         )[3] + " " + a.split()[4] + " " + " " * (3 - len(a.split()[5])) + a.split()[5] + " \n"
         selected_c_beta_lines.append(ter)
 
-    w = open(args.outdir + "/" + pdb_file[pdb_file.rfind("/"):pdb_file.find(".")] + str(c_g) + "_SCA.pdb", 'w')
+    outfile = args.output
+    if not '.pdb' in outfile:
+	outfile+='.pdb'
+	
+    w = open(args.outdir + "/" + outfile, 'w')
     w.writelines(header)
     w.writelines(selected_c_beta_lines)
     w.write("END")
@@ -190,8 +194,8 @@ if __name__ == "__main__":
     parser.add_argument("--outdir", help="Output directory", default="output")
 
     # custom arguments
-    # parser.add_argument("--output", help="")#output = "3VBSPent"
-    parser.add_argument("--pdbFile", help="PDB input file")  # 3VBSPent.pdb
+    parser.add_argument("--output", help="File name for Coarse Grained PDB", default = 'ComplexCG.pdb')#output = "3VBSPent"
+    parser.add_argument("--pdb", help="PDB input file")  # 3VBSPent.pdb
     parser.add_argument("--cg", help="Course grain level [int]", default=4, type=int)
     parser.add_argument("--startingAtom", help="Residue number of starting atoms [int]", default=1, type=int)
     # parser.add_argument("--protomerAtoms", help="", default=0, type=int)

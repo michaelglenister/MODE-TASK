@@ -7,3 +7,7 @@
 ./test_get_aligned.sh
 ./test_conformation.sh
 ./test_trajectory.sh
+./test_internal_pca.sh
+./test_pca.sh
+./test_mds.sh
+./test_tsne.sh

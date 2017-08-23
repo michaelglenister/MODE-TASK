@@ -228,7 +228,7 @@ const std::string currentDateTime() {
 int main(int argc, char *argv[])
 {	
 	//Init vars
-	double cutoff = 24;
+	double cutoff = 24;// this must be user define
 	string pdbInput, outdir = "output";
 	bool hasPdb = false;
 
@@ -254,10 +254,14 @@ int main(int argc, char *argv[])
 		}
 		else if(strcmp(argv[i], "--outdir") == 0)
 		{
-			outdir = atof(argv[i+1]);
+			outdir = argv[i+1];
 			//hasOutdir = true;
 		}
-    }
+	
+
+	}
+	
+	
 	
 	if(!hasPdb)
 	{
@@ -266,9 +270,6 @@ int main(int argc, char *argv[])
 	}
 	
 	cutoff = cutoff * cutoff;
-	/*string eigenvalueMatrixFile = outdir + "/" + pdbInput.substr(pdbInput.find_last_of("/\\")+1, 4) + "_W.txt";
-	string eigenvalueVTFile = outdir + "/" + pdbInput.substr(pdbInput.find_last_of("/\\")+1, 4) + "_VT.txt";
-	string eigenvalueUFile = outdir + "/" + pdbInput.substr(pdbInput.find_last_of("/\\")+1, 4) + "_U.txt";*/
 
 	string eigenvalueMatrixFile = outdir + "/W_values.txt";
 	string eigenvalueVTFile = outdir + "/VT_values.txt";
@@ -320,7 +321,7 @@ int main(int argc, char *argv[])
 	for (int i=0; i<r; i++)
 	{
 		double e = w(i);
-		outputFileW<<i<<" "<<e<<endl;
+		outputFileW<<i+1<<" "<<e<<endl;
 	}
 	outputFileW.close();
 
