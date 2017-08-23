@@ -113,6 +113,9 @@ args=get_options()
 traj = args.trj
 topology = args.topology
 #pca_traj = md.load(traj, top=topology)
+
+print 'Reading trajectory ', args.trj, '...' 
+
 try:
 	pca_traj = md.load(traj, top=topology)
 except:

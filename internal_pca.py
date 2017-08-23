@@ -38,8 +38,9 @@ def set_option():
 	parser.add_argument("-t", "--trj", dest="trj", help="file name of the MD trajectory", action="store")
 	parser.add_argument("-p", "--top", dest="topology", help="topology file")   
 	parser.add_argument("-out", "--out", dest="out_dir", help="Name of the output directory. Default is out")	
+	parser.add_argument("-nc", "--comp", type=int, dest="comp", help="Number of components to keep in a PCA object. If not set, by default all the components will be kept.")	
 	parser.add_argument("-ag", "--ag", dest="atm_grp", help="group of atom for PCA. Default is C alpha atoms. Other options are :"				  "all= all atoms, backbone = backbone atoms, CA= C alpha atoms, protein= protein's atoms")	
-	parser.add_argument("-ct", "--ref", dest="cordinate_type", help="nternal cordinate type. Options are: distance, angles, phi and, psi") 
+	parser.add_argument("-ct", "--ref", dest="cordinate_type", help="internal cordinate type. Options are: distance, angles, phi and, psi") 
 	args = parser.parse_args()	
 	
 	
@@ -97,6 +98,9 @@ if args.topology is None:
 traj = args.trj
 topology = args.topology
 #pca_traj = md.load(traj, top=topology)
+comp = args.comp
+print 'Reading trajectory ', args.trj, '...' 
+
 try:
 	pca_traj = md.load(traj, top=topology)
 except:
@@ -180,7 +184,7 @@ def get_internal_cordinates():
 		angle=md.compute_phi(pca_traj)
 		
 		int_cord=angle[1] ## apparently compute_phi returns tupple of atoms indices and phi angles, index 1 has phi angles 
-		print np.array(angle[1]).shape
+		#print np.array(angle[1]).shape
 		#print int_cord[0]
 	
 	if args.cordinate_type == 'psi':
@@ -189,13 +193,20 @@ def get_internal_cordinates():
 		angle=md.compute_psi(pca_traj)
 		
 		int_cord=angle[1] ## apparently compute_psi returns tupple of atoms indices and psi angles, index 1 has psi angles 
-		print np.array(angle[1]).shape
+		#print np.array(angle[1]).shape
 		
 	if args.cordinate_type == 'angle':
-		print "1-3 angle selected between C,CA and CB"
-		cbeta_idx=top.select_atom_indices('minimal')
-		print cbeta_idx
-		
+		print "1-3 angle selected between N,CA and C"
+		nrow=len(top.select("name CA")) # to get the number of amino acid ignoring ligand etc. 
+		ncol=3
+		# make a matrix of N,CA, C index, each row index making bond
+		B = np.ones((nrow, ncol))
+		B[:,0]= top.select('backbone and name N')
+		B[:,1]= top.select('backbone and name CA')
+		B[:,2]= top.select('backbone and name C')
+		# compute bonds between N,CA, C
+		angle=md.compute_angles(pca_traj, B)
+		int_cord=angle
 	return int_cord;
 
 #===========================================================
@@ -206,8 +217,7 @@ def get_internal_cordinates():
 def distance_pca(int_cord1):
 	'Internal Coordinate Based PCA'
 	
-	pca = PCA()
-	
+	pca = PCA(n_components=comp)
 	dpca = pca.fit(int_cord1)
 	dpca_reduced=dpca.transform(int_cord1)
 	

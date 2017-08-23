@@ -20,7 +20,7 @@ def man():
 
 # print trajectory informations
 
-def trajectory_info(pca_traj, traj, atm_name, sele_grp):
+def trajectory_info(pca_traj, traj, atm_name=None, sele_grp=None):
 	'Prints various information of MD trajectory'
 	print '\n\nTrajectory info:\n'
 	print "Total",pca_traj.n_frames,"frames read from", traj
@@ -129,7 +129,7 @@ def get_kmo(input):
 			
 			# above the diagonal
 			B[i,j]=-(cov_inv[i,j])/(math.sqrt(cov_inv[i,i]*cov_inv[j,j]))
-			
+
 			# below the diagonal
 			B[j,i]=B[i,j]
 	
@@ -141,7 +141,6 @@ def get_kmo(input):
 	return;
 	
 def print_kmo(pca_traj, traj, atm_name, sele_grp):
-	pca_traj.superpose(pca_traj, 0, atom_indices=sele_grp) 			# Superpose each conformation in the trajectory upon first frame
 	sele_trj = pca_traj.xyz[:,sele_grp,:]												# select cordinates of selected atom groups
 	sele_traj_reshaped = sele_trj.reshape(pca_traj.n_frames, len(sele_grp) * 3)
 	arr = sele_traj_reshaped
@@ -164,7 +163,8 @@ def get_rmsf(pca_traj, sele_grp, trj_eval, out_dir):
 	iter=iter
 	nrow=pca_traj.n_frames
 	ncol = len(sele_grp)
-
+	
+	# weighted RMSD Modes
 	# matrix for storing RMSF
 	B = np.ones((nrow, ncol))
 	C = np.ones((nrow, ncol))
@@ -173,10 +173,40 @@ def get_rmsf(pca_traj, sele_grp, trj_eval, out_dir):
 	for i in range(0,pca_traj.n_frames):
 		k=0
 		for j in range(0,iter,3):   ## iterate over every third coloumn (x,y,z of each atom)
-			B[i,k]=math.sqrt(pow(sele_traj_reshaped[i,j],2)+pow(sele_traj_reshaped[i,j+1],2)+pow(sele_traj_reshaped[i,j+2],2)*trj_eval.real[0]) # for first eigenvector, multiply by first eigenvalue
-			C[i,k]=math.sqrt(pow(sele_traj_reshaped[i,j],2)+pow(sele_traj_reshaped[i,j+1],2)+pow(sele_traj_reshaped[i,j+2],2)*trj_eval.real[1])
-			D[i,k]=math.sqrt(pow(sele_traj_reshaped[i,j],2)+pow(sele_traj_reshaped[i,j+1],2)+pow(sele_traj_reshaped[i,j+2],2)*trj_eval.real[2])
+			B[i,k]=math.sqrt((pow(sele_traj_reshaped[i,j],2)+pow(sele_traj_reshaped[i,j+1],2)+pow(sele_traj_reshaped[i,j+2],2))*trj_eval.real[0]) # for first eigenvector, multiply by first eigenvalue
+			C[i,k]=math.sqrt((pow(sele_traj_reshaped[i,j],2)+pow(sele_traj_reshaped[i,j+1],2)+pow(sele_traj_reshaped[i,j+2],2))*trj_eval.real[1])
+			D[i,k]=math.sqrt((pow(sele_traj_reshaped[i,j],2)+pow(sele_traj_reshaped[i,j+1],2)+pow(sele_traj_reshaped[i,j+2],2))*trj_eval.real[2])
 			k=k+1
+	
+	# unweighted RMSD Modes
+	# matrix for storing RMSF
+	E = np.ones((nrow, ncol))
+	for i in range(0,pca_traj.n_frames):
+		k=0
+		for j in range(0,iter,3):   ## iterate over every third coloumn (x,y,z of each atom)
+			E[i,k]=math.sqrt(pow(sele_traj_reshaped[i,j],2)+pow(sele_traj_reshaped[i,j+1],2)+pow(sele_traj_reshaped[i,j+2],2))
+			k=k+1
+	
+	## write the unweighted RMSF mode file
+	pc1_rmsf_fname=out_dir+'/uwrmsf.agr'
+	np.savetxt(pc1_rmsf_fname,np.average(E, axis=0))
+	rf = open(pc1_rmsf_fname, 'r')
+	rf_cont = rf.read()
+	rf.close()
+	my_time = strftime("%Y-%m-%d  %a  %H:%M:%S", gmtime())
+	title = '\tcreated by pca.py\t'
+	subtitle='@    subtitle "RMSF"\
+	@    subtitle font 0\
+	@    subtitle size 1.000000\
+	@    subtitle color 1'
+	legends = '@    title "Un-weighted RMSD modes"\n\
+	@    xaxis  label "Residue"\n\
+	@    yaxis  label "RMSD"\n\
+	@	TYPE xy\n'
+	
+	pf = open(pc1_rmsf_fname, 'w')
+	pf.write('#'+title+'\ton\t'+my_time+'\n'+legends+subtitle+'\n'+rf_cont)
+	pf.close()
 	
 	## write the RMSF mode file for first PC
 	pc1_rmsf_fname=out_dir+'/pc1_rmsf.agr'
@@ -187,16 +217,24 @@ def get_rmsf(pca_traj, sele_grp, trj_eval, out_dir):
 	
 	my_time = strftime("%Y-%m-%d  %a  %H:%M:%S", gmtime())
 	title = '\tcreated by pca.py\t'
+	subtitle='@    subtitle "Contribution of each residue to the PC1"\
+	@    subtitle font 0\
+	@    subtitle size 1.000000\
+	@    subtitle color 1'
 	legends = '@    title "RMSD modes"\n\
 	@    xaxis  label "Residue"\n\
 	@    yaxis  label "RMSD"\n\
 	@	TYPE xy\n'
 	
 	pf = open(pc1_rmsf_fname, 'w')
-	pf.write('#'+title+'\ton\t'+my_time+'\n'+legends+'\n'+rf_cont)
+	pf.write('#'+title+'\ton\t'+my_time+'\n'+legends+subtitle+'\n'+rf_cont)
 	pf.close()
 
 	## write the RMSF mode file for second PC
+	subtitle='@    subtitle "Contribution of each residue to the PC2"\
+	@    subtitle font 0\
+	@    subtitle size 1.000000\
+	@    subtitle color 1'
 	pc2_rmsf_fname=out_dir+'/pc2_rmsf.agr'
 	np.savetxt(pc2_rmsf_fname, np.average(C, axis=0))
 	rf = open(pc2_rmsf_fname, 'r')
@@ -211,10 +249,14 @@ def get_rmsf(pca_traj, sele_grp, trj_eval, out_dir):
 	@	TYPE xy\n'
 	
 	pf = open(pc2_rmsf_fname, 'w')
-	pf.write('#'+title+'\ton\t'+my_time+'\n'+legends+'\n'+rf_cont)
+	pf.write('#'+title+'\ton\t'+my_time+'\n'+legends+subtitle+'\n'+rf_cont)
 	pf.close()
 	
 	## write the RMSF mode file for third PC
+	subtitle='@    subtitle "Contribution of each residue to the PC3"\
+	@    subtitle font 0\
+	@    subtitle size 1.000000\
+	@    subtitle color 1'
 	pc3_rmsf_fname=out_dir+'/pc3_rmsf.agr'
 	np.savetxt(pc3_rmsf_fname,np.average(D, axis=0))
 	rf = open(pc3_rmsf_fname, 'r')
@@ -229,7 +271,7 @@ def get_rmsf(pca_traj, sele_grp, trj_eval, out_dir):
 	@	TYPE xy\n'
 	
 	pf = open(pc3_rmsf_fname, 'w')
-	pf.write('#'+title+'\ton\t'+my_time+'\n'+legends+'\n'+rf_cont)
+	pf.write('#'+title+'\ton\t'+my_time+'\n'+legends+subtitle+'\n'+rf_cont)
 	pf.close()
 	
 	return;
