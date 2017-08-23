@@ -192,6 +192,7 @@ sele_grp = get_trajectory()
 trajectory_info(pca_traj, traj, atm_name, sele_grp)
 
 # print KMO 
+#sele_grp1=top.select("backbone") ## select protein for KMO
 print_kmo(pca_traj, traj, atm_name, sele_grp)
 
 #===============================================================
@@ -242,10 +243,7 @@ def svd_pca(svd):
 	pca_sele_traj_reduced = pca_sele_traj.transform(sele_traj_reshaped_scaled)
 	
 	print "Trace of the covariance matrix is: ", np.trace(pca_sele_traj.get_covariance())
-	#print "Wrote covariance matrix..."
-	#np.savetxt('cov.dat', pca_sele_traj.get_covariance())
-	print pca_sele_traj.components_.shape
-
+	
 	# write the plots 
 	
 	write_plots('pca_projection', pca_sele_traj_reduced, out_dir)
@@ -381,11 +379,10 @@ def my_pca():
 	j = 0
 	eigv = []
 	n_comp=100
-	#print trj_evec.real.shape
 	pca = trj_evec.real[:,0:n_comp]    ## keep first 100 eigenvectors
 	for i in trj_eval.real[0:n_comp]:
 		eigv.append(i)
-		variation.append(i/tot_var)
+		variation.append((i/tot_var)*100)
 		j +=1
 	
 	# write PC plot 
@@ -419,9 +416,8 @@ def my_pca():
 	ef.close()
 	#========================================================
 	# transform the input data into choosen pc
-	#print pca.shape
 	arr_transformed = pca.T.dot(arr.T)
-	
+	print arr_transformed.shape
 	write_plots('pca_projection', arr_transformed, out_dir)
 	write_fig('pca_projection', arr_transformed, out_dir)
 	
