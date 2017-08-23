@@ -8,4 +8,4 @@ done <${file}
 
 cd ..
 
-./getAligned.py --pdbAligned tests/${prot}.pdb --pdbSca output/${prot}4_SCA.pdb
+./getAlignedCG.py --pdbAligned tests/${prot}.pdb --pdbCG output/ComplexCG.pdb
