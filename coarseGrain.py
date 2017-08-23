@@ -190,8 +190,10 @@ if __name__ == "__main__":
 
     # standard arguments for logging and output
     parser.add_argument("--silent", help="Turn off logging", action='store_true', default=False)
+    parser.add_argument("--welcome", help="Display welcome message", default="true")
     parser.add_argument("--log-file", help="Output log file (default: standard output)", default=None)
     parser.add_argument("--outdir", help="Output directory", default="output")
+
 
     # custom arguments
     parser.add_argument("--output", help="File name for Coarse Grained PDB", default = 'ComplexCG.pdb')#output = "3VBSPent"

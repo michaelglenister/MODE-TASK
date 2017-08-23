@@ -277,6 +277,12 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    print "!=====================================================================================!"
+    print "! Pleas check the following:                                                          !"
+    print "! --pdbANM must be the PDB file that NMA was performed on                             !"
+    print "! --pdbProtAligned must be a PDB of your complex aligned to the conformational change !"
+    print "!=====================================================================================!"
+
     # Check if required directories exist
     if not os.path.isdir(args.outdir):
         os.makedirs(args.outdir)

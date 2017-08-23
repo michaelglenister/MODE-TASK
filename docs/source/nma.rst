@@ -130,7 +130,7 @@ Extracts the common residues between two pdb models such as two protein conforma
 | Conformation PDB *     | File       |``--conf1``         | Path to first PDB file      |
 |                        |            |                    |                             |
 +------------------------+------------+--------------------+-----------------------------+
-| Conformation PDB *     | File       |``--conf2``	       | Path to second PDB file     |
+| Conformation PDB *     | File       |``--conf2``         | Path to second PDB file     |
 |                        |            |                    |                             |
 +------------------------+------------+--------------------+-----------------------------+
 
@@ -272,7 +272,7 @@ Creates a PDB for a multiple protomer structure, containing co-ords of an aligne
 Trajectory pentamer
 -------------------------------
 
-Makes a trajectory of 100 PDB files. The resulting output can be viewed in the tool VMD
+Generates a trajectory with arrows that can be viewed in the tool VMD
 
 **Command:** ::
 
