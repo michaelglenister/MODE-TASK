@@ -11,8 +11,8 @@ import math
 
 
 def main(args):
-    protein_name = args.pdbCG
-    protein_name = protein_name[protein_name.rfind("/") + 1:protein_name.rfind("/") + 5]
+    #protein_name = args.pdbCG
+    #protein_name = protein_name[protein_name.rfind("/") + 1:protein_name.rfind("/") + 5]
     f = open(args.pdbAligned, 'r')
     lines = f.readlines()
     f.close()
@@ -32,10 +32,10 @@ def main(args):
             atom_type = info[2]
             chain = info[4]
             res_num = info[5]
-	    atomInfo = res+'-'+atom_type+'-'+chain+'-'+res_num
-	    if atomInfo in cg_atoms:
-		break
-	    else:
+        atomInfo = res+'-'+atom_type+'-'+chain+'-'+res_num
+        if atomInfo in cg_atoms:
+            break
+        else:
                 cg_atoms.append(res+'-'+atom_type+'-'+chain+'-'+res_num)
 	  
 
@@ -47,9 +47,9 @@ def main(args):
                 atom_type2 = info2[2]
                 chain2 = info2[4]
                 res_num2 = info2[5]
-	        atomInfo = res2+'-'+atom_type2+'-'+chain2+'-'+res_num2
-                if cgA == atomInfo:
-                    coarse_grained.append(line)
+            atomInfo = res2+'-'+atom_type2+'-'+chain2+'-'+res_num2
+            if cgA == atomInfo:
+                coarse_grained.append(line)
 
     # print len(coarse_grained)
 
@@ -83,7 +83,7 @@ if __name__ == "__main__":
     # custom arguments
     parser.add_argument("--pdbAligned", help="") 
     parser.add_argument("--pdbCG", help="")
-    parser.add_argument("--output", help="")   
+    parser.add_argument("--output", help="", default="aligned.pdb")
 
     args = parser.parse_args()
 
