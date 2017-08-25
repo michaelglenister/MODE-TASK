@@ -39,9 +39,10 @@ def get_options():
 	parser.add_argument("-t", "--trj", dest="trj",				help="file name of the MD trajectory")
 	parser.add_argument("-p", "--top", dest="topology",				help="topology file")
 	parser.add_argument("-out", "--out", dest="out_dir", help="Name of the output directory. Default is out")
-	parser.add_argument("-ag", "--ag", dest="atm_grp", help="group of atom for MDS. Default is C alpha atoms. Other options are :"				  "all= all atoms, backbone = backbone atoms, CA= C alpha atoms, protein= protein's atoms")	
+	parser.add_argument("-ag", "--ag", dest="atm_grp", help="group of atom for t-SNE. Default is C alpha atoms. Other options are :"				  "all= all atoms, backbone = backbone atoms, CA= C alpha atoms, protein= protein's atoms")	
 	parser.add_argument("-ct", "--cordinate_type",  dest="cordinate_type",				help="Type of cordinates to use for distance calculation")
 	parser.add_argument("-dt", "--dissimilarity_type",  dest="dissimilarity_type",				help="Type of dissimilarity matrix to use. Euclidean distance between internal cordinates or pairwise RMSD")
+	parser.add_argument("-ai", "--atom_indices",  dest="atom_indices",				help="group of atom for pairwise distance. Default is C alpha atoms. Other options are :"				  "all= all atoms, backbone = backbone atoms, alpha= C alpha atoms, heavy= all non hydrogen atoms, minimal=CA,CB,C,N,O atoms")
 	args = parser.parse_args()
 	
 	if args.out_dir == None:
@@ -49,11 +50,28 @@ def get_options():
 		args.out_dir=out
 		
 	if args.atm_grp == None:
-		print 'No atom selected. MDS will be performed on C alpha atoms '
+		print 'No atom selected. t-SNE will be performed on C alpha atoms '
 		args.atm_grp = 'CA'  # set to default C-alpha atoms
 		
 	if args.atm_grp not in  ('all', 'CA', 'backbone', 'protein'):
 		print 'ERROR: no such option as', args.atm_grp, 'for flag -at \nPlease see the usage\n\n '
+		sys.exit(1)
+		
+	if args.cordinate_type not in  ('distance', 'phi', 'psi', 'angle', None):
+		print 'ERROR: no such option as', args.cordinate_type, 'for flag -ct \nPlease see the usage\n\n '
+		sys.exit(1)
+		
+	if 	args.dissimilarity_type == 'euc':
+		if args.atom_indices == None:
+			print 'No atom selected for pairwise distance. pairwise distance of C alpha atoms will be used'
+			args.atom_indices='alpha'
+			
+	if args.atom_indices not in  ('all', 'alpha', 'backbone', 'minimal', 'heavy', None):
+		print 'ERROR: no such option as', args.atom_indices, 'for flag -ai \nPlease see the usage\n\n '
+		sys.exit(1)
+		
+	if args.dissimilarity_type not in  ('rmsd', 'euc', None):
+		print 'ERROR: no such option as', args.dissimilarity_type, 'for flag -dt \nPlease see the help by running \n tsne.py -h\n\n '
 		sys.exit(1)
 	return args;
 	
@@ -74,9 +92,7 @@ if args.topology is None:
 	print 'Missing topology !!\nPlease see the help by running \n\nsystem_setup.py -h\n\n '
 	parser.print_help()
 	sys.exit(1)
-if args.cordinate_type == None:
-	args.cordinate_type = "distance"
-	print "distance is the cordinate type by default"
+
 
 #=======================================
 # assign the passed arguments and read the trajectory
@@ -98,7 +114,7 @@ top = pca_traj.topology
 #atm_name='CA'
 atm_name=args.atm_grp
 sele_grp = get_trajectory(atm_name, top)
-
+atom_indices=args.atom_indices
 # take the input trj name for output directory
 out_dir=args.out_dir
 out_dir=out_dir.split('/')
@@ -139,10 +155,9 @@ def get_pair_rmsd(pca_traj, sele_grp):
 def tsne(input):
 	't-distributed Stochastic Neighbor Embedding'
 	seed = np.random.RandomState(seed=1)
-	my_tsne = TSNE(n_components=10, n_iter=3000, random_state=seed, init='pca')
+	my_tsne = TSNE(n_components=4, n_iter=3000, random_state=seed, init='pca')
 	print "Performing TSNE..."
 	mpos = my_tsne.fit_transform(input)
-	#print mpos.shape
 	write_plots('tsne_projection', mpos, out_dir)
 	write_fig('tsne_projection', mpos, out_dir)
 
@@ -153,9 +168,14 @@ if args.dissimilarity_type == 'rmsd' or args.dissimilarity_type == None:
 	pair_rmsd=get_pair_rmsd(pca_traj, sele_grp)
 	tsne(pair_rmsd)
 	print 'FINISHED!'
-if args.dissimilarity_type == 'distance':
-	int_cord=get_internal_cordinates(top, args.cordinate_type, pca_traj)
-	tsne(int_cord)
+if args.dissimilarity_type == 'euc':
+	if args.cordinate_type == None:
+		args.cordinate_type = "distance"
+		print "Using pairwise distance by default"
+	print 'using Euclidean space of', args.cordinate_type
+	int_cord=get_internal_cordinates(top, args.cordinate_type, pca_traj, atom_indices)
+	similarities = euclidean_distances(int_cord)
+	tsne(similarities)
 	print 'FINISHED!'
 	
 
