@@ -204,7 +204,7 @@ def get_internal_cordinates():
 		B[:,0]= top.select('backbone and name N')
 		B[:,1]= top.select('backbone and name CA')
 		B[:,2]= top.select('backbone and name C')
-		# compute bonds between N,CA, C
+		# compute angle between N,CA, C
 		angle=md.compute_angles(pca_traj, B)
 		int_cord=angle
 	return int_cord;
