@@ -264,6 +264,7 @@ if __name__ == "__main__":
 
     # standard arguments for logging
     parser.add_argument("--silent", help="Turn off logging", action='store_true', default=False)
+    parser.add_argument("--welcome", help="Display welcome message (true/false)", default="true")
     parser.add_argument("--log-file", help="Output log file (default: standard output)", default=None)
     parser.add_argument("--outdir", help="Output directory", default="output")
 
@@ -276,6 +277,9 @@ if __name__ == "__main__":
     parser.add_argument("--output", help="Output file", default="ModesOfConformtionalChange.txt")
 
     args = parser.parse_args()
+
+    if args.welcome == "true":
+        welcome_msg("Conformation mode", "Caroline Ross (caroross299@gmail.com)")
 
     print "!=====================================================================================!"
     print "! Pleas check the following:                                                          !"

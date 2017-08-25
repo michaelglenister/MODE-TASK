@@ -177,21 +177,21 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
     # standard arguments for logging
-    parser.add_argument("--silent", help="Turn off logging",
-                        action='store_true', default=False)
-    parser.add_argument(
-        "--log-file", help="Output log file (default: standard output)", default=None)
-    parser.add_argument(
-        "--outdir", help="Output directory", default="output")
+    parser.add_argument("--silent", help="Turn off logging", action='store_true', default=False)
+    parser.add_argument("--welcome", help="Display welcome message (true/false)", default="true")
+    parser.add_argument("--log-file", help="Output log file (default: standard output)", default=None)
+    parser.add_argument("--outdir", help="Output directory", default="output")
 
     # custom arguments
     # '3VBSFull_Aligned.pdb'
     parser.add_argument("--pdb", help="Coarse grained PDB file")  # '3VBSProtomer3_SCA.pdb'
     parser.add_argument("--mode", help="[int]", type=int)
-
     parser.add_argument("--vectorFile", help="File containing eigen vectors")  # 'ProtomerMode'
 
     args = parser.parse_args()
+
+    if args.welcome == "true":
+        welcome_msg("Visualise vector", "Caroline Ross (caroross299@gmail.com)")
 
     # Check if required directories exist
     if not os.path.isdir(args.outdir):

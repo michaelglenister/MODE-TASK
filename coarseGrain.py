@@ -190,7 +190,7 @@ if __name__ == "__main__":
 
     # standard arguments for logging and output
     parser.add_argument("--silent", help="Turn off logging", action='store_true', default=False)
-    parser.add_argument("--welcome", help="Display welcome message", default="true")
+    parser.add_argument("--welcome", help="Display welcome message (true/false)", default="true")
     parser.add_argument("--log-file", help="Output log file (default: standard output)", default=None)
     parser.add_argument("--outdir", help="Output directory", default="output")
 
@@ -203,6 +203,9 @@ if __name__ == "__main__":
     # parser.add_argument("--protomerAtoms", help="", default=0, type=int)
 
     args = parser.parse_args()
+
+    if args.welcome == "true":
+        welcome_msg("Coarse grain", "Caroline Ross (caroross299@gmail.com)")
 
     # Check if required directories exist
     if not os.path.isdir(args.outdir):
