@@ -44,15 +44,13 @@ def get_internal_cordinates(top, cordinate_type, pca_traj, atom_indices):
 		atom_pairs = list(combinations(calpha_idx, 2)) # all unique pairs of elements 
 		pairwise_distances = md.geometry.compute_distances(pca_traj, atom_pairs)
 		int_cord=pairwise_distances
-		#print int_cord.shape
+		
 	if cordinate_type == 'phi':
 		print  "phi torsions  selected\n"
 		atom_pairs = list(combinations(calpha_idx, 3)) 
 		angle=md.compute_phi(pca_traj)
 		
 		int_cord=angle[1] ## apparently compute_phi returns tupple of atoms indices and phi angles, index 1 has phi angles 
-		#print np.array(angle[1]).shape
-		#print int_cord[0]
 	
 	if cordinate_type == 'psi':
 		print "psi torsions  selected\n"
@@ -60,13 +58,20 @@ def get_internal_cordinates(top, cordinate_type, pca_traj, atom_indices):
 		angle=md.compute_psi(pca_traj)
 		
 		int_cord=angle[1] ## apparently compute_psi returns tupple of atoms indices and psi angles, index 1 has psi angles 
-		#print np.array(angle[1]).shape
 		
 	if cordinate_type == 'angle':
-		print "1-3 angle selected between C,CA and CB"
-		cbeta_idx=top.select_atom_indices('minimal')
-		#print cbeta_idx
+		print "1-3 angle selected between N,CA and C"
+		nrow=len(top.select("name CA")) # to get the number of amino acid ignoring ligand etc. 
+		ncol=3
+		# make a matrix of N,CA, C index, each row index making bond
+		B = np.ones((nrow, ncol))
+		B[:,0]= top.select('backbone and name N')
+		B[:,1]= top.select('backbone and name CA')
+		B[:,2]= top.select('backbone and name C')
 		
+		# compute bonds between N,CA, C
+		angle=md.compute_angles(pca_traj, B)
+		int_cord=angle
 	return int_cord;
 	
 #==========================================================================
