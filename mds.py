@@ -71,6 +71,10 @@ def get_options():
 		parser.print_help()
 		sys.exit(1)
 		
+	if args.dissimilarity_type not in  ('rmsd', 'euc', None):
+		print 'ERROR: no such option as', args.dissimilarity_type, 'for flag -dt \nPlease see the help by running \n mds.py -h..\n\n '
+		sys.exit(1)
+		
 	if args.mds_type == None:
 		print 'No MDS type given... pefroming non-metric MDS...'
 		args.mds_type='nm'
