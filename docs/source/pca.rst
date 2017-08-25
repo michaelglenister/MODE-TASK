@@ -31,7 +31,8 @@ To see the all the availaible options run the following command:
 |                        |            |                    | (.gro, .pdb etc)            |
 +------------------------+------------+--------------------+-----------------------------+
 | Output directory       | string     |``-out``            | Name of the output directory|
-|                        |            |                    | . Default is out            |
+|                        |            |                    | .Default is out suffixed by |
+|                        |            |                    | trajectory name             |
 +------------------------+------------+--------------------+-----------------------------+
 | Atom group             | String     |``-ag``             | group of atom for PCA.      |
 |                        |            |                    | Default is C-alpha atoms.   |
@@ -170,7 +171,7 @@ Run the following command to see the detailed usage and other options:
 2.PCA on internal cordinates
 -----------------------------
 
-User can also performs the PCA on internal cordinates of a MD trajectory. Options for availaible for different types of internal cordinates such as:*pairwise distance between atoms*, *1-3 angle between backbone atoms*, *psi angle*, and *phi angle*. 
+User can also performs the PCA on internal cordinates of a MD trajectory. Options are availaible for different types of internal cordinates such as:*pairwise distance between atoms*, *1-3 angle between backbone atoms*, *psi angle*, and *phi angle*. 
 
 **General Usage:**
 
@@ -190,7 +191,8 @@ User can also performs the PCA on internal cordinates of a MD trajectory. Option
 |                        |            |                    | (.gro, .pdb etc)            |
 +------------------------+------------+--------------------+-----------------------------+
 | Output directory       | string     |``-out``            | Name of the output directory|
-|                        |            |                    | . Default is out            |
+|                        |            |                    | . Default is out suffixed by|
+|                        |            |                    | trajectory name             |
 +------------------------+------------+--------------------+-----------------------------+
 | Atom group             | String     |``-ag``             | group of atom for PCA.      |
 |                        |            |                    | Default is C-alpha atoms.   |
@@ -266,9 +268,10 @@ MDS is a tool to visualize the similarity or dissimilarity in a dataset. Two typ
 |                        |            |                    | (.gro, .pdb etc)            |
 +------------------------+------------+--------------------+-----------------------------+
 | Output directory       | string     |``-out``            | Name of the output directory|
-|                        |            |                    | . Default is out            |
+|                        |            |                    | . Default is out suffixed by|
+|                        |            |                    | trajectory name             |
 +------------------------+------------+--------------------+-----------------------------+
-| Atom group             | String     |``-ag``             | group of atom for PCA.      |
+| Atom group             | String     |``-ag``             | group of atom for MDS.      |
 |                        |            |                    | Default is C-alpha atoms.   |
 | 			 |	      | 		   | Other options are:          |
 |                        |            |                    | all= all atoms,             |
@@ -285,8 +288,10 @@ MDS is a tool to visualize the similarity or dissimilarity in a dataset. Two typ
 |                        |            |                    | cordinates, rmsd= pairwise  |
 |                        |            |                    | RMSD. Default is rmsd       |
 +------------------------+------------+--------------------+-----------------------------+
-| Cordinate type         | String     | ``-ct``		   |Internal cordinates type.    |
+| Cordinate type         | String     | ``-ct``		   | Internal cordinates type.   |
 |                        |            |                    | Default is pairwise distance|
+|                        |            |                    | Only used if Dissimilarity  |
+|                        |            |                    | type is euclidean           |
 +------------------------+------------+--------------------+-----------------------------+
 | Atom indices           | String     | ``-ai``            | group of atom for pairwise  |
 |                        |            |                    | distance. Default is C-alpha|
@@ -358,9 +363,10 @@ t-SNE (t-distributed Stochastic Neighbor Embedding) is a tool for dimentionality
 |                        |            |                    | (.gro, .pdb etc)            |
 +------------------------+------------+--------------------+-----------------------------+
 | Output directory       | string     |``-out``            | Name of the output directory|
-|                        |            |                    | . Default is out            |
+|                        |            |                    | . Default is out suffixed by|
+|                        |            |                    | trajectory name             |
 +------------------------+------------+--------------------+-----------------------------+
-| Atom group             | String     |``-ag``             | group of atom for PCA.      |
+| Atom group             | String     |``-ag``             | group of atom for t-SNE.    |
 |                        |            |                    | Default is C-alpha atoms.   |
 | 			 |	      | 		   | Other options are:          |
 |                        |            |                    | all= all atoms,             |
@@ -370,12 +376,23 @@ t-SNE (t-distributed Stochastic Neighbor Embedding) is a tool for dimentionality
 +------------------------+------------+--------------------+-----------------------------+
 | Cordinate type         | String     | ``-ct``		   | Internal cordinates type.   |
 |                        |            |                    | Default is pairwise distance|
+|                        |            |                    | . Only used if Dissimilarity|
+|                        |            |                    | type is euclidean           |
 +------------------------+------------+--------------------+-----------------------------+
 | Dissimilarity type     | String     | ``-dt``            | Type of dissimilarity matrix|
 |                        |            |                    | to use. euc = Euclidean     |
 |                        |            |                    | distance between internal   |
 |                        |            |                    | cordinates, rmsd= pairwise  |
 |                        |            |                    | RMSD. Default is rmsd       |
++------------------------+------------+--------------------+-----------------------------+
+| Atom indices           | String     | ``-ai``            | group of atom for pairwise  |
+|                        |            |                    | distance. Default is C-alpha|
+|                        |            |                    | atoms. Other options are:   |
+|                        |            |                    | all= all atoms,backbone =   |
+|                        |            |                    | backbone atoms, alpha=      |
+|                        |            |                    | C-alpha atoms,heavy= all non|
+|                        |            |                    | hydrogen atoms, minimal=CA, |
+|                        |            |                    | CB,C,N,O atoms              |
 +------------------------+------------+--------------------+-----------------------------+
 
  
@@ -396,9 +413,15 @@ t-SNE (t-distributed Stochastic Neighbor Embedding) is a tool for dimentionality
 **specific example:**
 
 **4.1 t-SNE on C-alpha atoms:**
+To perform the t-SNE using pairwise RMSD of C-alpha atoms as index of dissimilarity.
 
 **command:**
-	``tsne.py -t trajectory.xtc -p complex.pdb -ag CA``
+	``tsne.py -t trajectory.xtc -p complex.pdb -ag CA -dt rmsd``
+
+To perform the t-SNE using euclidean space between pairwise distance of C-alpha atoms as index of dissimilarity.
+
+**command:**
+	``tsne.py -t trajectory.xtc -p complex.pdb -ag CA -dt euc -ai alpha``
 
 **Detailed usage:**
 
