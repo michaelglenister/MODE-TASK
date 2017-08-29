@@ -290,7 +290,7 @@ int main(int argc, char *argv[])
 	
         ifstream mfile (pdbInput.c_str());// This is the PDB file that will be coarse grained. 
 	if (mfile.good() == false) {
-        	cout<<newline<<"**************************************"<<newline<<"ERROR: Specified PDB file does not exist. Exiting..."<<newline<<"**************************************"<<newline;
+        	cout<<endl<<"**************************************"<<endl<<"ERROR: Specified PDB file does not exist. Exiting..."<<endl<<"**************************************"<<endl;
 		return -1;
         }//if
         mfile.close();
@@ -316,7 +316,7 @@ int main(int argc, char *argv[])
         char newline = '\n';
         if (atype!="CA" and atype!="CB")
         {
-        cout<<newline<<"**************************************"<<newline<<"Unrecognised atom type"<<newline<<"Input Options:"<<newline<<"CA: to select alpha carbon atoms"<<newline<<"CB: to select beta carbon atoms"<<newline<<"**************************************"<<newline;
+        cout<<endl<<"**************************************"<<endl<<"Unrecognised atom type"<<endl<<"Input Options:"<<endl<<"CA: to select alpha carbon atoms"<<endl<<"CB: to select beta carbon atoms"<<endl<<"**************************************"<<endl;
         return -1;
         }//if
        
@@ -324,7 +324,7 @@ int main(int argc, char *argv[])
         size_t found = pdbInput.find(str2);
         if (found==std::string::npos)
         {
-         cout<<newline<<"**************************************"<<newline<<"ERROR: INPUT FILE MUST BE A PDB FILE!"<<newline<<"**************************************"<<newline;
+         cout<<endl<<"**************************************"<<endl<<"ERROR: INPUT FILE MUST BE A PDB FILE!"<<endl<<"**************************************"<<endl;
          return -1;
         }//if not a pdbfile
 
