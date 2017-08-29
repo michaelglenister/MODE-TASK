@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 #filename: pca.py
-import os, sys
-import time, re, math
+import os
+import sys
+import time
+import re
+import math
 import argparse
 from time import sleep, gmtime, strftime
 from datetime import datetime
@@ -10,9 +13,9 @@ import numpy as np
 from sklearn.decomposition import PCA, KernelPCA, IncrementalPCA
 from sklearn.metrics import euclidean_distances
 from sklearn import preprocessing
-from write_plot import write_plots, write_pcs, write_fig
-from traj_info import trajectory_info, get_cosine, get_kmo, print_kmo, get_rmsf
-from welcome_msg import welcome_msg
+from lib.write_plot import write_plots, write_pcs, write_fig
+from lib.traj_info import trajectory_info, get_cosine, get_kmo, print_kmo, get_rmsf
+from lib.utils import welcome_msg
 import scipy.integrate
 
 def main():
@@ -33,7 +36,7 @@ def main():
 ##								 Welcome message
 ##===============================================================================
 title='PCA MD'
-welcome_msg(title)
+welcome_msg(title, "Bilal Nizami")
 
 
 #==============================================================================

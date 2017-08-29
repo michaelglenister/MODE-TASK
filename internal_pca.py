@@ -1,16 +1,17 @@
 #!/usr/bin/env python
 #filename: internal_pca.py
 
-import os, sys
+import os
+import sys
 import argparse
 import mdtraj as md
 import numpy as np
 from sklearn.decomposition import PCA, KernelPCA, IncrementalPCA
 from sklearn.metrics import euclidean_distances
 from itertools import combinations
-from write_plot import write_plots, write_pcs, write_fig
-from traj_info import trajectory_info, get_cosine, print_kmo
-from welcome_msg import welcome_msg
+from lib.write_plot import write_plots, write_pcs, write_fig
+from lib.traj_info import trajectory_info, get_cosine, print_kmo
+from lib.utils import welcome_msg
 
 def main():
 	
@@ -29,7 +30,7 @@ def main():
 ##===============================================================================
 
 title='Internal PCA MD'
-welcome_msg(title)
+welcome_msg(title, "Bilal Nizami")
 
 def set_option():
 	parser = argparse.ArgumentParser( usage='%(prog)s -t <MD trajectory> -p <topology file>')

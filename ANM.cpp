@@ -5,7 +5,6 @@
 // August 2017
 
 
-
 //Performs Normal Mode Analysis using the ANM tool
 //The script uses the alglib library and the following must be included for the script to run. These are contained in src folder in a cpp folder of the alglib package. When complying this code use g++ -I path/cpp/src as an option
 #include <iostream>
@@ -18,8 +17,8 @@
 #include <specialfunctions.h>
 #include <specialfunctions.cpp>
 #include <iostream>
-#include <linalg.h> 
-#include <linalg.cpp> 
+#include <linalg.h>
+#include <linalg.cpp>
 #include <alglibinternal.h>
 #include <alglibinternal.cpp>
 #include <alglibmisc.h>
@@ -49,8 +48,6 @@ vector< vector<double> > getCoOrds(string pdbInput,string atype)// gets the x,y,
 	
         ifstream mfile (pdbInput.c_str());// This is the PDB file that will be coarse grained. 
 	string li;
-
-       
 
 // file is open and not empty
 	
@@ -245,6 +242,19 @@ int main(int argc, char *argv[])
         string atype="CA";
 	bool hasPdb = false;
 
+	// Welcome message
+	cout<< "============================================================\n"<<endl;
+	
+	cout<< "\t:-) >>------->"<<argv[0]<<"<-------<< (-:\t\n"<<endl;
+
+	cout<< "\tAuthor(s): Caroline Ross (caroross299@gmail.com)\t\t\t\t"<<endl;
+	cout<< "\tResearch Unit in Bioinformatics (RUBi)\t\t"<<endl;
+	cout<< "\tRhodes University, 2017\t\t\t\t"<<endl;
+	cout<< "\tDistributed under GNU GPL 3.0\t\t\t\n"<<endl;
+	cout<< "\thttps://github.com/michaelglenister/NMA-TASK\t\n"<<endl;
+
+	cout<< "============================================================"<<endl;
+
 	// Begin parameter handling
 	// Add more else if statements for further parameters
 	int i;
@@ -279,8 +289,6 @@ int main(int argc, char *argv[])
 		}
 	
 	}
-	
-	
 	
 	if(!hasPdb)
 	{

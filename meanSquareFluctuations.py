@@ -9,16 +9,11 @@
 
 # Calculates and Returns Diagonals of Correlated Matrix for a given set of modes
 
-import os 
-# import sys
+import os
 import argparse
 from datetime import datetime
 
-from utils import *
-
-# import matplotlib
-# import matplotlib.pyplot as plt
-# from matplotlib import cm as CM
+from lib.utils import *
 import numpy as np
 
 

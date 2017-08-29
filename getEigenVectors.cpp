@@ -10,7 +10,7 @@
 #include <string>
 #include <sstream>
 #include <stdlib.h>
-#include <math.h> 
+#include <math.h>
 #include <stdio.h>
 
 #include <ap.h>
@@ -36,6 +36,19 @@ int main(int argc, char *argv[])
 	string protomerVT, totalRes, firstMode, outdir = "output";
 	int direction = 1; //direction of overlap correction - 1 is default - user will determine this from Conformational Analysis
 	bool hasVt = false, hasRes = false, hasMode = false;
+	
+	// Welcome message
+	cout<< "============================================================\n"<<endl;
+	
+	cout<< "\t:-) >>------->"<<argv[0]<<"<-------<< (-:\t\n"<<endl;
+
+	cout<< "\tAuthor(s): Caroline Ross (caroross299@gmail.com)\t\t\t\t"<<endl;
+	cout<< "\tResearch Unit in Bioinformatics (RUBi)\t\t"<<endl;
+	cout<< "\tRhodes University, 2017\t\t\t\t"<<endl;
+	cout<< "\tDistributed under GNU GPL 3.0\t\t\t\n"<<endl;
+	cout<< "\thttps://github.com/michaelglenister/NMA-TASK\t\n"<<endl;
+
+	cout<< "============================================================"<<endl;
 
 	// Begin parameter handling
 	// Add more else if statements for further parameters
