@@ -1,5 +1,11 @@
 #!/usr/bin/env python
-# Takes a protomer structure and coarse grains to select a set amount of C-Beta
+
+# coarseGrain.py
+# Selects a sub-set of carbon atoms, equally distributed across the complex
+# Author: Caroline Ross: caroross299@gmail.com
+# August 2017
+
+
 import os
 import sys
 import argparse
@@ -11,10 +17,22 @@ import math
 
 
 def main(args):
-    pdb_file = args.pdb
-    f = open(pdb_file, 'r')
-    lines = f.readlines()
-    f.close()
+
+	
+    atomT = args.atomType.upper()
+    if atomT!='CA' and atomT!='CB':
+	print '\n**************************************\nUnrecognised atom type\nInput Options:\nCA: to select alpha carbon atoms\nCB: to select beta carbon atoms\n**************************************\n'
+	sys.exit()
+
+    try:
+        pdb_file = args.pdb
+	f = open(pdb_file, 'r')
+	lines = f.readlines()
+	f.close()
+    except IOError:
+	print '\n**************************************\nFILE '+args.pdb+' NOT FOUND\n**************************************\n'
+        sys.exit()
+
 
     # get index of first atom
     for i in range(len(lines)):
@@ -34,7 +52,7 @@ def main(args):
             chain = info[4]
             res = info[3]
             atom_type = info[2]
-            if atom_type == "CB" or (atom_type == "CA" and res == "GLY"): #Give user the option for C-aplhas or C-betas
+            if atom_type == atomT or (atom_type == "CA" and res == "GLY"): #Give user the option for C-aplhas or C-betas
                 if number_protomer_atoms == 0:
                     chain1 = chain
                 if chain not in chain_dics:
@@ -67,7 +85,7 @@ def main(args):
             coords = []
             res = line.split()[3].strip()
             atom_type = line.split()[2].strip()
-            if atom_type == "CB" or (atom_type == "CA" and res == "GLY"):
+            if atom_type == atomT or (atom_type == "CA" and res == "GLY"):
                 coords.append(float(line[30:38].strip().strip()))
                 coords.append(float(line[38:46].strip().strip()))
                 coords.append(float(line[46:54].strip().strip()))
@@ -76,6 +94,12 @@ def main(args):
     index_of_selected_atoms = []
 
     starting_atom = args.startingAtom  # residue number of starting atoms
+    if starting_atom<0:
+	starting_atom = 1
+	print '\n**************************************\nInvalid Starting Atom: '+str(starting_atom)+'\nDefault Starting Atom = 1 has been used\n**************************************\n'
+	
+
+
     starting_atom_i = starting_atom - 1  # Index for starting atom
     index_of_selected_atoms.append(starting_atom_i)
 
@@ -103,15 +127,26 @@ def main(args):
         distance_index[distance] = i
     distances_from_start.sort()
 
+    #c_g_select = 0
+    if c_g == 0 or c_g<0:
+	print '\n**************************************\nERROR: Coarse Grain Level = '+str(c_g)+'\nNo output generated\n**************************************'
+	sys.exit()
+    elif c_g == 1:
+	c_g_select = 0
+    elif c_g ==2:
+	c_g_select = 1
+    else:
+	c_g_select = (c_g * (c_g - 1)) - c_g
+
     # selects atoms which are not within this distance to already selected atoms
-    cutoff = distances_from_start[(c_g * (c_g - 1)) - c_g]
+    cutoff = distances_from_start[c_g_select]
     atom_index = distance_index[cutoff]
     index_of_selected_atoms.append(atom_index)
 
     distribution = {}
 
     # loops through ordered list and selects all suitable atoms
-    for dist in distances_from_start[((c_g * (c_g - 1)) - c_g) + 1:]:
+    for dist in distances_from_start[ c_g_select+ 1:]:
         atom_index = distance_index[dist]
         x = protomer_c_betas[atom_index][0]
         y = protomer_c_betas[atom_index][1]
@@ -161,8 +196,11 @@ def main(args):
         selected_c_beta_lines.append(ter)
 
     outfile = args.output
-    if not '.pdb' in outfile:
+    if not '.pdb' in outfile and not'.' in outfile:
 	outfile+='.pdb'
+    elif not '.pdb' in outfile and '.' in outfile:
+	print '\n**************************************\nSpecified output file name is not comptable with PDB format\nDefault file use: ComplexCG.pdb\n**************************************'
+	outfile = "ComplexCG.pdb"
 	
     w = open(args.outdir + "/" + outfile, 'w')
     w.writelines(header)
@@ -194,12 +232,12 @@ if __name__ == "__main__":
     parser.add_argument("--log-file", help="Output log file (default: standard output)", default=None)
     parser.add_argument("--outdir", help="Output directory", default="output")
 
-
     # custom arguments
     parser.add_argument("--output", help="File name for Coarse Grained PDB", default = 'ComplexCG.pdb')#output = "3VBSPent"
     parser.add_argument("--pdb", help="PDB input file")  # 3VBSPent.pdb
-    parser.add_argument("--cg", help="Course grain level [int]", default=4, type=int)
-    parser.add_argument("--startingAtom", help="Residue number of starting atoms [int]", default=1, type=int)
+    parser.add_argument("--cg", help="Course grain level [int]: Increase level to increase amount of coarse graining", default=4, type=int)
+    parser.add_argument("--startingAtom", help="Residue number of first carbon atom to be selected [int]", default=1, type=int)
+    parser.add_argument("--atomType", help="Enter CA to select alpha carbons or CB to select beta carbons", default='CA')
     # parser.add_argument("--protomerAtoms", help="", default=0, type=int)
 
     args = parser.parse_args()
@@ -207,7 +245,7 @@ if __name__ == "__main__":
     if args.welcome == "true":
         welcome_msg("Coarse grain", "Caroline Ross (caroross299@gmail.com)")
 
-    # Check if required directories exist
+        # Check if required directories exist
     if not os.path.isdir(args.outdir):
         os.makedirs(args.outdir)
 

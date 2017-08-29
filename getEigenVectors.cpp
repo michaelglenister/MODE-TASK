@@ -1,4 +1,10 @@
+// getEigenVectors.cpp
+// Extracts the eigenvectors for a specfied normal mode
+// Author: Caroline Ross: caroross299@gmail.com
+// August 2017
+
 //Run individually for each mode
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -79,13 +85,18 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
+	char newline = '\n';
+	ifstream vfile (protomerVT.c_str());// This is the PDB file that will be coarse grained. 
+	if (vfile.good() == false) {
+        	cout<<newline<<"**************************************"<<newline<<"ERROR: Specified VectorMatrix file does not exist. Exiting..."<<newline<<"**************************************"<<newline;
+		return -1;
+        }//if
+        vfile.close();
 
-	
 	string protomerMode = outdir + "/EVectors"+firstMode.c_str()+".txt"; 
 	
 	int total = atoi(totalRes.c_str());
 	int mode1 = atoi(firstMode.c_str())-1;
-	
 
 
 	// End parameter handling

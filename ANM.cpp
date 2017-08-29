@@ -1,4 +1,12 @@
-//Performed Normal Mode Analysis using the ANM tool
+
+// ANM.cpp
+// Performs Normal Mode Analysis using the ANM tool
+// Author: Caroline Ross: caroross299@gmail.com
+// August 2017
+
+
+
+//Performs Normal Mode Analysis using the ANM tool
 //The script uses the alglib library and the following must be included for the script to run. These are contained in src folder in a cpp folder of the alglib package. When complying this code use g++ -I path/cpp/src as an option
 #include <iostream>
 #include <cstdlib>
@@ -34,16 +42,20 @@ int countAtoms()//counts Carbon Atoms (Beta carbons for all residues but Alpha c
 }//countAtoms
 
 
-vector< vector<double> > getCoOrds(string pdbInput)// gets the x,y,z cordinates for all the carbon atoms in PDB file. Returns 3 X numAtoms Matrix
+vector< vector<double> > getCoOrds(string pdbInput,string atype)// gets the x,y,z cordinates for all the carbon atoms in PDB file. Returns 3 X numAtoms Matrix
 {	
 	vector< vector<double> > C;
 	vector<double> atomC;
 	
-	ifstream mfile (pdbInput.c_str());// This is the PDB file that will be coarse grained. 
+        ifstream mfile (pdbInput.c_str());// This is the PDB file that will be coarse grained. 
 	string li;
+
+       
+
+// file is open and not empty
 	
 	while (! mfile.eof() )
-	{
+	{       
 		getline (mfile,li);
 		istringstream iss(li);
 		string atom, temp, type,res,x,y,z;
@@ -58,7 +70,7 @@ vector< vector<double> > getCoOrds(string pdbInput)// gets the x,y,z cordinates 
 		iss>>z;
 		if (atom=="ATOM")
 		{	
-			if((res=="GLY"&&type=="CA")||type=="CB")// This selects only CA atoms for CB atoms use if((res=="GLY"&&type=="CA")||type=="CB") such that CA are selected in the case of Glycine
+			if((res=="GLY"&&type=="CA")||type==atype)// This selects only CA atoms for CB atoms use if((res=="GLY"&&type=="CA")||type=="CB") such that CA are selected in the case of Glycine
 			{
 				atomC.push_back(atof(x.c_str()));
 				atomC.push_back(atof(y.c_str()));
@@ -230,6 +242,7 @@ int main(int argc, char *argv[])
 	//Init vars
 	double cutoff = 24;// this must be user define
 	string pdbInput, outdir = "output";
+        string atype="CA";
 	bool hasPdb = false;
 
 	// Begin parameter handling
@@ -257,8 +270,14 @@ int main(int argc, char *argv[])
 			outdir = argv[i+1];
 			//hasOutdir = true;
 		}
+             
 	
-
+                else if(strcmp(argv[i], "--atomType") == 0)
+		{
+			atype = argv[i+1];
+			//hasOutdir = true;
+		}
+	
 	}
 	
 	
@@ -269,6 +288,13 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 	
+        ifstream mfile (pdbInput.c_str());// This is the PDB file that will be coarse grained. 
+	if (mfile.good() == false) {
+        	cout<<newline<<"**************************************"<<newline<<"ERROR: Specified PDB file does not exist. Exiting..."<<newline<<"**************************************"<<newline;
+		return -1;
+        }//if
+        mfile.close();
+
 	cutoff = cutoff * cutoff;
 
 	string eigenvalueMatrixFile = outdir + "/W_values.txt";
@@ -286,9 +312,24 @@ int main(int argc, char *argv[])
 	int sec;
 	std::cout << "Started at: " << currentDateTime() << std::endl;
 	clock_t tStart = clock();
+        
+        char newline = '\n';
+        if (atype!="CA" and atype!="CB")
+        {
+        cout<<newline<<"**************************************"<<newline<<"Unrecognised atom type"<<newline<<"Input Options:"<<newline<<"CA: to select alpha carbon atoms"<<newline<<"CB: to select beta carbon atoms"<<newline<<"**************************************"<<newline;
+        return -1;
+        }//if
+       
+	string str2=".pdb";
+        size_t found = pdbInput.find(str2);
+        if (found==std::string::npos)
+        {
+         cout<<newline<<"**************************************"<<newline<<"ERROR: INPUT FILE MUST BE A PDB FILE!"<<newline<<"**************************************"<<newline;
+         return -1;
+        }//if not a pdbfile
 
 
-	vector< vector<double> > C = getCoOrds(pdbInput);
+	vector< vector<double> > C = getCoOrds(pdbInput,atype);
 	vector< vector<double> > Hessian = getHessian(C, cutoff);
 
 	int size = Hessian.size();

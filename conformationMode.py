@@ -1,4 +1,10 @@
 #!/usr/bin/env python
+
+# coformationalMode.py
+# Identifies normal modes that act in the direction of a conformational change
+# Author: Caroline Ross: caroross299@gmail.com
+# August 2017
+
 import os
 import sys
 import argparse
@@ -6,16 +12,39 @@ from datetime import datetime
 from utils import *
 import numpy as np
 from math import sqrt
+import sdrms
+import numpy as np
 
 def main(args):
-    # Read In PDB files
-    f = open(args.pdbConfAligned, 'r')
-    lines_empty = f.readlines()
-    f.close()
 
-    f = open(args.pdbProtAligned, 'r')
-    lines_full = f.readlines()
-    f.close()
+    atomT = args.atomType.upper()
+    if atomT!='CA' and atomT!='CB':
+	print '\n**************************************\nUnrecognised atom type\nInput Options:\nCa: to select alpha carbon atoms\CB: to select beta carbon atoms\n**************************************'
+	sys.exit()
+
+
+
+    if args.pdbConf==args.pdbANM:
+	print '\n**************************************\nWARNING!!!\nConformational change PDB files are the same:\n--pdbANM: '+args.pdbANM+'\n--pdbConf: '+args.pdbConf+'\n**************************************\n'
+	
+
+    try:
+        f = open(args.pdbConf, 'r')
+        lines_empty = f.readlines()
+        f.close()
+    except IOError:
+        print '\n**************************************\nFILE '+args.pdbConf+' NOT FOUND:\n**************************************\n'
+	sys.exit()
+
+
+
+    try:
+        f = open(args.pdbANM, 'r')
+        nma = f.readlines()
+        f.close()
+    except IOError:
+        print '\n**************************************\nFILE '+args.pdbANM+' NOT FOUND:\n**************************************\n'
+	sys.exit()
 
     empty_residues = {}
     full_residues = {}
@@ -26,13 +55,13 @@ def main(args):
     number_of_protomers = 0
     currentResidue = 0
 
-    for line in lines_full:
+    for line in nma:
         if line.startswith("ATOM"):
             info = line.split()
             atype = info[2].strip()
             res_type = info[3].strip()
             res = int(info[5].strip())
-            if atype == "CB" or (atype == "CA" and res_type == "GLY"):
+            if atype == atomT or (atype == "CA" and res_type == "GLY"):
 		if currentResidue == 0:
 			currentResidue = res
 			number_of_protomers+=1	
@@ -51,21 +80,21 @@ def main(args):
             res_type = info[3].strip()
             chain = info[4].strip()
             res = int(info[5].strip())
-            if atype == "CB" or (atype == "CA" and res_type == "GLY"):
+            if atype == atomT or (atype == "CA" and res_type == "GLY"):
 		if chain in empty_residues:
                     if res not in empty_residues[chain]:
                         empty_residues[chain].append(res)
 		else:
 			empty_residues[chain] = [res]
 
-    for line in lines_full:
+    for line in nma:
         if line.startswith("ATOM"):
             info = line.split()
             atype = info[2].strip()
             res_type = info[3].strip()
             chain = info[4].strip()
             res = int(info[5].strip())
-            if atype == "CB" or (atype == "CA" and res_type == "GLY"):	
+            if atype == atomT or (atype == "CA" and res_type == "GLY"):
 	        if chain in full_residues:
                     if res not in full_residues[chain]:
                         full_residues[chain].append(res)
@@ -92,7 +121,7 @@ def main(args):
     for ch in common_residues:
 	selected_full[ch] = []
 
-
+    count_common = 0
     empty_cords = []
     full_cords = []
     for line in lines_empty:
@@ -105,14 +134,15 @@ def main(args):
 	    if chain in common_residues:
 		
                 if res in common_residues[chain]:
-                    if atype == "CB" or (atype == "CA" and res_type == "GLY"):
+                    if atype == atomT or (atype == "CA" and res_type == "GLY"):
                         x = float(line[30:38].strip())
                         y = float(line[38:46].strip())
                         z = float(line[46:54].strip())
                         cod = [x, y, z]
                         empty_cords.append(cod)
+			count_common+=1
 
-    for line in lines_full:
+    for line in nma:
         if line.startswith("ATOM"):
             info = line.split()
             atype = info[2].strip()
@@ -123,31 +153,41 @@ def main(args):
                 if res in common_residues[chain]:
                     if res not in selected_full[chain]:
                         selected_full[chain].append(res)
-                    if atype == "CB" or (atype == "CA" and res_type == "GLY"):
+                    if atype == atomT or (atype == "CA" and res_type == "GLY"):
                         x = float(line[30:38].strip())
                         y = float(line[38:46].strip())
                         z = float(line[46:54].strip())
                         cod = [x, y, z]
                         full_cords.append(cod)
 
+
+    target = np.zeros((count_common,3))
+    for i,res in enumerate(empty_cords):
+	for j,c in enumerate(res):
+		target[i,j] = c
+	
+
+    struc = np.zeros((count_common,3))
+    for i,res in enumerate(full_cords):
+	for j,c in enumerate(res):
+		struc[i,j] = c
+    confAligned = sdrms.superpose3D(struc, target)
+    alignedFull = confAligned[0]
+    rmsd = confAligned[1]
+    
+    print '\nRMSD between '+args.pdbANM+' and '+args.pdbConf+' = '+str(rmsd)+'\n'
     # Calculate deltaR
-
     delta_r = []
-    
+    for j in range(len(alignedFull)):
+      full = alignedFull[j]
+      empty = target[j]
+      rx = empty[0] - full[0]
+      ry = empty[1] - full[1]
+      rz = empty[2] - full[2]
+      delta_r.append(rx)
+      delta_r.append(ry)
+      delta_r.append(rz)
 
-    for i in range(number_of_protomers):
-        for j in range(len(empty_cords) / number_of_protomers):
-            full = full_cords[i + (j * number_of_protomers)]
-            empty = empty_cords[i + (j * number_of_protomers)]
-            rx = empty[0] - full[0]
-            ry = empty[1] - full[1]
-            rz = empty[2] - full[2]
-            delta_r.append(rx)
-            delta_r.append(ry)
-            delta_r.append(rz)
-
-
-    
     # Calculate the magnitude
     correlationDR = []
     csum=0
@@ -164,9 +204,6 @@ def main(args):
     # Get Eigenvectors for a mode
     # Calculate Indexes of vectors to be selected
     interface_index = []
-    f = open(args.pdbANM, 'r')
-    nma = f.readlines()
-    f.close()
     count = 0
     for line in nma:
         if line.startswith("ATOM"):
@@ -175,77 +212,78 @@ def main(args):
             res_type = info[3].strip()
             chain = info[4].strip()
             res = int(info[5].strip())
-            if atype == "CB" or (atype == "CA" and res_type == "GLY"):
+            if atype == atomT or (atype == "CA" and res_type == "GLY"):
                 if chain in common_residues:
                     if res in common_residues[chain]:
                         interface_index.append(count)
                 count += 1
 
- 
-    f = open(args.vtMatrix, 'r')
-    vectors = f.readlines()
-    f.close()
+
+    try:   
+        f = open(args.vtMatrix, 'r')
+        vectors = f.readlines()
+        f.close()
+    except IOError:
+        print '\n**************************************\nFILE '+args.vtMatrix+' NOT FOUND:\n**************************************\n'
+	sys.exit()
     mode_range = range(len(vectors)-6) #excludes the trivial modes
 	
     
     output = {}
-    for mode in mode_range:
-	correlationMode = []
-        overlap = 0
-        common_vector = []
-        vector = vectors[mode].split()
-        for res in interface_index:
-            csum = 0
-            for i in range(3):
-                ele = float(vector[res * 3 + i])
-		csum = csum+ele*ele
-                common_vector.append(ele)
-	    csum = sqrt(csum)
-	    correlationMode.append(csum)
+    try:
+        for mode in mode_range:
+	    correlationMode = []
+            overlap = 0
+            common_vector = []
+            vector = vectors[mode].split()
+            for res in interface_index:
+                csum = 0
+                for i in range(3):
+                    ele = float(vector[res * 3 + i])
+		    csum = csum+ele*ele
+                    common_vector.append(ele)
+	        csum = sqrt(csum)
+	        correlationMode.append(csum)
 
-        # Calculate the magnitude
-        mag_mode = 0
-        for r in common_vector:
-            mag_mode += r * r
+
+            # Calculate the magnitude
+            mag_mode = 0
+            for r in common_vector:
+                mag_mode += r * r
 	
-        mag_mode = sqrt(mag_mode)
-        # Calculate Dot Product
-        if len(common_vector) == len(delta_r):
-            # print "Vectors Match"
-            C = abs(np.corrcoef(correlationMode,correlationDR)[0,1])
-            for i in range(len(common_vector)):
-                overlap += common_vector[i] * delta_r[i]
+            mag_mode = sqrt(mag_mode)
+            # Calculate Dot Product
+            if len(common_vector) == len(delta_r):
+                # print "Vectors Match"
+                C = abs(np.corrcoef(correlationMode,correlationDR)[0,1])
+                for i in range(len(common_vector)):
+                    overlap += common_vector[i] * delta_r[i]
 
-            overlap = overlap / (mag_d_r * mag_mode)
+                overlap = overlap / (mag_d_r * mag_mode)
 	    
-            spaces = len("mode: "+str(mode+1))
+                spaces = len("mode: "+str(mode+1))
 	    
-	    spaces = 15-spaces
+	        spaces = 15-spaces
 	    
-	    if abs(overlap) in output:
-                output[abs(overlap)].append("Mode: " + str(mode+1) + ' '*spaces+ str(overlap) +'      '+str(C)+'\n')
-	    else:
-		output[abs(overlap)]=["Mode: " + str(mode+1) + ' '*spaces + str(overlap)+'      '+ str(C)+'\n']
-            
-    	    
+	        if abs(overlap) in output:
+                    output[abs(overlap)].append("Mode: " + str(mode+1) + ' '*spaces+ str(overlap) +'      '+str(C)+'\n')
+	        else:
+		    output[abs(overlap)]=["Mode: " + str(mode+1) + ' '*spaces + str(overlap)+'      '+ str(C)+'\n']
 
-    
-    overlap_list = output.keys()
-    overlap_list.sort()
-    overlap_list.reverse()
+        overlap_list = output.keys()
+        overlap_list.sort()
+        overlap_list.reverse()
 
-   
+        w = open(args.outdir + "/" + args.output, 'w')
+        w.write('MODE           Overlap              Correlation\n\n')
+        for out in overlap_list:
+	    for o in output[out]:
+                w.write(o)
 
-
-
-    w = open(args.outdir + "/" + args.output, 'w')
-    w.write('MODE           Overlap              Correlation\n\n')
-    for out in overlap_list:
-	for o in output[out]:
-            w.write(o)
-
-    w.close()
-
+        w.close()
+    except IndexError:
+        print '\n**************************************\nFILE '+args.vtMatrix+' IS NOT A VALID EIGENVECTOR FILE:\n**************************************\n'
+        sys.exit()
 silent = False
 stream = sys.stdout
 
@@ -269,12 +307,11 @@ if __name__ == "__main__":
     parser.add_argument("--outdir", help="Output directory", default="output")
 
     # custom arguments
-    parser.add_argument("--pdbConfAligned", help="")
-
-    parser.add_argument("--pdbProtAligned", help="")
+    parser.add_argument("--pdbConf", help="")
     parser.add_argument("--pdbANM", help="")
     parser.add_argument("--vtMatrix", help="")  # note: change this from vtProtomer
     parser.add_argument("--output", help="Output file", default="ModesOfConformtionalChange.txt")
+    parser.add_argument("--atomType", help="Enter CA to select alpha carbons or CB to select beta carbons", default='CA')
 
     args = parser.parse_args()
 
