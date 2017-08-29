@@ -10,8 +10,8 @@ Collection of tools for analysing normal modes and performing principal componen
 
 *Download the project:*
 ```bash
-git clone https://github.com/RUBi-ZA/NMA-TASK.git
-cd NMA-TASK
+git clone https://github.com/RUBi-ZA/MODE-TASK.git
+cd MODE-TASK
 ```
 *Install dependencies and set up Python virtual environment:*
 ```bash
@@ -24,15 +24,15 @@ pip install matplotlib
 pip install cython
 pip install mdtraj
 ```
-*Compile binaries:*
+*Compile C++ binaries:*
 ```
 sudo apt install g++
 g++ -I cpp/src/ ANM.cpp -o ANM
-g++ getEigenVectors.cpp -o getEigenVectors
+g++ -I cpp/input/ getEigenVectors.cpp -o getEigenVectors
 
 ```
 
 ## Usage
 
-For detailed documentation on installation and usage of the tool suite please see our [ReadTheDocs](http://nma-task.readthedocs.io/en/latest/index.html) site
+For more detailed documentation on installation and usage of the tool suite please see our [ReadTheDocs](http://mode-task.readthedocs.io/en/latest/index.html) site
 
