@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Normal Mode Analysis &mdash; NMA-Task  documentation</title>
+  <title>NMA Scripts &mdash; NMA-Task  documentation</title>
   
 
   
@@ -34,8 +34,8 @@
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="NMA-Task  documentation" href="index.html"/>
-        <link rel="next" title="Principle Component Analysis" href="pca.html"/>
-        <link rel="prev" title="Installation" href="installation.html"/> 
+        <link rel="next" title="PCA Scripts" href="pca.html"/>
+        <link rel="prev" title="Theory" href="theory.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -84,21 +84,21 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="theory.html">Theory</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Usage</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Normal Mode Analysis</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">NMA Scripts</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#coarse-grain">Coarse grain</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#anm">ANM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#get-eigen-vectors">Get eigen vectors</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#common-residues">Common residues</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#mean-square-fluctuation">Mean square fluctuation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#conformation-mode">Conformation mode</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#get-aligned-coarse-grained">Get aligned coarse grained</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#trajectory-pentamer">Trajectory pentamer</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="pca.html">Principle Component Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pca.html">PCA Scripts</a></li>
 <li class="toctree-l1"><a class="reference internal" href="demo.html">Tool Demonstration</a></li>
 </ul>
 
@@ -130,7 +130,7 @@
   <ul class="wy-breadcrumbs">
     <li><a href="index.html">Docs</a> &raquo;</li>
       
-    <li>Normal Mode Analysis</li>
+    <li>NMA Scripts</li>
       <li class="wy-breadcrumbs-aside">
         
           
@@ -144,8 +144,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="normal-mode-analysis">
-<h1>Normal Mode Analysis<a class="headerlink" href="#normal-mode-analysis" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="nma-scripts">
+<h1>NMA Scripts<a class="headerlink" href="#nma-scripts" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="coarse-grain">
 <h2>Coarse grain<a class="headerlink" href="#coarse-grain" title="Permalink to this headline">¶</a></h2>
 <p>Takes a protomer structure and coarse grains to select a set amount of C-Beta</p>
@@ -551,67 +551,6 @@ ModesOfConfChange.pdb</td>
 </tbody>
 </table>
 </div>
-<div class="section" id="get-aligned-coarse-grained">
-<h2>Get aligned coarse grained<a class="headerlink" href="#get-aligned-coarse-grained" title="Permalink to this headline">¶</a></h2>
-<p>Creates a PDB for a multiple protomer structure, containing co-ords of an aligned PDB structure</p>
-<p><strong>Command:</strong></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">getAlignedCG</span><span class="o">.</span><span class="n">py</span> <span class="o">&lt;</span><span class="n">options</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">pdbAligned</span> <span class="o">&lt;</span><span class="n">PDB</span> <span class="n">file</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">pdbCG</span> <span class="o">&lt;</span><span class="n">PDB</span> <span class="n">file</span><span class="o">&gt;</span>
-</pre></div>
-</div>
-<p><strong>Inputs:</strong></p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="28%" />
-<col width="14%" />
-<col width="24%" />
-<col width="34%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Input (<em>*required</em>)</th>
-<th class="head">Input type</th>
-<th class="head">Flag</th>
-<th class="head">Description</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr class="row-even"><td>Aligned PDB file *</td>
-<td>File</td>
-<td><code class="docutils literal"><span class="pre">--pdbAligned</span></code></td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td>PDB *</td>
-<td>File</td>
-<td><code class="docutils literal"><span class="pre">--pdbCG</span></code></td>
-<td>Coarse grained PDB from
-the coarseGrain.py script</td>
-</tr>
-<tr class="row-even"><td>Output file</td>
-<td>File</td>
-<td><code class="docutils literal"><span class="pre">--output</span></code></td>
-<td>Specify a name for the PDB
-output file. Default:
-aligned.pdb</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Outputs:</strong></p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="45%" />
-<col width="55%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Output</th>
-<th class="head">Description</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr class="row-even"><td>PDB file</td>
-<td>&#160;</td>
-</tr>
-</tbody>
-</table>
-</div>
 <div class="section" id="trajectory-pentamer">
 <h2>Trajectory pentamer<a class="headerlink" href="#trajectory-pentamer" title="Permalink to this headline">¶</a></h2>
 <p>Generates a trajectory with arrows that can be viewed in the tool VMD</p>
@@ -676,7 +615,6 @@ the VMD visualizer</td>
 </tr>
 </tbody>
 </table>
-<p><em>Page created by: Michael Glenister</em></p>
 </div>
 </div>
 
@@ -687,10 +625,10 @@ the VMD visualizer</td>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="pca.html" class="btn btn-neutral float-right" title="Principle Component Analysis" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="pca.html" class="btn btn-neutral float-right" title="PCA Scripts" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="installation.html" class="btn btn-neutral" title="Installation" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="theory.html" class="btn btn-neutral" title="Theory" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
