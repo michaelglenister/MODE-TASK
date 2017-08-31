@@ -1,4 +1,4 @@
-Principle Component Analysis
+PCA Scripts
 ====================================
 
 Principal component analysis (PCA) is a useful statistical technique that has found application in detection of correlated motion in MD data. Protein dynamics is manifested as a change in molecular structure, or conformation over a time scale. PCA extract most important motions from a protein's MD trajectory using a covariance/correlation matrix (C-matrix) constructed from atomic coordinates. Different types of cordinates systems (Cartesian or internal coordinates) can be employed that define atomic movement in each time frame of a trajectory. Modes describing the protein motions can be constructed by diagonalizing the C-matrix. It leads to a complete set of orthonormal (orthogonal and normalized) collective modes (eigenvectors) with each eigenvalues (variance) that characterize the protein dynamics. Eigenvalues with largest value represent the larger spatial motion. When the original mean centered data (MD trajectory) is projected on eigenvectors the result is called Principle Components (PC). Diagonilazation of C-matrix could be done by Eigenvalue decomposition (EVD) or Singular value decomposition (SVD), with later being computationaly efficient.  
@@ -119,7 +119,7 @@ This will perform SVD based PCA on C-alpha atoms by default. To use other method
 
 
 **1.1 SVD PCA**
-^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^
 
 To perform the singular value decomposition (SVD) PCA on C-alpha atoms of a MD trajectory
 
@@ -134,7 +134,7 @@ To perform the SVD PCA on backbone atoms
 
 
 **1.2 Kernel PCA**
-^^^^^^^^^^^^^^^^^^ 
+^^^^^^^^^^^^^^^^^^
 
 To perform the Kernel PCA with linear kernel
 
@@ -246,7 +246,7 @@ Run the following command to see the detailed usage and other options:
 	``internal_pca.py -h``
 
 3.MDS (Multi-dimentional scaling)  on MD trajectory
--------------------------------------------------
+---------------------------------------------------
 
 MDS is a tool to visualize the similarity or dissimilarity in a dataset. Two types of dissimilarity measures can be used in the case of a MD trajectory. First is Euclidean distance between internal cordinates of a protein structure, second is pairwise RMSD between a set of atoms over the frames of a MD trajectory.
 
@@ -350,6 +350,7 @@ t-SNE (t-distributed Stochastic Neighbor Embedding) is a tool for dimentionality
 
 **Command:**
 	``tsne.py -t <MD trajectory> -p <topology file>``
+
 **Inputs:**
 
 +------------------------+------------+--------------------+-----------------------------+
