@@ -5,15 +5,23 @@
 # Author: Caroline Ross: caroross299@gmail.com
 # August 2017
 
+
 import os
 import sys
+
+# Append to system path to allow for importing local libraries
+pathname = os.path.dirname(sys.argv[0])
+sys.path.append(os.path.abspath(pathname))
+
 import argparse
 from datetime import datetime
 from lib.utils import *
 import numpy as np
 from math import sqrt
-import lib.sdrms
 import numpy as np
+
+from lib import sdrms
+
 
 def main(args):
 
