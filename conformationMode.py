@@ -319,7 +319,7 @@ if __name__ == "__main__":
         welcome_msg("Conformation mode", "Caroline Ross (caroross299@gmail.com)")
 
     print "!=====================================================================================!"
-    print "! Pleas check the following:                                                          !"
+    print "! Please check the following:                                                          !"
     print "! --pdbANM must be the PDB file that NMA was performed on                             !"
     print "! --pdbProtAligned must be a PDB of your complex aligned to the conformational change !"
     print "!=====================================================================================!"

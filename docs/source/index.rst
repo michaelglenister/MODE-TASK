@@ -20,4 +20,4 @@ NMA-Task's documentation
    
    nma
    pca 
-   demo
+   tutorials

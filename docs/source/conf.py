@@ -46,8 +46,9 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'NMA-Task'
-copyright = u'2017, Michael Glenister'
-author = u'Michael Glenister'
+copyright = u'2017, CJ Ross, B Nizami, M Glenister, OS Amamuddy, AR Atilgan, C Atilgan and Ö Tastan Bishop'
+
+author = u'CJ Ross, B Nizami, M Glenister, OS Amamuddy, AR Atilgan, C Atilgan and Ö Tastan Bishop'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
