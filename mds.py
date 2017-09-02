@@ -42,7 +42,7 @@ def get_options():
 	parser.add_argument("-mt", "--mds_type", dest="mds_type",				help="Type of MDS. Options are nm=non-metric, metric=metric")
 	parser.add_argument("-dt", "--dissimilarity_type",  dest="dissimilarity_type",				help="Type of dissimilarity matrix to use. euc = Euclidean distance between internal cordinates, rmsd= pairwise RMSD. Default is rmsd")
 	parser.add_argument("-ag", "--ag", dest="atm_grp", help="group of atom for MDS. Default is C alpha atoms. Other options are :"				  "all= all atoms, backbone = backbone atoms, CA= C alpha atoms, protein= protein's atoms")	
-	parser.add_argument("-ict", "--cordinate_type",  dest="cordinate_type",				help="Internal cordinates type. Default is pairwise distance")
+	parser.add_argument("-ct", "--cordinate_type",  dest="cordinate_type",				help="Internal cordinates type. Default is pairwise distance")
 	parser.add_argument("-ai", "--atom_indices",  dest="atom_indices",				help="group of atom for pairwise distance. Default is C alpha atoms. Other options are :"				  "all= all atoms, backbone = backbone atoms, alpha= C alpha atoms, heavy= all non hydrogen atoms, minimal=CA,CB,C,N,O atoms")
 
 	args = parser.parse_args()
@@ -67,12 +67,12 @@ def get_options():
 		sys.exit(1)
 		
 	if args.topology is None:
-		print 'ERROR: Missing toplogy argument.... :(  \nPlease see the help by running \n\nsystem_setup.py -h\n\n '
+		print 'ERROR: Missing toplogy argument.... :(  \nPlease see the help by running \n mds.py -h\n\n '
 		parser.print_help()
 		sys.exit(1)
 		
 	if args.dissimilarity_type not in  ('rmsd', 'euc', None):
-		print 'ERROR: no such option as', args.dissimilarity_type, 'for flag -dt \nPlease see the help by running \n mds.py -h..\n\n '
+		print 'ERROR: no such option as', args.dissimilarity_type, 'for flag -dt \nPlease see the help by running \n mds.py -h\n\n '
 		sys.exit(1)
 		
 	if args.mds_type == None:
@@ -82,7 +82,7 @@ def get_options():
 		print 'ERROR: no such option as', args.mds_type, 'for flag -mt \nPlease see the usage\n\n '
 		sys.exit(1)
 		
-	if args.cordinate_type not in  ('distance', 'phi', 'psi', None):
+	if args.cordinate_type not in  ('distance', 'phi', 'psi', 'angle', None):
 		print 'ERROR: no such option as', args.cordinate_type, 'for flag -ct \nPlease see the usage\n\n '
 		parser.print_help()
 		sys.exit(1)
@@ -167,7 +167,7 @@ def get_pair_rmsd(pca_traj, sele_grp):
 def mds(input, type):
 	'metric and nonmetric Multidimensional scaling'
 	seed = np.random.RandomState(seed=1)
-	
+	np.savetxt('mds_input.txt', input) ## testing value error
 	if type == 'nm':
 		nmds=MDS(n_components=100, max_iter=3000, metric=False, random_state=seed, dissimilarity="precomputed")
 		print "Performing non-metric MDS.."
@@ -222,7 +222,7 @@ if args.dissimilarity_type == 'euc':
 	if args.cordinate_type == None:
 		args.cordinate_type = "distance"
 		print "Using pairwise distance by default"
-	print 'using Euclidean distance between', atom_indices
+	print 'using Euclidean space of', args.cordinate_type
 	int_cord=get_internal_cordinates(top, args.cordinate_type, pca_traj, atom_indices)
 	similarities = euclidean_distances(int_cord)
 	mds(similarities, type)

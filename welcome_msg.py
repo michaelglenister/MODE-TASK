@@ -12,10 +12,13 @@ def main():
 
 def welcome_msg(title):
 	'Print Welcome message'
+	tool_name='MODE-TASK'
 	print '\n\n'
 	print '\t|=======================================================|'
 	print '\t|\t\t\t\t\t\t\t|'
-	print '\t|\t :-) >>------->',title,'<-------<< (-:	\t|'
+	print '\t|\t :-) >>------->',tool_name,'<-------<< (-:\t|'
+	print '\t|\t\t\t\t\t\t\t|'
+	print '\t|\t    :-) ----------',title,'---------- (-:\t\t|'
 	print '\t|\t\t\t\t\t\t\t|'
 	print '\t|\t\t\t\t\t\t\t|'
 	print '\t|\tThis programe performs the', title,' \t\t| \n\t|\ton a MD trajectory\t\t\t\t|'
