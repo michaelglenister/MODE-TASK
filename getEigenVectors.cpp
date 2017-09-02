@@ -57,7 +57,14 @@ int main(int argc, char *argv[])
     {
 		if (strcmp(argv[i], "-h") == 0)
 		{
-			cout<<"Help"<<endl;
+			cout<<"usage: getEigenVectors [-h] [--vt VTMATRIX] [--mode ]"<<endl;
+			cout<<"		[--outdir ] [--direction ]"<<endl;
+			cout<<"arguments:"<<endl;
+			cout<<" -h, --help		Show this help message and exit"<<endl;
+			cout<<" --vt			VT matrix file"<<endl;
+			cout<<" --mode			Mode value"<<endl;
+			cout<<" --outdir		Directory to generate output to"<<endl;
+			cout<<" --direction		Direction of overlap correction (Default -1)"<<endl;
 			return -1;
 		}
 		else if(strcmp(argv[i], "--vt") == 0)
