@@ -94,7 +94,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#get-eigen-vectors">Get eigen vectors</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#mean-square-fluctuation">Mean square fluctuation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#conformation-mode">Conformation mode</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#trajectory-pentamer">Trajectory pentamer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mode-visualisation">Mode visualisation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="pca.html">PCA Scripts</a></li>
@@ -171,12 +171,16 @@
 <tr class="row-even"><td>PDB file *</td>
 <td>File</td>
 <td><code class="docutils literal"><span class="pre">--pdb</span></code></td>
-<td>PDB input file</td>
+<td>PDB structure to coarse
+grain</td>
 </tr>
 <tr class="row-odd"><td>Course grain level</td>
 <td>Integer</td>
 <td><code class="docutils literal"><span class="pre">--cg</span></code></td>
-<td>Default: 4</td>
+<td>Level by which to coarse
+grain the protein. Lower
+is less coarse grained.
+Default: 4</td>
 </tr>
 <tr class="row-even"><td>Starting atom</td>
 <td>Integer</td>
@@ -241,12 +245,13 @@ Default: ComplexCG.pdb</td>
 <tr class="row-even"><td>PDB file *</td>
 <td>File</td>
 <td><code class="docutils literal"><span class="pre">--pdb</span></code></td>
-<td>&#160;</td>
+<td>PDB input file</td>
 </tr>
 <tr class="row-odd"><td>Cutoff</td>
 <td>Integer</td>
 <td><code class="docutils literal"><span class="pre">--cutoff</span></code></td>
-<td>Default: 24</td>
+<td>Cuttoff radius in Å.
+Default: 24</td>
 </tr>
 </tbody>
 </table>
@@ -263,13 +268,18 @@ Default: ComplexCG.pdb</td>
 </thead>
 <tbody valign="top">
 <tr class="row-even"><td>W matrix</td>
-<td>&#160;</td>
+<td>Text file of 3*N*
+eigenvalues</td>
 </tr>
 <tr class="row-odd"><td>VT matrix</td>
-<td>&#160;</td>
+<td>Text file of 3*N*x3*N*
+eigenvectors. Printed in
+rows</td>
 </tr>
 <tr class="row-even"><td>U matrix</td>
-<td>&#160;</td>
+<td>Text file of 3*N*x3*N*
+eigenvectors. Printed in
+columns</td>
 </tr>
 </tbody>
 </table>
@@ -370,7 +380,7 @@ level. But obviously must compare only the residues that are common in each mode
 <tr class="row-even"><td>PDB file *</td>
 <td>File</td>
 <td><code class="docutils literal"><span class="pre">--pdb</span></code></td>
-<td>&#160;</td>
+<td>PDB input file</td>
 </tr>
 <tr class="row-odd"><td>Conformation PDB</td>
 <td>File</td>
@@ -449,25 +459,22 @@ values for common residues</td>
 <tr class="row-even"><td>Aligned PDB file *</td>
 <td>File</td>
 <td><code class="docutils literal"><span class="pre">--pdbConfAligned</span></code></td>
-<td>&#160;</td>
+<td>PDB file of the
+conformational change</td>
 </tr>
-<tr class="row-odd"><td>Aligned protomer PDB
-file *</td>
-<td>File</td>
-<td><code class="docutils literal"><span class="pre">--pdbProtAligned</span></code></td>
-<td>&#160;</td>
-</tr>
-<tr class="row-even"><td>PDB *</td>
+<tr class="row-odd"><td>PDB *</td>
 <td>File</td>
 <td><code class="docutils literal"><span class="pre">--pdbANM</span></code></td>
-<td>&#160;</td>
+<td>PDB file that was useed to
+run ANM</td>
 </tr>
-<tr class="row-odd"><td>VT matrix file *</td>
+<tr class="row-even"><td>VT matrix file *</td>
 <td>File</td>
 <td><code class="docutils literal"><span class="pre">--vtMatrix</span></code></td>
-<td>VT values from ANM script</td>
+<td>Eigenavalues obtained from
+ANM script</td>
 </tr>
-<tr class="row-even"><td>Output file</td>
+<tr class="row-odd"><td>Output file</td>
 <td>File</td>
 <td><code class="docutils literal"><span class="pre">--output</span></code></td>
 <td>Specify a name for the PDB
@@ -488,14 +495,16 @@ ModesOfConfChange.pdb</td>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td>&#160;</td>
-<td>&#160;</td>
+<tr class="row-even"><td>Conformation file</td>
+<td>Text file with the overlap
+and correlation of each
+mode</td>
 </tr>
 </tbody>
 </table>
 </div>
-<div class="section" id="trajectory-pentamer">
-<h2>Trajectory pentamer<a class="headerlink" href="#trajectory-pentamer" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="mode-visualisation">
+<h2>Mode visualisation<a class="headerlink" href="#mode-visualisation" title="Permalink to this headline">¶</a></h2>
 <p>Generates a trajectory with arrows that can be viewed in the tool VMD</p>
 <p><strong>Command:</strong></p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">visualiseVector</span><span class="o">.</span><span class="n">py</span> <span class="o">&lt;</span><span class="n">options</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">pdb</span> <span class="o">&lt;</span><span class="n">PDB</span> <span class="n">file</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">vectorFile</span> <span class="o">&lt;</span><span class="n">text</span> <span class="n">file</span><span class="o">&gt;</span>
@@ -521,12 +530,14 @@ ModesOfConfChange.pdb</td>
 file *</td>
 <td>File</td>
 <td><code class="docutils literal"><span class="pre">--pdb</span></code></td>
-<td>&#160;</td>
+<td>Coarse grained PDB input
+file</td>
 </tr>
-<tr class="row-odd"><td>&#160;</td>
-<td>File</td>
+<tr class="row-odd"><td>Mode index value</td>
+<td>Ingeter</td>
 <td><code class="docutils literal"><span class="pre">--mode</span></code></td>
-<td>&#160;</td>
+<td>Value specifying the index
+of the mode</td>
 </tr>
 <tr class="row-even"><td>Vector file *</td>
 <td>File</td>
@@ -550,11 +561,13 @@ vectors</td>
 </thead>
 <tbody valign="top">
 <tr class="row-even"><td>PDB file</td>
-<td>&#160;</td>
+<td>Output PDM to be opened in
+VMD</td>
 </tr>
 <tr class="row-odd"><td>Arrows file</td>
-<td>Text file to draw arrows in
-the VMD visualizer</td>
+<td>Tcl script that can be
+copied into the VMD TK
+console</td>
 </tr>
 </tbody>
 </table>
