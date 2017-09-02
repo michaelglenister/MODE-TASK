@@ -113,38 +113,6 @@ Get eigen vectors
 |                        | list of eigen vectors       |
 +------------------------+-----------------------------+
 
-Common residues
--------------------------------
-
-Extracts the common residues between two pdb models such as two protein conformations
-
-**Command:** ::
-
-	commonResidues.py <options> --conf1 <pdb file> --conf2 <pdb file>
-
-**Inputs:**
-
-+------------------------+------------+--------------------+-----------------------------+
-| Input (*\*required*)   | Input type | Flag               | Description                 |
-+========================+============+====================+=============================+
-| Conformation PDB *     | File       |``--conf1``         | Path to first PDB file      |
-|                        |            |                    |                             |
-+------------------------+------------+--------------------+-----------------------------+
-| Conformation PDB *     | File       |``--conf2``         | Path to second PDB file     |
-|                        |            |                    |                             |
-+------------------------+------------+--------------------+-----------------------------+
-
-**Outputs:**
-
-+------------------------+-----------------------------+
-| Output                 | Description                 |
-+========================+=============================+
-| Common residues file   | Text file containing common |
-|                        | residues, this file is used |
-|                        | as input to the mean square |
-|                        | fluctuations script         |
-+------------------------+-----------------------------+
-
 Mean square fluctuation
 -------------------------------
 
