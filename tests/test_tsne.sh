@@ -2,4 +2,4 @@
 
 cd ..
 
-./tsne.py --trj tests/pca_test_trj.xtc --top tests/complex.pdb
+./tsne.py -t tests/pca_test_trj.xtc -p tests/complex.pdb -ag CA -dt rmsd

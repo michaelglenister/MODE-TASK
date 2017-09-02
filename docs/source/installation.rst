@@ -23,7 +23,9 @@ Install system dependencies
 
 **Windows:**
 
-	Download and install python 2.7
+	Enable Windows Subsystem for Linux (WSL) by following `these instructions <https://msdn.microsoft.com/en-us/commandline/wsl/install_guide>`_.
+
+	Install the system dependencies as with Ubuntu above.
 
 
 Install Python dependencies
@@ -51,6 +53,3 @@ NMA-TASK can be cloned from it's GitHub repository ::
 Activate the virtual environment you created in the previous step when using NMA-TASK. with::
 
 	source venv/bin/activate
-
-
-*Page created by: Michael Glenister*

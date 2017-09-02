@@ -1,4 +1,4 @@
-Normal Mode Analysis
+NMA Scripts
 ====================================
 
 Coarse grain
@@ -235,39 +235,6 @@ Identifies Modes responsible for conformational change for a molecule wth 15 cop
 |                        |                             |
 +------------------------+-----------------------------+
 
-Get aligned coarse grained
--------------------------------
-
-Creates a PDB for a multiple protomer structure, containing co-ords of an aligned PDB structure
-
-**Command:** ::
-
-	getAlignedCG.py <options> --pdbAligned <PDB file> --pdbCG <PDB file>
-
-**Inputs:**
-
-+------------------------+------------+--------------------+-----------------------------+
-| Input (*\*required*)   | Input type | Flag               | Description                 |
-+========================+============+====================+=============================+
-| Aligned PDB file *     | File       |``--pdbAligned``    |                             |
-|                        |            |                    |                             |
-+------------------------+------------+--------------------+-----------------------------+
-| PDB *                  | File       |``--pdbCG``         | Coarse grained PDB from     |
-|                        |            |                    | the coarseGrain.py script   |
-+------------------------+------------+--------------------+-----------------------------+
-| Output file            | File       |``--output``        | Specify a name for the PDB	 |
-|                        |            |                    | output file. Default:       |
-|                        |            |                    | aligned.pdb                 |
-+------------------------+------------+--------------------+-----------------------------+
-
-**Outputs:**
-
-+------------------------+-----------------------------+
-| Output                 | Description                 |
-+========================+=============================+
-| PDB file               |                             |
-|                        |                             |
-+------------------------+-----------------------------+
 
 Trajectory pentamer
 -------------------------------
@@ -306,6 +273,3 @@ Outputs are generated in output/VISUALISE directory by default.
 | Arrows file            | Text file to draw arrows in |
 |                        | the VMD visualizer          |
 +------------------------+-----------------------------+
-
-
-*Page created by: Michael Glenister*

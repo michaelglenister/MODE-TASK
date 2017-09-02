@@ -1,14 +1,15 @@
 #!/usr/bin/env python
 #filename: tsne.py
-import os, sys
+import os
+import sys
 import argparse
 import mdtraj as md
 import numpy as np
 from sklearn.metrics import euclidean_distances
 from sklearn.manifold import TSNE
-from write_plot import write_plots, write_pcs, write_fig
-from traj_info import trajectory_info, get_internal_cordinates, get_trajectory
-from welcome_msg import welcome_msg
+from lib.write_plot import write_plots, write_pcs, write_fig
+from lib.traj_info import trajectory_info, get_internal_cordinates, get_trajectory
+from lib.utils import welcome_msg
 
 def main():
 	
@@ -26,8 +27,9 @@ def main():
 ##===============================================================================
 ##								 Welcome message
 ##===============================================================================
-title='TSNE'
-welcome_msg(title)
+
+title='TSNE MD'
+welcome_msg(title, "Bilal Nizami")
 #==============================================================================
 #                            Setting the options
 #==============================================================================

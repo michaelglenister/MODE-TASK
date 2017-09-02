@@ -2,9 +2,7 @@
 ./test_cg.sh
 ./test_anm.sh
 ./test_eigen_vectors.sh
-./test_common_residues.sh
 ./test_msf.sh
-./test_get_aligned.sh
 ./test_conformation.sh
 ./test_trajectory.sh
 ./test_internal_pca.sh

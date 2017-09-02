@@ -1,0 +1,1493 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Tutorials &mdash; NMA-Task  documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="NMA-Task  documentation" href="index.html"/>
+        <link rel="prev" title="PCA Scripts" href="pca.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> NMA-Task
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="theory.html">Theory</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Usage</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="nma.html">NMA Scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pca.html">PCA Scripts</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#pca">PCA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#nma">NMA</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">NMA-Task</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>Tutorials</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/tutorials.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="tutorials">
+<h1>Tutorials<a class="headerlink" href="#tutorials" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="pca">
+<h2>PCA<a class="headerlink" href="#pca" title="Permalink to this headline">¶</a></h2>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+<title></title>
+<meta name="generator" content="LibreOffice 5.1.4.2 (Linux)"/>
+<meta name="created" content="2017-08-21T05:34:50.676497502"/>
+<meta name="changed" content="2017-09-01T16:48:59.382295710"/>
+<style type="text/css">
+@page { margin: 2cm }
+p { margin-bottom: 0.25cm; line-height: 120% }
+a:link { so-language: zxx }
+</style>
+</head>
+<body lang="en-ZA" dir="ltr">
+<p align="center" style="margin-bottom: 0cm; line-height: 100%"><font size="6" style="font-size: 28pt">MODE
+TASK</font></p>
+<p style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="center" style="margin-bottom: 0cm; line-height: 100%"><font size="6" style="font-size: 28pt">ANM
+TUTORIAL</font></p>
+<p align="center" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><font size="6" style="font-size: 26pt">Getting
+Started</font></p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><font size="4" style="font-size: 16pt">All
+the required scripts can be downloaded from the GitHub respository:
+<a href="https://github.com/michaelglenister/NMA-TASK">https://github.com/michaelglenister/NMA-TASK</a>.
+Certain scripts will require additional libraries to run. Ensure you
+also download the following:</font></p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><font size="4" style="font-size: 16pt">1)
+The AlgLib C++ library. Simply downlaod the cpp folder from the
+<a href="https://github.com/michaelglenister/NMA-TASK">https://github.com/michaelglenister/NMA-TASK</a>
+respitory.</font></p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><font size="4" style="font-size: 16pt">2)
+The NumPy python library: Download this  library by using the
+command:</font></p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><font size="4" style="font-size: 16pt"><b>pip
+install numpy</b></font></p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%">
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="justify" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="justify" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="justify" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="justify" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="justify" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="center" style="margin-bottom: 0cm; line-height: 100%"><font size="6" style="font-size: 26pt"><span style="font-weight: normal">Analysis
+</span><span style="font-weight: normal">the </span><span style="font-weight: normal">Enterovirus
+71 </span><span style="font-weight: normal">capsid pentamer</span></font></p>
+<p align="center" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="justify" style="margin-bottom: 0cm; line-height: 100%"><font size="4" style="font-size: 16pt"><span style="font-weight: normal">Enterovirus
+71 (EV-71) is a human pathogen that predominantly infects small
+children. </span><span style="font-weight: normal">The capsid is
+icoshedral and contains 60 protomer units. </span><span style="font-weight: normal">In
+a </span><b>mature capsid</b><span style="font-weight: normal"> t</span><span style="font-weight: normal">he
+protomers are assembled as a set of 12 pentamers. Each protomer
+contains a single copy of the proteins VP1-VP4. During infection the
+virus capsid expands to release its RNA into the host cell. This
+expanded capsid is known as the </span><b>A-particle</b><span style="font-weight: normal">.</span></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"> <font size="4" style="font-size: 16pt"><font size="6" style="font-size: 22pt"><b>Aim</b></font></font></p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><font size="4" style="font-size: 16pt"><span style="font-weight: normal">In
+this tutorial we </span><span style="font-weight: normal">will</span><span style="font-weight: normal">
+</span><span style="font-weight: normal">apply the ANM model to </span><span style="font-weight: normal">a
+single pentamer of the mature EV-71 capsid.</span><span style="font-weight: normal">
+We aim to identify the normal modes that contribute to </span><span style="font-weight: normal">the
+conformational changes within a pentamer during capsid expansion.</span></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><font size="4" style="font-size: 16pt"><font size="6" style="font-size: 22pt"><b>C</b></font><font size="6" style="font-size: 22pt"><b>reate
+a working directory</b></font></font></p>
+<p align="justify" style="margin-bottom: 0cm; font-style: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="justify" style="margin-bottom: 0cm; font-style: normal; font-weight: normal; line-height: 100%">
+<font size="4" style="font-size: 16pt">First create a directory for
+all the Mode Task scripts using the linux command:</font></p>
+<p align="justify" style="margin-bottom: 0cm; font-style: normal; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="justify" style="margin-bottom: 0cm; font-style: normal; line-height: 100%">
+<font size="4" style="font-size: 16pt"><b>mkdir ModeTask</b></font></p>
+<p align="justify" style="margin-bottom: 0cm; font-style: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="justify" style="margin-bottom: 0cm; font-style: normal; font-weight: normal; line-height: 100%">
+<font size="4" style="font-size: 16pt">In the html folder copy the
+entire contents of the ANM Scripts folder into your working
+directory.</font></p>
+<p align="justify" style="margin-bottom: 0cm; font-style: normal; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="justify" style="margin-bottom: 0cm; font-style: normal; font-weight: normal; line-height: 100%">
+<font size="4" style="font-size: 16pt">Within this directory create a
+folder called <b>Tutorial:</b></font></p>
+<p align="justify" style="margin-bottom: 0cm; font-style: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="justify" style="margin-bottom: 0cm; font-style: normal; line-height: 100%">
+<font size="4" style="font-size: 16pt"><b>cd ModeTask</b></font></p>
+<p align="justify" style="margin-bottom: 0cm; font-style: normal; line-height: 100%">
+<font size="4" style="font-size: 16pt"><b>mkdir Tutorial</b></font></p>
+<p align="justify" style="margin-bottom: 0cm; font-style: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="justify" style="margin-bottom: 0cm; font-style: normal; font-weight: normal; line-height: 100%">
+<font size="4" style="font-size: 16pt">We will run all scripts from
+the ModeTask directory. </font>
+</p>
+<p align="justify" style="margin-bottom: 0cm; font-style: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="justify" style="margin-bottom: 0cm; font-style: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="justify" style="margin-bottom: 0cm; font-style: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-style: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><font size="6" style="font-size: 22pt"><b>Preparation
+of structures</b></font></p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="justify" style="margin-bottom: 0cm; line-height: 100%"><font size="4" style="font-size: 16pt">1)
+Download the 3VBS biological assembly (3VBS.pdb1) of the <b>mature
+EV-71 capsid.</b></font></p>
+<p align="justify" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="justify" style="margin-bottom: 0cm; line-height: 100%"><font size="4" style="font-size: 16pt">2)
+Open 3VBS.pdb1 in PyMol.</font></p>
+<p align="justify" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="justify" style="margin-bottom: 0cm; line-height: 100%"><font size="4" style="font-size: 16pt">3)
+Use the <b>split_states </b><b>3VBS</b><b> </b><span style="font-weight: normal">command
+to visualise the full capsid.</span></font></p>
+<p align="justify" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="justify" style="margin-bottom: 0cm; line-height: 100%"><font size="4" style="font-size: 16pt"><span style="font-weight: normal">4)
+Save the capsid: File – Save Molecule – Select </span><span style="font-weight: normal">the
+first 5 states</span><span style="font-weight: normal">. </span><span style="font-weight: normal">Save
+as </span><span style="font-weight: normal">EV71_</span><span style="font-weight: normal">Pentamer</span><span style="font-weight: normal">.pdb
+</span><span style="font-weight: normal">into the </span><b>ModeTask/Tutorial</b><span style="font-weight: normal">
+</span><b>directory. </b></font>
+</p>
+<p align="justify" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="justify" style="margin-bottom: 0cm; line-height: 100%"><font size="4" style="font-size: 16pt"><span style="font-weight: normal">Each
+protomer has 4 subunits: VP1-VP4. </span><span style="font-weight: normal">VP4
+is an internal capsid protein.</span></font></p>
+<p align="justify" style="margin-bottom: 0cm; line-height: 100%"><font size="4" style="font-size: 16pt"><span style="font-weight: normal">*
+</span><span style="font-weight: normal">Number of residues per
+protomer = 8</span><span style="font-weight: normal">4</span><span style="font-weight: normal">2</span></font></p>
+<p align="justify" style="margin-bottom: 0cm; line-height: 100%"><font size="4" style="font-size: 16pt"><span style="font-weight: normal">*
+Number of residues per </span><span style="font-weight: normal">pentamer</span><span style="font-weight: normal">
+= </span><span style="font-weight: normal">421</span><span style="font-weight: normal">0</span></font></p>
+<p align="justify" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="justify" style="margin-bottom: 0cm; line-height: 100%"><font size="4" style="font-size: 16pt"><span style="font-weight: normal">The
+estimated run time to perfom ANM on a complex of 421</span><span style="font-weight: normal">0</span><span style="font-weight: normal">
+residues, using</span><b> Mode Task </b><span style="font-weight: normal">is
+25 hours. </span></font>
+</p>
+<p align="justify" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="justify" style="margin-bottom: 0cm; line-height: 100%"><font size="4" style="font-size: 16pt"><span style="font-weight: normal">For
+the sake of this tutorial we will</span><span style="font-weight: normal">
+use the</span><span style="font-weight: normal"> </span><b>coarseGrain.py
+</b><span style="font-weight: normal">script  </span><span style="font-weight: normal">to
+construct </span><span style="font-weight: normal">a </span><span style="font-weight: normal">pentamer
+with </span><span style="font-weight: normal">lower resolution
+pentamer</span><span style="font-weight: normal">:</span></font></p>
+<p align="justify" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><font size="6" style="font-size: 22pt"><b>c</b><b>oarseGrain.py</b></font></p>
+<p align="justify" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="justify" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font size="4" style="font-size: 16pt">The Mode TASK package is
+designed to analyse both single proteins or larger macromolecules
+such as a virus capsid. The ANM.cpp script contructs an elastic
+network model on all CA or CB atoms in a given PDB file. This is
+ideal from smaller protein complexes. For larger protein complexes
+the coarseGrained.py script can be used to construct an additional
+coarse grained PDB file. </font>
+</p>
+<p align="left" style="margin-bottom: 0cm; font-style: normal; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><font size="4" style="font-size: 16pt"><span style="font-style: normal"><span style="font-weight: normal">1)
+Create a model of the </span></span><span style="font-style: normal"><span style="font-weight: normal">EV71
+Pentamer</span></span><span style="font-style: normal"><span style="font-weight: normal">
+complex with additional coarse graining </span></span><span style="font-style: normal"><span style="font-weight: normal">set
+at level 3, </span></span><span style="font-style: normal"><span style="font-weight: normal">selecting
+CB atoms</span></span><span style="font-style: normal"><span style="font-weight: normal">:</span></span></font></p>
+<p align="left" style="margin-bottom: 0cm; font-style: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="justify" style="margin-bottom: 0cm; font-style: normal; line-height: 100%">
+<font size="4" style="font-size: 16pt"><b>python coarseGrain.py --pdb
+Tutorial/EV71_Pentamer.pdb --cg 3 --startingAtom 1 --output
+EV71_CG3.pdb --outdir Tutorial --atomType CB</b></font></p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><font size="4" style="font-size: 16pt"><b>The
+input paramaters include:</b></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font size="4" style="font-size: 16pt">--pdb: This is the pdb
+structure that you wish to coarse grain</font></p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><font size="4" style="font-size: 16pt"><span style="font-weight: normal">--cg:
+This </span><span style="font-weight: normal">specifies</span><span style="font-weight: normal">
+the level of coarse graining. To select fewer atoms increase the
+level.</span></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font size="4" style="font-size: 16pt">--starting atom: This
+specifies the first residue to be selected in the complex.</font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font size="4" style="font-size: 16pt">--output: The filename of the
+coarse grained pdb file</font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font size="4" style="font-size: 16pt">--outdir: The directory in
+which to save the coarse grained pdb file</font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><font size="4" style="font-size: 16pt"><b>Output:</b></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt"><span style="font-weight: normal">a</span><span style="font-weight: normal">)
+</span><span style="font-weight: normal">EV71_CG3</span><span style="font-weight: normal">.pdb:
+</span><span style="font-weight: normal">A</span><span style="font-weight: normal">
+coarse grained pdb file that has selected CB atoms from residues that
+are equally distributed across the complex </span><span style="font-weight: normal">(Figure
+</span><span style="font-weight: normal">1</span><span style="font-weight: normal">)</span><span style="font-weight: normal">.
+</span></font></font>
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt"><span style="font-weight: normal">b</span><span style="font-weight: normal">)
+Command line output</span></font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="DejaVu Sans Light, sans-serif"><font size="4" style="font-size: 16pt">Started
+at: 2017-08-22 11:54:19.392835</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="DejaVu Sans Light, sans-serif"><font size="4" style="font-size: 16pt">No.
+atoms selected per unit: 122 from 842 orignal residues</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="DejaVu Sans Light, sans-serif"><font size="4" style="font-size: 16pt">No.
+atoms selected per macromolecule: 610 from 4210 orignal residues</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="DejaVu Sans Light, sans-serif"><font size="4" style="font-size: 16pt">Completed
+at: 2017-08-22 11:54:19.509456</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="DejaVu Sans Light, sans-serif"><font size="4" style="font-size: 16pt">-
+Total time: 0:00:00</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><font size="4" style="font-size: 16pt"><span style="font-weight: normal">*</span><span style="font-weight: normal">Note,
+the same </span><span style="font-weight: normal">212</span><span style="font-weight: normal">
+atoms in from each protomer were selected – thus the symmetry of
+the </span><span style="font-weight: normal">pentamer </span><span style="font-weight: normal">is
+retained.</span></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><font size="4" style="font-size: 16pt"><span style="font-style: normal"><span style="font-weight: normal">2</span></span><span style="font-style: normal"><span style="font-weight: normal">)
+Create a model of the </span></span><span style="font-style: normal"><span style="font-weight: normal">EV71
+Pentamer</span></span><span style="font-style: normal"><span style="font-weight: normal">
+complex with additional coarse graining </span></span><span style="font-style: normal"><span style="font-weight: normal">set
+at level </span></span><span style="font-style: normal"><span style="font-weight: normal">4</span></span><span style="font-style: normal"><span style="font-weight: normal">:</span></span></font></p>
+<p align="left" style="margin-bottom: 0cm; font-style: normal; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="justify" style="margin-bottom: 0cm; font-style: normal; line-height: 100%">
+<font size="4" style="font-size: 16pt"><b>python coarseGrain.py --pdb
+Tutorial/EV71_Pentamer.pdb --cg 4 --startingAtom 1 --output
+EV71_CG4.pdb --outdir Tutorial --atomType CB</b></font></p>
+<p align="justify" style="margin-bottom: 0cm; font-style: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="justify" style="margin-bottom: 0cm; font-style: normal; font-weight: normal; line-height: 100%">
+<font face="DejaVu Sans Light, sans-serif"><font size="4" style="font-size: 16pt">Started
+at: 2017-08-22 11:54:53.484248</font></font></p>
+<p align="justify" style="margin-bottom: 0cm; font-style: normal; font-weight: normal; line-height: 100%">
+<font face="DejaVu Sans Light, sans-serif"><font size="4" style="font-size: 16pt">No.
+atoms selected per unit: 54 from 842 orignal residues</font></font></p>
+<p align="justify" style="margin-bottom: 0cm; font-style: normal; font-weight: normal; line-height: 100%">
+<font face="DejaVu Sans Light, sans-serif"><font size="4" style="font-size: 16pt">No.
+atoms selected per macromolecule: 270 from 4210 orignal residues</font></font></p>
+<p align="justify" style="margin-bottom: 0cm; font-style: normal; font-weight: normal; line-height: 100%">
+<font face="DejaVu Sans Light, sans-serif"><font size="4" style="font-size: 16pt">Completed
+at: 2017-08-22 11:54:53.586145</font></font></p>
+<p align="justify" style="margin-bottom: 0cm; font-style: normal; font-weight: normal; line-height: 100%">
+<font face="DejaVu Sans Light, sans-serif"><font size="4" style="font-size: 16pt">-
+Total time: 0:00:00</font></font></p>
+<p align="justify" style="margin-bottom: 0cm; font-style: normal; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="justify" style="margin-bottom: 0cm; font-style: normal; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="justify" style="margin-bottom: 0cm; font-style: normal; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="justify" style="margin-bottom: 0cm; font-style: normal; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="justify" style="margin-bottom: 0cm; font-style: normal; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><font size="3" style="font-size: 12pt"><span style="font-weight: normal">F</span><span style="font-weight: normal">igure
+</span><span style="font-weight: normal">1</span><span style="font-weight: normal">.
+</span><span style="font-weight: normal">Left) Crystal structure of
+t</span><span style="font-weight: normal">he </span><span style="font-weight: normal">EV71
+Pentamer </span><span style="font-weight: normal">(3VBS)</span><span style="font-style: normal"><span style="font-weight: normal">.
+</span></span><span style="font-style: normal"><span style="font-weight: normal">Right)
+</span></span><span style="font-style: normal"><span style="font-weight: normal">EV71_</span></span><span style="font-style: normal"><span style="font-weight: normal">CG</span></span><span style="font-style: normal"><span style="font-weight: normal">3</span></span><span style="font-style: normal"><span style="font-weight: normal">.pdb
+</span></span><span style="font-style: normal"><span style="font-weight: normal">contains
+</span></span><span style="font-style: normal"><span style="font-weight: normal">610</span></span><span style="font-style: normal"><span style="font-weight: normal">
+CB atoms from </span></span><span style="font-style: normal"><span style="font-weight: normal">4210</span></span><span style="font-style: normal"><span style="font-weight: normal">
+total residues. </span></span></font>
+</p>
+<p align="left" style="margin-bottom: 0cm; font-style: normal; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><font size="4" style="font-size: 16pt"><font size="6" style="font-size: 22pt"><b>A</b></font><font size="6" style="font-size: 22pt"><b>NM.cpp</b></font></font></p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="justify" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font size="4" style="font-size: 16pt">The ANM.cpp script accepts a
+PDB file and a cutoff distance. The script constructs the hessian
+matrix connecting all CB atoms in within the specific cutoff radius.
+The script then performs singular value decompostion to return the
+eigenvalues and eigenvectors of the hessian matrix. </font>
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><font size="4" style="font-size: 16pt"><b>Input
+parameters:</b></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font size="4" style="font-size: 16pt">--pdb: path to PDB file</font></p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><font size="4" style="font-size: 16pt"><span style="font-weight: normal">--cutoff:
+</span></font><font size="4" style="font-size: 16pt"><span style="font-weight: normal">cutoff
+radius in A. The script will construct an eleastic network model by
+connecting all atoms that interact within the cutoff distance
+(default = 24</span></font><font size="4" style="font-size: 16pt">Å</font><font size="4" style="font-size: 16pt"><span style="font-weight: normal">).</span></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font size="4" style="font-size: 16pt">--outdir: folder in which
+output is saved</font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><font size="4" style="font-size: 16pt"><b>Output:</b></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font size="4" style="font-size: 16pt">W_values.txt: A list of 3<i>N</i><span style="font-style: normal">
+eigenvalues the normal modes of the system. Eigenvalues are ordered
+from fastest to slowest mode.</span></font></p>
+<p align="left" style="margin-bottom: 0cm; font-style: normal; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font size="4" style="font-size: 16pt"><span style="font-style: normal">VT_values.txt:
+A 3</span><i>N</i><span style="font-style: normal">x3</span><i>N</i><span style="font-style: normal">
+list of the eigenvectors for each mode. Eigenvectors are printed as a
+set of rows.</span></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font size="4" style="font-size: 16pt"><span style="font-style: normal">U_values.txt:
+A 3</span><i>N</i><span style="font-style: normal">x3</span><i>N</i><span style="font-style: normal">
+list of the eigenvectors for each mode. Eigenvectors are printed as a
+set of columns. </span></font>
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font size="4" style="font-size: 16pt">1) Compile the ANM.cpp script</font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><font size="4" style="font-size: 16pt"><span style="font-weight: normal">The
+ANM.cpp script requires classes of the AlgLib library. </span><span style="font-weight: normal">These
+class can be found in the cpp/src folder in the GitHub Directory. The
+path to these classes must be specified in the compile command using
+the -I paramter:</span></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><font size="4" style="font-size: 16pt"><b>g++
+-I cpp/src/ ANM.cpp -o ANM</b></font></p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><font size="4" style="font-size: 16pt"><span style="font-weight: normal">In
+this tutorial we will perform a comprative analysis between the
+normal modes of the </span><span style="font-weight: normal">EV71_CG3.pdb
+and EV71_CG4.pdb</span><span style="font-weight: normal"> </span></font>
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><font size="4" style="font-size: 16pt"><span style="font-weight: normal">2)
+</span></font><font size="4" style="font-size: 16pt"><span style="font-weight: normal">Run
+the ./ANM to analyse EV71_CG4.pdb with a cutoff of 2</span></font><font size="4" style="font-size: 16pt"><span style="font-weight: normal">4</span></font><font size="4" style="font-size: 16pt">Å</font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><font size="4" style="font-size: 16pt"><b>./ANM
+--pdb Tutorial/EV71_CG4.pdb  --outdir Tutorial --atomType CB</b></font></p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt">Example
+of command line output:</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="DejaVu Sans Light, sans-serif"><font size="4" style="font-size: 16pt">Started
+at: 2017-08-22 11:55:33</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="DejaVu Sans Light, sans-serif"><font size="4" style="font-size: 16pt">Starting
+Decomposition</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="DejaVu Sans Light, sans-serif"><font size="4" style="font-size: 16pt">Completed
+at: 2017-08-22 11:55:47</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="DejaVu Sans Light, sans-serif"><font size="4" style="font-size: 16pt">-
+Total time: 0:00:13</font></font></p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font size="4" style="font-size: 16pt">3) Run the ./ANM to analyse
+EV71_CG3.pdb</font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font size="4" style="font-size: 16pt">3.1) First make a
+sub-directory to avoid overwriting of your previous ANM outout:</font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font size="4" style="font-size: 16pt"><b>mkdir </b><b>Tutorial/CG3</b></font></p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font size="4" style="font-size: 16pt">3.2) <b>./ANM --pdb
+</b><b>T</b><b>utorial/EV71_CG3.pdb --outdir </b><b>T</b><b>utorial/</b><b>CG</b><b>3
+</b><b>--atomType CB</b></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt">Example
+of command line output:</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="DejaVu Sans Light, sans-serif"><font size="4" style="font-size: 16pt">Started
+at: 2017-08-22 11:56:42</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="DejaVu Sans Light, sans-serif"><font size="4" style="font-size: 16pt">Starting
+Decomposition</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="DejaVu Sans Light, sans-serif"><font size="4" style="font-size: 16pt">Completed
+at: 2017-08-22 11:59:14</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="DejaVu Sans Light, sans-serif"><font size="4" style="font-size: 16pt">-
+Total time: 0:02:0-704</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><font face="Liberation Serif, serif"><font size="6" style="font-size: 22pt"><b>Indentification
+of modes that contribute to conformational change</b></font></font></p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt">We
+have performed ANM on two separte pentamer complexes. From each model
+we have obtained a set of eigenvalues and eigenvectors corresponding
+to each normal mode:</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt">1)
+EV71_CG4.pdb</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt">*Total
+non-trivial mdes = 804</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt">2)
+EV71_CG3.pdb</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt">*
+Total non-trivial mdes = 1824</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt">For
+each model we will now identify the modes that contribute to the
+conformational change of a pentamer during capsid expansion.</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt">We
+will then compare the modes from the respective models and determine
+if the additional coarse graining effected the ability to capture
+such modes. </font></font>
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt">To
+determine if our modes overlap with the direction of conformational
+change, we must first determine the conformational change between the
+crystal structures of the <b>mature </b>and <b>A-particle pentamer.
+</b>The <b>conformationMode.py </b> scripts take two <font color="#ff0000"><u><b>UNALIGNED
+</b></u></font><font color="#000000"><span style="text-decoration: none">
+pdb files and the set of all eigenvectors determined for the complex.
+The script aligns the structures, calculates the known conformational
+change and then identifies which modes contribute to the change.</span></font></font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt"><font size="6" style="font-size: 22pt"><b>conformationMode</b></font><font size="6" style="font-size: 22pt"><b>.</b></font><font size="6" style="font-size: 22pt"><b>py</b></font></font></font></p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt">1)
+Compute overlap between all modes of the EV71_CG4 model:</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt"><b>python
+conformationMode.py --pdbANM Tutorial/EV71_CG4.pdb --vtMatrix
+Tutorial/VT_values.txt  --pdbConf Tutorial/Apart_Pentamer.pdb
+--outdir Tutorial/ --atomType CB</b></font></font></p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt"><i><b>Input
+paramters:</b></i></font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt"><i>--pdbANM:
+This is the PDB file that you use to run ANM. Do not use the aligned
+file here</i></font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt"><i>--vtMatrix:
+The eigenavalues obtained from ANM of the EV71_CG4 model</i></font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt"><i>--pdbConf:
+This is the pdb file of the conformational change. In this case the
+pentamer of the A-particle <font color="#ff0000">(The –pdbANM and
+–pdbConf must NOT BE ALIGNED)</font></i></font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt"><i><b>Output:</b></i></font></font></p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt"><i>A
+text file with the overlap and correlation of each mode to the
+conformational change. The modes are ordered by the absoulte value of
+their overlap.</i></font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt"><span style="font-weight: normal">2)
+</span><span style="font-weight: normal">Compute overlap between all
+modes of the EV71_CG</span><span style="font-weight: normal">3</span><span style="font-weight: normal">
+model </span><span style="font-weight: normal">(Remember to specify
+the correct directory)</span><span style="font-weight: normal">:</span></font></font></p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt"><b>python
+conformationMode.py --pdbANM Tutorial/EV71_CG3.pdb --vtMatrix
+Tutorial/CG3/VT_values.txt  --pdbConf
+Tutorial/Apart_PentamerAligned.pdb --outdir Tutorial/CG3 --atomType
+CB</b></font></font></p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt"><b>Top
+output from conformationalMode.py of EV71_CG4:</b></font></font></p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="DejaVu Sans Light, sans-serif"><font size="3" style="font-size: 12pt">MODE Overlap Correlation</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font color="#ff3333"><font face="DejaVu Sans Light, sans-serif"><font size="3" style="font-size: 12pt">Mode:
+802      0.464930905363      0.505024336385</font></font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="DejaVu Sans Light, sans-serif"><font size="3" style="font-size: 12pt">Mode:
+799      0.288299273538      0.212056909378</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="DejaVu Sans Light, sans-serif"><font size="3" style="font-size: 12pt">Mode:
+775      -0.251274270888      0.102742699068</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="DejaVu Sans Light, sans-serif"><font size="3" style="font-size: 12pt">Mode:
+748      0.247685561536      0.131291816799</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="DejaVu Sans Light, sans-serif"><font size="3" style="font-size: 12pt">Mode:
+788      0.212254981509      0.0620242553959</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="DejaVu Sans Light, sans-serif"><font size="3" style="font-size: 12pt">Mode:
+705      0.182970920364      0.134255823159</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="DejaVu Sans Light, sans-serif"><font size="3" style="font-size: 12pt">Mode:
+785      -0.16260558288      0.230938806173</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="DejaVu Sans Light, sans-serif"><font size="3" style="font-size: 12pt">Mode:
+203      0.161599915581      0.0168408447117</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="DejaVu Sans Light, sans-serif"><font size="3" style="font-size: 12pt">Mode:
+754      -0.152172952906      0.142214445993</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="DejaVu Sans Light, sans-serif"><font size="3" style="font-size: 12pt">Mode:
+397      0.1331492216         0.240388245613</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="DejaVu Sans Light, sans-serif"><font size="3" style="font-size: 12pt">Mode:
+622      -0.13150716791      0.13057940904</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="DejaVu Sans Light, sans-serif"><font size="3" style="font-size: 12pt">Mode:
+280      0.12871454907      0.0444642851196</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="DejaVu Sans Light, sans-serif"><font size="3" style="font-size: 12pt">Mode:
+774      0.123724858059      0.0394196518151</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="DejaVu Sans Light, sans-serif"><font size="3" style="font-size: 12pt">Mode:
+793      0.116201325237      0.0236754652566</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="DejaVu Sans Light, sans-serif"><font size="3" style="font-size: 12pt">Mode:
+750      0.116127226795      0.167416988474</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt"><b>Top
+output from conformationalMode.py of EV71_CG3:</b></font></font></p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="DejaVu Sans Light, sans-serif"><font size="3" style="font-size: 12pt">MODE Overlap Correlation</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font color="#ff3333"><font face="DejaVu Sans Light, sans-serif"><font size="3" style="font-size: 12pt">Mode:
+1822     -0.415600190243      0.247290729903</font></font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="DejaVu Sans Light, sans-serif"><font size="3" style="font-size: 12pt">Mode:
+1816     0.252625858163      0.113261133544</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="DejaVu Sans Light, sans-serif"><font size="3" style="font-size: 12pt">Mode:
+1746     0.175581842737      0.306224937911</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="DejaVu Sans Light, sans-serif"><font size="3" style="font-size: 12pt">Mode:
+1745     0.13950940547      0.303095607429</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="DejaVu Sans Light, sans-serif"><font size="3" style="font-size: 12pt">Mode:
+1747     0.138225569708      0.297843432141</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="DejaVu Sans Light, sans-serif"><font size="3" style="font-size: 12pt">Mode:
+1659     0.137739698541      0.272789201446</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="DejaVu Sans Light, sans-serif"><font size="3" style="font-size: 12pt">Mode:
+1801     -0.136763146302      0.210065050974</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="DejaVu Sans Light, sans-serif"><font size="3" style="font-size: 12pt">Mode:
+1730     0.136567023438      0.299515587264</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="DejaVu Sans Light, sans-serif"><font size="3" style="font-size: 12pt">Mode:
+1665     -0.133241326847      0.354553903803</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="DejaVu Sans Light, sans-serif"><font size="3" style="font-size: 12pt">Mode:
+1793     -0.13005798464      0.202987256131</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="DejaVu Sans Light, sans-serif"><font size="3" style="font-size: 12pt">Mode:
+1738     -0.120706064305      0.220396792939</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="DejaVu Sans Light, sans-serif"><font size="3" style="font-size: 12pt">Mode:
+1800     0.120606594989      0.178140199695</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="DejaVu Sans Light, sans-serif"><font size="3" style="font-size: 12pt">Mode:
+1774     -0.12050356591      0.126790378565</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="DejaVu Sans Light, sans-serif"><font size="3" style="font-size: 12pt">Mode:
+1408     -0.103297837303      0.346942965669</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="DejaVu Sans Light, sans-serif"><font size="3" style="font-size: 12pt">Mode:
+1754     -0.103052988178      0.312731487395</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%; page-break-before: always">
+<font face="Liberation Serif, serif"><font size="6" style="font-size: 22pt"><b>Mode
+Visualisation</b></font></font></p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt">From
+each model we have identified which mode overlaps the most with the
+direction of the conformational change. We can now visualise these
+modes.</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt">1)
+First we must extract the eigenvectors of each mode using the
+<b>getEigen</b><b>Ve</b><b>ctors.</b><b>cpp</b><b> </b>script. This
+is a c++ script and must be complied:</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt"><b>g++
+-I cpp/input/ getEigenVectors.cpp -o getEigenVectors</b></font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt">1.1)
+Obtain eigenvectors for mode 802 of the CG4 model. Note this overlap
+is postive, thus the vectors act in the opposite direction to
+conformational change. Therefore we must specify the direction as 1
+when extracting the vectors:</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt"><b>./getEigenVectors
+--vtMatrix Tutorial/VT_values.txt --mode 802 --direction 1 --outdir
+Tutorial/</b></font></font></p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt">1.1)
+Obtain eigenvectors for mode 1822 of the CG3 model. However the
+overlap for this mode was negative, therefore we must specifify
+direction as -1</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt"><b>./getEigenVectors
+--vt Tutorial/CG3/VT_values.txt --mode 1822 --direction -1 --outdir
+Tutorial/CG3</b></font></font></p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt">2)
+We can now project these vectors onto the respective models using the
+<b>visualiseVector.py </b>script and then visualise them as a set of
+frames in VMD:</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt">2.1)
+Mode 802 of CG4:</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt"><b>python
+visualiseVector.py --pdb Tutorial/EV71_CG4.pdb --vectorFile
+Tutorial/EVectors802.txt --mode 802 --outdir Tutorial/ --atomType CB</b></font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt">2.2)
+Mode 1822 of CG3:</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt"><b>python
+visualiseVector.py --pdb Tutorial/CG3/EV71_CG3.pdb  --vectorFile
+Tutorial/CG3/EVectors1822.txt --mode 1822 --outdir Tutorial/CG3
+--atomType CB</b></font></font></p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt"><b>Output
+from visualiseVector.py</b></font></font></p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt">The
+script will produce a folder named VISUALISE. For every mode that you
+give to <b>visualiseVector.py</b> two files will be produced:</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt">1)
+A VISUAL PDB file. This can be opened in VMD and visualised as a set
+of 100 frames.</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt">2)
+An VISUAL_ARROWS txt file. This file contains a Tcl script that can
+be copied into the VMD TK console. The script plots as set of arrows
+indicating the direction of each atom.</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt"><font size="6" style="font-size: 22pt"><b>meanSquareFluctuation</b></font><font size="6" style="font-size: 22pt"><b>.</b></font><font size="6" style="font-size: 22pt"><b>py</b></font></font></font></p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt">Lastly
+we will use the meanSquareFluctuations.py script to calculate the msf
+of the CB atoms. The scripts allows you to calculate:</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt">a)
+the overall msf, calculated over all modes</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt">b)
+the msf of the CB atoms for a specific mode, or a specific range of
+modes.</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="justify" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt">The
+script also allows for comparison of msf obtained from modes of
+obtained from different models. We can use the –pdbConf2 paramter
+to send the script a second PDB model. The script will then calculate
+the msf of atoms corresponding to residues that are common between
+both models. </font></font>
+</p>
+<p align="justify" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="justify" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt">In
+this toturial we will analyse the msf between EV71_CG4 and EV71_CG3.</font></font></p>
+<p align="justify" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="justify" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="justify" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="justify" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="justify" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="justify" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="justify" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt">1)
+First we will calculate the msf of the CG4 model. We will calculate
+the overall msf and the msf for the mode 802.</font></font></p>
+<p align="justify" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="justify" style="margin-bottom: 0cm; line-height: 100%"><font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt"><b>python
+meanSquareFluctuation.py -<font color="#6666ff">-pdb
+Tutorial/EV71_CG4.pdb</font> <font color="#ff3333">--pdbConf2
+Tutorial/EV71_CG3.pdb </font>--firstMode 802 --lastMode 802 --wMatrix
+Tutorial/W_values.txt --vtMatrix Tutorial/VT_values.txt --outdir
+Tutorial/ --atomType CB</b></font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt">2)
+Next we will calculate the msf of the CG3 model. We will calculate
+the overall msf and the msf for the mode 1822</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt"><b>python
+meanSquareFluctuation.py -<font color="#ff3333">-pdb
+Tutorial/EV71_CG3.pdb</font> <font color="#6666ff">--pdbConf2
+Tutorial/EV71_CG4.pdb</font> --firstMode 1822 --lastMode 1822
+--wMatrix Tutorial/CG3/W_values.txt --vtMatrix
+Tutorial/CG3/VT_values.txt --outdir Tutorial/CG3/ --atomType CB</b></font></font></p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt"><b>Output
+for Model CG4:</b></font></font></p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt"><b>1
+)</b><b>EV71_msf.txt </b>: Text file of the overall msf values for
+all residues</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt"><b>2)
+</b><b>EV71_msfModes802_802.txt</b>: msf for all residues for mode
+802</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt"><b>3)
+EV71CommonResidues_msf.txt: </b><span style="font-weight: normal">overal
+msf for residues common between CG4 and CG3.</span></font></font></p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt"><b>4)
+EV71_CommonResidues_msfModes802_802.txt: </b><span style="font-weight: normal">msf
+for residues common between CG4 and CG3 calculated for mode 802</span></font></font></p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%; page-break-before: always">
+<font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt"><b>Output
+for Model CG3:</b></font></font></p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt"><b>1
+)</b><b>EV71_msf.txt </b>: Text file of the overall msf values for
+all residues</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt"><b>2)
+</b><b>EV71_msfModes</b><b>1822</b><b>_</b><b>1822</b><b>.txt</b>:
+msf for all residues for mode 1822</font></font></p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><font face="Liberation Serif, serif"><font size="4" style="font-size: 16pt"><b>3)
+EV71CommonResidues_msf.txt: </b><span style="font-weight: normal">overal
+msf for residues common between CG3 and CG4.</span></font></font></p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; line-height: 100%"><font size="4" style="font-size: 16pt"><b><font face="Liberation Serif, serif">4)
+EV71_CommonResidues_msfModes</font><font face="Liberation Serif, serif">1822</font><font face="Liberation Serif, serif">_</font><font face="Liberation Serif, serif">1822</font><font face="Liberation Serif, serif">.txt:
+</font></b><font face="Liberation Serif, serif"><span style="font-weight: normal">msf
+for residues common between CG</span></font><font face="Liberation Serif, serif"><span style="font-weight: normal">3</span></font><font face="Liberation Serif, serif"><span style="font-weight: normal">
+and CG</span></font><font face="Liberation Serif, serif"><span style="font-weight: normal">3</span></font><font face="Liberation Serif, serif"><span style="font-weight: normal">
+calculated for mode </span></font><font face="Liberation Serif, serif"><span style="font-weight: normal">182</span></font><font face="Liberation Serif, serif"><span style="font-weight: normal">2</span></font></font></p>
+<p align="justify" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+<p align="left" style="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<br/>
+
+</p>
+</body>
+</html></div>
+<div class="section" id="nma">
+<h2>NMA<a class="headerlink" href="#nma" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="pca.html" class="btn btn-neutral" title="PCA Scripts" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, CJ Ross, B Nizami, M Glenister, OS Amamuddy, AR Atilgan, C Atilgan and Ö Tastan Bishop.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

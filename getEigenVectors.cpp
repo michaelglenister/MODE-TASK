@@ -1,10 +1,16 @@
+// getEigenVectors.cpp
+// Extracts the eigenvectors for a specfied normal mode
+// Author: Caroline Ross: caroross299@gmail.com
+// August 2017
+
 //Run individually for each mode
+
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <sstream>
 #include <stdlib.h>
-#include <math.h> 
+#include <math.h>
 #include <stdio.h>
 
 #include <ap.h>
@@ -30,6 +36,19 @@ int main(int argc, char *argv[])
 	string protomerVT, totalRes, firstMode, outdir = "output";
 	int direction = 1; //direction of overlap correction - 1 is default - user will determine this from Conformational Analysis
 	bool hasVt = false, hasRes = false, hasMode = false;
+	
+	// Welcome message
+	cout<< "============================================================\n"<<endl;
+	
+	cout<< "\t:-) >>------->"<<argv[0]<<"<-------<< (-:\t\n"<<endl;
+
+	cout<< "\tAuthor(s): Caroline Ross (caroross299@gmail.com)\t\t\t\t"<<endl;
+	cout<< "\tResearch Unit in Bioinformatics (RUBi)\t\t"<<endl;
+	cout<< "\tRhodes University, 2017\t\t\t\t"<<endl;
+	cout<< "\tDistributed under GNU GPL 3.0\t\t\t\n"<<endl;
+	cout<< "\thttps://github.com/michaelglenister/NMA-TASK\t\n"<<endl;
+
+	cout<< "============================================================"<<endl;
 
 	// Begin parameter handling
 	// Add more else if statements for further parameters
@@ -79,13 +98,18 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
+	char newline = '\n';
+	ifstream vfile (protomerVT.c_str());// This is the PDB file that will be coarse grained. 
+	if (vfile.good() == false) {
+        	cout<<newline<<"**************************************"<<newline<<"ERROR: Specified VectorMatrix file does not exist. Exiting..."<<newline<<"**************************************"<<newline;
+		return -1;
+        }//if
+        vfile.close();
 
-	
 	string protomerMode = outdir + "/EVectors"+firstMode.c_str()+".txt"; 
 	
 	int total = atoi(totalRes.c_str());
 	int mode1 = atoi(firstMode.c_str())-1;
-	
 
 
 	// End parameter handling

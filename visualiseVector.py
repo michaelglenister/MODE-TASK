@@ -1,16 +1,31 @@
 #!/usr/bin/env python
-# Makes a trajectory of 100 PDB files
+
+# visualiseVector.py
+# Projects a set of eigenvectors of a normal onto the PDB structure. 
+# Produces as set of frames to visualise the motion and Tcl script to plot the eigenvectors as a set of arrows
+# Author: Caroline Ross: caroross299@gmail.com
+# August 2017
 
 import argparse
 from datetime import datetime
 
-from utils import *
+from lib.utils import *
 
 
 def main(args):
-    pdb_file = open(args.pdb, 'r')
-    pdb_lines = pdb_file.readlines()
-    pdb_file.close()
+
+    atomT = args.atomType.upper()
+    if atomT!='CA' and atomT!='CB':
+	print '\n**************************************\nUnrecognised atom type\nInput Options:\nCA: to select alpha carbon atoms\nCB: to select beta carbon atoms\n**************************************'
+	sys.exit()
+
+    try:
+        pdb_file = open(args.pdb, 'r')
+        pdb_lines = pdb_file.readlines()
+        pdb_file.close()
+    except IOError:
+        print '\n**************************************\nFILE '+args.pdb+' NOT FOUND:\n**************************************\n'
+	sys.exit()
 
     # CHANGE THE FOLLOWING
     mode = args.mode
@@ -32,7 +47,7 @@ def main(args):
             first = info[0].strip()
             res = info[3]
             atom_type = info[2]
-            if first == "ATOM" and (atom_type == "CB" or (atom_type == "CA" and res == "GLY")):
+            if first == "ATOM" and (atom_type == atomT or (atom_type == "CA" and res == "GLY")):
                 c_beta_atoms.append(atom)
         else:
             if "TER" in atom or "END" in atom:
@@ -66,98 +81,105 @@ def main(args):
 
     # Get the vectors
     # CHANGE HERE # may not be correct change, double check
-  
-    vectorf = open(args.vectorFile, 'r')
-    vectors = vectorf.readlines()
-    vectorf.close()
+
+    try:  
+        vectorf = open(args.vectorFile, 'r')
+        vectors = vectorf.readlines()
+        vectorf.close()
+    except IOError:
+        print '\n**************************************\nFILE '+args.vectorFile+' NOT FOUND:\n**************************************\n'
+	sys.exit()
 
     #Write VISUALISE
-    w = open(args.outdir + "/" + "VISUALISE/" + structure + '_' + str(mode) + ".pdb", 'w')
-    for i in range(0, 100):
-        v_index = -1
-        for atom in c_beta_atoms:
-            if "ATOM" in atom:
-                v_index += 1 
-                    # print v_index
+    try:
+        w = open(args.outdir + "/" + "VISUALISE/" + structure + '_' + str(mode) + ".pdb", 'w')
+        for i in range(0, 100):
+            v_index = -1
+            for atom in c_beta_atoms:
+                if "ATOM" in atom:
+                    v_index += 1 
+                        
                     
-                v = vectors[v_index].split()
-                vx = float(v[0].strip())
-                vy = float(v[1].strip())
-                vz = float(v[2].strip())
-                x = round(float(atom[30:38].strip()) + (vx * i / 5), 3)
-                xspace = ' ' * (len(atom[30:38]) - len(str(x)))
-                y = round(float(atom[38:46].strip()) + (vy * i / 5), 3)
-                yspace = ' ' * (len(atom[38:46]) - len(str(y)))
-                z = round(float(atom[46:54].strip()) + (vz * i / 5), 3)
-                zspace = ' ' * (len(atom[46:54]) - len(str(z)))
-                atom = atom[0:30] + xspace + str(x) + yspace + str(y) + zspace + str(z) + atom[54:]
-                w.write(atom)
-            else:
-                if "TER " in atom:
+                    v = vectors[v_index].split()
+                    vx = float(v[0].strip())
+                    vy = float(v[1].strip())
+                    vz = float(v[2].strip())
+                    x = round(float(atom[30:38].strip()) + (vx * i / 5), 3)
+                    xspace = ' ' * (len(atom[30:38]) - len(str(x)))
+                    y = round(float(atom[38:46].strip()) + (vy * i / 5), 3)
+                    yspace = ' ' * (len(atom[38:46]) - len(str(y)))
+                    z = round(float(atom[46:54].strip()) + (vz * i / 5), 3)
+                    zspace = ' ' * (len(atom[46:54]) - len(str(z)))
+                    atom = atom[0:30] + xspace + str(x) + yspace + str(y) + zspace + str(z) + atom[54:]
                     w.write(atom)
                 else:
-                    if "END" in atom:
-                        for Con in conect:
-                            for c in range(len(Con) - 1):
-                                atom1 = str(Con[c])
-                                atom2 = str(Con[c + 1])
-                                w.write("CONECT" + " " * (5 - len(atom1)) +atom1 + " " * (5 - len(atom2)) + atom2 + "\n")
-                        w.write(atom+'\n')
+                    if "TER " in atom:
+                        w.write(atom)
+                    else:
+                        if "END" in atom:
+                            for Con in conect:
+                                for c in range(len(Con) - 1):
+                                    atom1 = str(Con[c])
+                                    atom2 = str(Con[c + 1])
+                                    w.write("CONECT" + " " * (5 - len(atom1)) +atom1 + " " * (5 - len(atom2)) + atom2 + "\n")
+                            w.write(atom+'\n')
 
-    w.close()
+        w.close()
 
-    # write arrows
+        # write arrows
 
-    arrows = []
-    steps = [0, 5]
-    v_index = -1
-    chainbreaks = []
-    for cb in conect:
-    	chainbreaks.append(cb[-1])
-    colours = ['green','red','blue','orange','yellow','pink','cyan','silver','magenta','violet','ochre']
+        arrows = []
+        steps = [0, 5]
+        v_index = -1
+        chainbreaks = []
+        for cb in conect:
+    	    chainbreaks.append(cb[-1])
+        colours = ['green','red','blue','orange','yellow','pink','cyan','silver','magenta','violet','ochre']
 
-    colourByChain=False
-    if len(chainbreaks)<10:
-	colourByChain=True
-	arrows.append('proc vmd_draw_arrow {mol start end} {\n    set middle [vecadd $start [vecscale 0.9 [vecsub $end '
+        colourByChain=False
+        if len(chainbreaks)<10:
+	    colourByChain=True
+	    arrows.append('proc vmd_draw_arrow {mol start end} {\n    set middle [vecadd $start [vecscale 0.9 [vecsub $end '
               '$start]]]\n    graphics $mol cylinder $start $middle radius 0.20\n    graphics $mol cone $middle $end '
               'radius 0.35\n}\ndraw color green\n')
-    else:
-        arrows.append('proc vmd_draw_arrow {mol start end} {\n    set middle [vecadd $start [vecscale 0.9 [vecsub $end '
+        else:
+            arrows.append('proc vmd_draw_arrow {mol start end} {\n    set middle [vecadd $start [vecscale 0.9 [vecsub $end '
               '$start]]]\n    graphics $mol cylinder $start $middle radius 0.20\n    graphics $mol cone $middle $end '
               'radius 0.35\n}\ndraw color black\n')
 
     
 
-    indexOfCB = 0
+        indexOfCB = 0
 
-    for atom in c_beta_atoms:
-        if "ATOM" in atom:
+        for atom in c_beta_atoms:
+            if "ATOM" in atom:
 
-            v_index += 1
-	    v = vectors[v_index].split()	
-            vx = float(v[0].strip())
-            vy = float(v[1].strip())
-            vz = float(v[2].strip())
-            x1 = round(float(atom[30:38].strip()) + (vx * steps[0]), 3)
-            y1 = round(float(atom[38:46].strip()) + (vy * steps[0]), 3)
-            z1 = round(float(atom[46:54].strip()) + (vz * steps[0]), 3)
+                v_index += 1
+	        v = vectors[v_index].split()	
+                vx = float(v[0].strip())
+                vy = float(v[1].strip())
+                vz = float(v[2].strip())
+                x1 = round(float(atom[30:38].strip()) + (vx * steps[0]), 3)
+                y1 = round(float(atom[38:46].strip()) + (vy * steps[0]), 3)
+                z1 = round(float(atom[46:54].strip()) + (vz * steps[0]), 3)
 
-            x2 = round(float(atom[30:38].strip()) + (vx * steps[1]), 3)
-            y2 = round(float(atom[38:46].strip()) + (vy * steps[1]), 3)
-            z2 = round(float(atom[46:54].strip()) + (vz * steps[1]), 3)
-            arrows.append('draw arrow {' + str(x1) + ' ' + str(y1) + ' ' + str(
-                z1) + '} {' + str(x2) + ' ' + str(y2) + ' ' + str(z2) + '}\n')
-	    if colourByChain:
-                if v_index + 1 == chainbreaks[indexOfCB]:
-                    arrows.append('draw color '+colours[indexOfCB+1]+'\n')
-		    indexOfCB+=1
+                x2 = round(float(atom[30:38].strip()) + (vx * steps[1]), 3)
+                y2 = round(float(atom[38:46].strip()) + (vy * steps[1]), 3)
+                z2 = round(float(atom[46:54].strip()) + (vz * steps[1]), 3)
+                arrows.append('draw arrow {' + str(x1) + ' ' + str(y1) + ' ' + str(z1) + '} {' + str(x2) + ' ' + str(y2) + ' ' + str(z2) + '}\n')
+	        if colourByChain:
+                    if v_index + 1 == chainbreaks[indexOfCB]:
+                        arrows.append('draw color '+colours[indexOfCB+1]+'\n')
+		        indexOfCB+=1
 	    
   
 
-    w = open(args.outdir + "/" + "VISUALISE/" + structure + '_ARROWS_' + str(mode) + ".txt", 'w')
-    w.writelines(arrows)
-    w.close()
+        w = open(args.outdir + "/" + "VISUALISE/" + structure + '_ARROWS_' + str(mode) + ".txt", 'w')
+        w.writelines(arrows)
+        w.close()
+    except IndexError:
+        print '\n**************************************\nERROR!!\nVECTOR FILE and PDB FILE ARE NOT COMPATIBLE\n**************************************\n'
+        sys.exit()
 
 
 silent = False
@@ -187,6 +209,7 @@ if __name__ == "__main__":
     parser.add_argument("--pdb", help="Coarse grained PDB file")  # '3VBSProtomer3_SCA.pdb'
     parser.add_argument("--mode", help="[int]", type=int)
     parser.add_argument("--vectorFile", help="File containing eigen vectors")  # 'ProtomerMode'
+    parser.add_argument("--atomType", help="Enter CA to select alpha carbons or CB to select beta carbons", default='CA')
 
     args = parser.parse_args()
 

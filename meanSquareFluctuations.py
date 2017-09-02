@@ -1,15 +1,19 @@
 #!/usr/bin/env python
+
+# meanSquareFluctuation.py
+# Calcualtes the mean square fluctutaions if carbon atoms:
+# 1) overall msf over all normal modes
+# 2) msf for a specified mode range
+# Author: Caroline Ross: caroross299@gmail.com
+# August 2017
+
 # Calculates and Returns Diagonals of Correlated Matrix for a given set of modes
-import os 
-# import sys
+
+import os
 import argparse
 from datetime import datetime
 
-from utils import *
-
-# import matplotlib
-# import matplotlib.pyplot as plt
-# from matplotlib import cm as CM
+from lib.utils import *
 import numpy as np
 
 
@@ -21,6 +25,12 @@ import numpy as np
 # chain
 
 def main(args):
+
+    atomT = args.atomType.upper()
+    if atomT!='CA' and atomT!='CB':
+	print '\n**************************************\nUnrecognised atom type\nInput Options:\nCA: to select alpha carbon atoms\nCB: to select beta carbon atoms\n**************************************'
+	sys.exit()
+
     # residues common to multiple pdb files (if user has input two conformations)
     specificResidues = True
     pdb1 = args.pdb
@@ -33,19 +43,26 @@ def main(args):
     #getCommonResidues:
     # Takes two pdb models and determines the common residues
     #####################################
-    f = open(pdb1, 'r')
-    lines_c1 = f.readlines()
-    f.close()
-
-    f = open(pdb2, 'r')
-    lines_c2 = f.readlines()
-    f.close()
+    try:	
+        f = open(pdb1, 'r')
+        lines_c1 = f.readlines()
+        f.close()
+    except IOError:
+        print '\n**************************************\nFILE '+pdb1+' NOT FOUND:\n**************************************\n'
+	sys.exit()
+    try:
+        f = open(pdb2, 'r')
+        lines_c2 = f.readlines()
+        f.close()
+    except IOError:
+        print '\n**************************************\nFILE '+pdb2+' NOT FOUND:\n**************************************\n'
+	sys.exit()
     #####################################
 
     c1_residues = {}
     c2_residues = {}
 
-    common_residues = {'A': [], 'B': [], 'C': [], 'D': []}
+    common_residues = {}
 
     for line in lines_c1:
         if line.startswith("ATOM"):
@@ -54,12 +71,13 @@ def main(args):
             res_type = info[3].strip()
             chain = info[4].strip()
             res = int(info[5].strip())
-            if atype == "CB" or (atype == "CA" and res_type == "GLY"):
-                if chain not in c1_residues:
-                    c1_residues[chain] = [res]
-                else:
+            if atype == atomT or (atype == "CA" and res_type == "GLY"):
+                if chain in c1_residues:
                     if res not in c1_residues[chain]:
                         c1_residues[chain].append(res)
+                else:
+	            c1_residues[chain] = [res]
+
     for line in lines_c2:
         if line.startswith("ATOM"):
             info = line.split()
@@ -67,18 +85,21 @@ def main(args):
             res_type = info[3].strip()
             chain = info[4].strip()
             res = int(info[5].strip())
-            if atype == "CB" or (atype == "CA" and res_type == "GLY"):
-                if chain not in c2_residues:
-                    c2_residues[chain] = [res]
-                else:
+            if atype == atomT or (atype == "CA" and res_type == "GLY"):
+                if chain in c2_residues:
                     if res not in c2_residues[chain]:
                         c2_residues[chain].append(res)
+                else:
+	            c2_residues[chain] = [res]
 
     for ch in c2_residues:
         for r in c2_residues[ch]:
 	    if ch in c1_residues:
                 if r in c1_residues[ch]:
-                    common_residues[ch].append(r)
+		    if ch in common_residues:
+                    	common_residues[ch].append(r)
+		    else:
+			common_residues[ch] = [r]
 	    else:
 		break
     
@@ -90,10 +111,15 @@ def main(args):
     CResiduesOrderedByIndex = []
     ResiduesOrderedByIndex = []
 
-    # The pdb file on which NMA analysis was performed, this script handles on model at a time but we can change this
-    f = open(args.pdb, 'r')
-    nma = f.readlines()
-    f.close()
+    # The pdb file on which NMA analysis was performed, this script handles one model at a time but we can change this
+    try:
+        f = open(pdb1, 'r')
+        nma = f.readlines()
+        f.close()
+    except IOError:
+        print '\n**************************************\nFILE '+pdb1+' NOT FOUND:\n**************************************\n'
+	sys.exit()
+
     count = 0
     for line in nma:
         if line.startswith("ATOM"):
@@ -102,12 +128,13 @@ def main(args):
             res_type = info[3].strip()
             chain = info[4].strip()
             res = int(info[5].strip())
-            if atype == "CB" or (atype == "CA" and res_type == "GLY"):
-                if res in common_residues[chain]:
-                    # gets the index of the common atoms, as they would appear in the output W, U and VT matrix. As
-                    # these matrices contain info on all atoms
-		    CResiduesOrderedByIndex.append(chain+'-'+str(res))
-                    interface_index.append(count)
+            if atype == atomT or (atype == "CA" and res_type == "GLY"):
+                if chain in common_residues:
+                    if res in common_residues[chain]:
+                        # gets the index of the common atoms, as they would appear in the output W, U and VT matrix. As
+                        # these matrices contain info on all atoms
+		        CResiduesOrderedByIndex.append(chain+'-'+str(res))
+                        interface_index.append(count)
 		
 		ResiduesOrderedByIndex.append(chain+'-'+str(res))
                 count += 1
@@ -116,11 +143,15 @@ def main(args):
     protein_name = protein_name[protein_name.rfind("/")+1:protein_name.rfind("/")+5]
 
     # Specify modes
-    total_modes = 0 
-    f = open(args.wMatrix, 'r')
-    lines = f.readlines()
-    f.close()
-    for i in range(len(lines)):
+    total_modes = 0
+    try: 
+        f = open(args.wMatrix, 'r')
+        eigen_values = f.readlines()
+        f.close()
+    except IOError:
+        print '\n**************************************\nFILE '+args.wMatrix+' NOT FOUND:\n**************************************\n'
+	sys.exit()
+    for i in range(len(eigen_values)):
         total_modes += 1
 
     first_mode = args.firstMode  
@@ -148,12 +179,6 @@ def main(args):
     mode_range = range(first_mode-1, last_mode)
     
 
-
-    print "Parsing W_Matrix"
-    fw = open(args.wMatrix, 'r')
-    eigen_values = fw.readlines()
-    fw.close()
-
     # Create A Full W Inverse Matrix (This is if we want correlation averaged over all modes)
     w_inv = np.zeros((total_modes, total_modes))
     for i in range(total_modes):
@@ -169,78 +194,88 @@ def main(args):
     # Read In U and VT full Matrix as U is the transpose of VT I only read in VT and create U from the VT matrix
     # info. So we can exclude U output from C++ script for faster analysis
     print "Parsing VT_Matrix"
-    fvt = open(args.vtMatrix, 'r')  
-    eigen_vectors = fvt.readlines()
-    fvt.close()
-    
+
+    try:
+        fvt = open(args.vtMatrix, 'r')  
+        eigen_vectors = fvt.readlines()
+        fvt.close()
+    except IOError:
+        print '\n**************************************\nFILE '+args.vtMatrix+' NOT FOUND:\n**************************************\n'
+	sys.exit()
+
     print "Calculating Transpose of VT"
     v_t = np.zeros((total_modes, total_modes))
     u = np.zeros((total_modes, total_modes))
-
-    for i in range(total_modes):
-        vectors = eigen_vectors[i].split()
-        for j in range(total_modes):
-            vector = float(vectors[j].strip())
-            v_t[i, j] = vector
-            u[j, i] = vector
-
     
-    # Calculate Correlation Matrices
-    print "Calculating MSF across all modes"
-    w_v_t = np.dot(w_inv, v_t)
-    # print "Correlations Calculated"
-    c = np.dot(u, w_v_t)
-    # print "Correlations Calculated"
+    try:
 
-    print "Calculating MSF across modes: "+str(first_mode)+"-"+str(last_mode)	
-    # Mode Specific C Matrix
-    w_v_tm = np.dot(w_f, v_t)
-    CMS = np.dot(u, w_v_tm)
+	for i in range(total_modes):
+	    vectors = eigen_vectors[i].split()
+	    for j in range(total_modes):
+		vector = float(vectors[j].strip())
+		v_t[i, j] = vector
+		u[j, i] = vector
 
-
-    # Calculate Trace of the Correlation Matrices
-    trace_c = np.zeros((total_modes / 3, total_modes / 3))
-    trace_c_m = np.zeros((total_modes / 3, total_modes / 3))
-
-    for i in range(0, total_modes, 3):
-        for j in range(0, total_modes, 3):
-            trace = 0
-            trace_m = 0
-            for k in range(3):
-                trace = trace + c[i + k, j + k]
-                trace_m = trace_m + CMS[i + k, j + k]
-            trace_c[i / 3, j / 3] = trace
-            trace_c_m[i / 3, j / 3] = trace_m
-
-    # Print the diagonal values per residue
-    w = open(args.outdir + "/" + protein_name+ "_msf.txt", 'w')
-    w.write("Res\tm.s.f\n")
- 
-    for i in res_range:
-        w.write(str(ResiduesOrderedByIndex[i]) + "\t" + str(trace_c[i, i]) + "\n")
-    w.close()
-
-    w = open(args.outdir + "/" + protein_name +"_msfModes"+ str(first_mode)+"_"+str(last_mode)+".txt", 'w')
-    w.write("Res\tm.s.f\n")
-    for i in res_range:
-        w.write(str(ResiduesOrderedByIndex[i])+ "\t" + str(trace_c_m[i, i]) + "\n")
-    w.close()
+	
+	# Calculate Correlation Matrices
+	print "Calculating MSF across all modes"
+	w_v_t = np.dot(w_inv, v_t)
+	# print "Correlations Calculated"
+	c = np.dot(u, w_v_t)
+	# print "Correlations Calculated"
     
-  
-    if specificResidues:
-        w = open(args.outdir + "/" + protein_name + "CommonResidues_msf.txt", 'w')
+	print "Calculating MSF across modes: "+str(first_mode)+"-"+str(last_mode)	
+	# Mode Specific C Matrix
+	w_v_tm = np.dot(w_f, v_t)
+	CMS = np.dot(u, w_v_tm)
+    
+    
+	# Calculate Trace of the Correlation Matrices
+	trace_c = np.zeros((total_modes / 3, total_modes / 3))
+	trace_c_m = np.zeros((total_modes / 3, total_modes / 3))
+    
+	for i in range(0, total_modes, 3):
+	    for j in range(0, total_modes, 3):
+		trace = 0
+		trace_m = 0
+		for k in range(3):
+		    trace = trace + c[i + k, j + k]
+		    trace_m = trace_m + CMS[i + k, j + k]
+		trace_c[i / 3, j / 3] = trace
+		trace_c_m[i / 3, j / 3] = trace_m
+    
+	# Print the diagonal values per residue
+	w = open(args.outdir + "/" + protein_name+ "_msf.txt", 'w')
 	w.write("Res\tm.s.f\n")
-	for k,i in enumerate(interface_index): 
-          
-	    w.write(str(CResiduesOrderedByIndex[k]) + "\t" + str(trace_c[i, i]) + "\n")
+     
+	for i in res_range:
+	    w.write(str(ResiduesOrderedByIndex[i]) + "\t" + str(trace_c[i, i]) + "\n")
 	w.close()
-
-	w = open(args.outdir + "/" + protein_name +"_CommonResidues_msfModes"+ str(first_mode)+"_"+str(last_mode)+".txt", 'w')	
+    
+	w = open(args.outdir + "/" + protein_name +"_msfModes"+ str(first_mode)+"_"+str(last_mode)+".txt", 'w')
 	w.write("Res\tm.s.f\n")
-	for k,i in enumerate(interface_index):
-            w.write(str(CResiduesOrderedByIndex[k]) + "\t" + str(trace_c_m[i, i]) + "\n")
+	for i in res_range:
+	    w.write(str(ResiduesOrderedByIndex[i])+ "\t" + str(trace_c_m[i, i]) + "\n")
 	w.close()
-
+	
+      
+	if specificResidues:
+	    w = open(args.outdir + "/" + protein_name + "CommonResidues_msf.txt", 'w')
+	    w.write("Res\tm.s.f\n")
+	    for k,i in enumerate(interface_index): 
+	      
+		w.write(str(CResiduesOrderedByIndex[k]) + "\t" + str(trace_c[i, i]) + "\n")
+	    w.close()
+    
+	    w = open(args.outdir + "/" + protein_name +"_CommonResidues_msfModes"+ str(first_mode)+"_"+str(last_mode)+".txt", 'w')	
+	    w.write("Res\tm.s.f\n")
+	    for k,i in enumerate(interface_index):
+		w.write(str(CResiduesOrderedByIndex[k]) + "\t" + str(trace_c_m[i, i]) + "\n")
+	    w.close()
+    except IndexError:
+	print '\n**************************************\nERROR!!\nINPUT FILES ARE NOT COMPATIBLE\n**************************************\n'
+        sys.exit()	
+	
 
 silent = False
 stream = sys.stdout
@@ -269,10 +304,9 @@ if __name__ == "__main__":
     parser.add_argument("--pdbConf2", help="", default = "none")  
     parser.add_argument("--firstMode", help="[int]", default=0, type=int) #default = total modes-25
     parser.add_argument("--lastMode", help="[int]", default=0, type=int)  # use last non-trivial mode if no user input provided
-    #parser.add_argument("--firstResidue", help="[int]", default=1, type=int)
-    #parser.add_argument("--lastResidue", help="[int]", default=270, type=int)
     parser.add_argument("--wMatrix", help="W matrix input file that was output from C++ Scripts")
     parser.add_argument("--vtMatrix", help="U and VT full Matrix")
+    parser.add_argument("--atomType", help="Enter CA to select alpha carbons or CB to select beta carbons", default='CA')
 
     args = parser.parse_args()
 
@@ -283,7 +317,10 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         # Check modes
         if args.firstMode > args.lastMode:
-            print "First mode cannot be greater than last mode"
+            print '\n**************************************\nFirst mode cannot be greater than last mode\n**************************************\n'
+            sys.exit()
+        if args.firstMode<0 or args.lastMode<0:
+	    print '\n**************************************\nINVALID INPUT\nFirst and last mode must be positive integers\n**************************************\n'
             sys.exit()
 
 
