@@ -92,7 +92,6 @@
 <li class="toctree-l2"><a class="reference internal" href="#coarse-grain">Coarse grain</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#anm">ANM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#get-eigen-vectors">Get eigen vectors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#common-residues">Common residues</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#mean-square-fluctuation">Mean square fluctuation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#conformation-mode">Conformation mode</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#trajectory-pentamer">Trajectory pentamer</a></li>
@@ -337,62 +336,6 @@ correction</td>
 <tr class="row-even"><td>Eigen vectors file</td>
 <td>Text file containing a
 list of eigen vectors</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section" id="common-residues">
-<h2>Common residues<a class="headerlink" href="#common-residues" title="Permalink to this headline">¶</a></h2>
-<p>Extracts the common residues between two pdb models such as two protein conformations</p>
-<p><strong>Command:</strong></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">commonResidues</span><span class="o">.</span><span class="n">py</span> <span class="o">&lt;</span><span class="n">options</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">conf1</span> <span class="o">&lt;</span><span class="n">pdb</span> <span class="n">file</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">conf2</span> <span class="o">&lt;</span><span class="n">pdb</span> <span class="n">file</span><span class="o">&gt;</span>
-</pre></div>
-</div>
-<p><strong>Inputs:</strong></p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="28%" />
-<col width="14%" />
-<col width="24%" />
-<col width="34%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Input (<em>*required</em>)</th>
-<th class="head">Input type</th>
-<th class="head">Flag</th>
-<th class="head">Description</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr class="row-even"><td>Conformation PDB *</td>
-<td>File</td>
-<td><code class="docutils literal"><span class="pre">--conf1</span></code></td>
-<td>Path to first PDB file</td>
-</tr>
-<tr class="row-odd"><td>Conformation PDB *</td>
-<td>File</td>
-<td><code class="docutils literal"><span class="pre">--conf2</span></code></td>
-<td>Path to second PDB file</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Outputs:</strong></p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="45%" />
-<col width="55%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Output</th>
-<th class="head">Description</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr class="row-even"><td>Common residues file</td>
-<td>Text file containing common
-residues, this file is used
-as input to the mean square
-fluctuations script</td>
 </tr>
 </tbody>
 </table>
