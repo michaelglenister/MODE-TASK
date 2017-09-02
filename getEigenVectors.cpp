@@ -57,8 +57,8 @@ int main(int argc, char *argv[])
     {
 		if (strcmp(argv[i], "-h") == 0)
 		{
-			cout<<"usage: getEigenVectors [-h] [--vt VTMATRIX] [--mode ]"<<endl;
-			cout<<"		[--outdir ] [--direction ]"<<endl;
+			cout<<"usage: getEigenVectors [-h] [--vt VTMATRIX] [--mode MODEVALUE]"<<endl;
+			cout<<"		[--outdir DIRECTORY] [--direction INTEGER]"<<endl;
 			cout<<"arguments:"<<endl;
 			cout<<" -h, --help		Show this help message and exit"<<endl;
 			cout<<" --vt			VT matrix file"<<endl;
