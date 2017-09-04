@@ -157,7 +157,7 @@ def get_pair_rmsd(pca_traj, sele_grp):
 def tsne(input):
 	't-distributed Stochastic Neighbor Embedding'
 	seed = np.random.RandomState(seed=1)
-	my_tsne = TSNE(n_components=3, n_iter=3000, random_state=seed, init='pca')
+	my_tsne = TSNE(n_components=3, n_iter=3000, random_state=seed, init='pca') ## apparantly n_components more than 3 throws error in certain cases. 
 	print "Performing TSNE..."
 	mpos = my_tsne.fit_transform(input)
 	write_plots('tsne_projection', mpos, out_dir)
