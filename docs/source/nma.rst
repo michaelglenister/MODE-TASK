@@ -4,7 +4,7 @@ NMA Scripts
 Coarse grain
 -------------------------------
 
-Takes a protomer structure and coarse grains to select a set amount of C-Beta
+Takes a protomer structure and coarse grains to select a set amount of C-Beta atoms
 
 **Command:** ::
 	
@@ -15,11 +15,13 @@ Takes a protomer structure and coarse grains to select a set amount of C-Beta
 +------------------------+------------+--------------------+-----------------------------+
 | Input (*\*required*)   | Input type | Flag               | Description                 |
 +========================+============+====================+=============================+
-| PDB file *        	 | File       |``--pdb``           | PDB input file              |
-|                        |            |                    |                             |
+| PDB file *        	 | File       |``--pdb``           | PDB structure to coarse     |
+|                        |            |                    | grain                       |
 +------------------------+------------+--------------------+-----------------------------+
-| Course grain level     | Integer    |``--cg``            | Default: 4                  |
-|                        |            |                    |                             |
+| Course grain level     | Integer    |``--cg``            | Level by which to coarse    |
+|                        |            |                    | grain the protein. Lower    |
+|                        |            |                    | is less coarse grained.     |
+|                        |            |                    | Default: 4                  |
 +------------------------+------------+--------------------+-----------------------------+
 | Starting atom          | Integer    |``--startingAtom``  | Residue number of the    	 |
 |                        |            |                    | starting atom.              |
@@ -55,11 +57,11 @@ ANM
 +------------------------+------------+--------------------+-----------------------------+
 | Input (*\*required*)   | Input type | Flag               | Description                 |
 +========================+============+====================+=============================+
-| PDB file *             | File       |``--pdb``           |                             |
+| PDB file *             | File       |``--pdb``           | PDB input file              |
 |                        |            |                    |                             |
 +------------------------+------------+--------------------+-----------------------------+
-| Cutoff                 | Integer    |``--cutoff``        | Default: 24                 |
-|                        |            |                    |                             |
+| Cutoff                 | Integer    |``--cutoff``        | Cuttoff radius in Å.        |
+|                        |            |                    | Default: 24                 |
 +------------------------+------------+--------------------+-----------------------------+
 
 **Outputs:**
@@ -67,14 +69,16 @@ ANM
 +------------------------+-----------------------------+
 | Output                 | Description                 |
 +========================+=============================+
-| W matrix               |                             |
-|                        |                             |
+| W matrix               | Text file of 3*N*           |
+|                        | eigenvalues                 |
 +------------------------+-----------------------------+
-| VT matrix              |                             |
-|                        |                             |
+| VT matrix              | Text file of 3*N*\ x3*N*    |
+|                        | eigenvectors. Printed in    |
+|                        | rows                        |
 +------------------------+-----------------------------+
-| U matrix               |                             |
-|                        |                             |
+| U matrix               | Text file of 3*N*\ x3*N*    |
+|                        | eigenvectors. Printed in    |
+|                        | columns                     |
 +------------------------+-----------------------------+
 
 Get eigen vectors
@@ -113,38 +117,6 @@ Get eigen vectors
 |                        | list of eigen vectors       |
 +------------------------+-----------------------------+
 
-Common residues
--------------------------------
-
-Extracts the common residues between two pdb models such as two protein conformations
-
-**Command:** ::
-
-	commonResidues.py <options> --conf1 <pdb file> --conf2 <pdb file>
-
-**Inputs:**
-
-+------------------------+------------+--------------------+-----------------------------+
-| Input (*\*required*)   | Input type | Flag               | Description                 |
-+========================+============+====================+=============================+
-| Conformation PDB *     | File       |``--conf1``         | Path to first PDB file      |
-|                        |            |                    |                             |
-+------------------------+------------+--------------------+-----------------------------+
-| Conformation PDB *     | File       |``--conf2``         | Path to second PDB file     |
-|                        |            |                    |                             |
-+------------------------+------------+--------------------+-----------------------------+
-
-**Outputs:**
-
-+------------------------+-----------------------------+
-| Output                 | Description                 |
-+========================+=============================+
-| Common residues file   | Text file containing common |
-|                        | residues, this file is used |
-|                        | as input to the mean square |
-|                        | fluctuations script         |
-+------------------------+-----------------------------+
-
 Mean square fluctuation
 -------------------------------
 
@@ -164,7 +136,7 @@ level. But obviously must compare only the residues that are common in each mode
 +------------------------+------------+--------------------+-----------------------------+
 | Input (*\*required*)   | Input type | Flag               | Description                 |
 +========================+============+====================+=============================+
-| PDB file *             | File       |``--pdb``           |                             |
+| PDB file *             | File       |``--pdb``           | PDB input file              |
 |                        |            |                    |                             |
 +------------------------+------------+--------------------+-----------------------------+
 | Conformation PDB       | File       |``--pdfConf2``      | When assigned, caclulates   |
@@ -209,17 +181,14 @@ Identifies Modes responsible for conformational change for a molecule wth 15 cop
 +------------------------+------------+--------------------+-----------------------------+
 | Input (*\*required*)   | Input type | Flag               | Description                 |
 +========================+============+====================+=============================+
-| Aligned PDB file *     | File       |``--pdbConfAligned``|                             |
-|                        |            |                    |                             |
+| Aligned PDB file *     | File       |``--pdbConfAligned``| PDB file of the             |
+|                        |            |                    | conformational change       |
 +------------------------+------------+--------------------+-----------------------------+
-| Aligned protomer PDB   | File       |``--pdbProtAligned``|                             |
-| file *                 |            |                    |                             |
+| PDB *                  | File       |``--pdbANM``        | PDB file that was useed to  |
+|                        |            |                    | run ANM                     |
 +------------------------+------------+--------------------+-----------------------------+
-| PDB *                  | File       |``--pdbANM``        |                             |
-|                        |            |                    |                             |
-+------------------------+------------+--------------------+-----------------------------+
-| VT matrix file *       | File       |``--vtMatrix``      | VT values from ANM script   |
-|                        |            |                    |                             |
+| VT matrix file *       | File       |``--vtMatrix``      | Eigenavalues obtained from  |
+|                        |            |                    | ANM script                  |
 +------------------------+------------+--------------------+-----------------------------+
 | Output file            | File       |``--output``        | Specify a name for the PDB	 |
 |                        |            |                    | output file. Default:       |
@@ -231,12 +200,13 @@ Identifies Modes responsible for conformational change for a molecule wth 15 cop
 +------------------------+-----------------------------+
 | Output                 | Description                 |
 +========================+=============================+
-|                        |                             |
-|                        |                             |
+| Conformation file      | Text file with the overlap  |
+|                        | and correlation of each     |
+|                        | mode                        |
 +------------------------+-----------------------------+
 
 
-Trajectory pentamer
+Mode visualisation
 -------------------------------
 
 Generates a trajectory with arrows that can be viewed in the tool VMD
@@ -250,11 +220,11 @@ Generates a trajectory with arrows that can be viewed in the tool VMD
 +------------------------+------------+--------------------+-----------------------------+
 | Input (*\*required*)   | Input type | Flag               | Description                 |
 +========================+============+====================+=============================+
-| Coarse grained PDB     | File       |``--pdb``           |                             |
-| file *                 |            |                    |                             |
+| Coarse grained PDB     | File       |``--pdb``           | Coarse grained PDB input    |
+| file *                 |            |                    | file                        |
 +------------------------+------------+--------------------+-----------------------------+
-|                        | File       |``--mode``          |                             |
-|                        |            |                    |                             |
+| Mode index value       | Ingeter    |``--mode``          | Value specifying the index  |
+|                        |            |                    | of the mode                 |
 +------------------------+------------+--------------------+-----------------------------+
 | Vector file *          | File       |``--vectorFile``    | File containing eigen       |
 |                        |            |                    | vectors                     |
@@ -267,9 +237,10 @@ Outputs are generated in output/VISUALISE directory by default.
 +------------------------+-----------------------------+
 | Output                 | Description                 |
 +========================+=============================+
-| PDB file               |                             |
-|                        |                             |
+| PDB file               | Output PDM to be opened in  |
+|                        | VMD                         |
 +------------------------+-----------------------------+
-| Arrows file            | Text file to draw arrows in |
-|                        | the VMD visualizer          |
+| Arrows file            | Tcl script that can be      |
+|                        | copied into the VMD TK      |
+|                        | console                     |
 +------------------------+-----------------------------+
