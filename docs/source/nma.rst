@@ -4,7 +4,7 @@ NMA Scripts
 Coarse grain
 -------------------------------
 
-Takes a protomer structure and coarse grains to select a set amount of C-Beta
+Takes a protomer structure and coarse grains to select a set amount of C-Beta atoms
 
 **Command:** ::
 	
