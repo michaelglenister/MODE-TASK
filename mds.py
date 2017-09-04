@@ -77,8 +77,8 @@ def get_options():
 		sys.exit(1)
 		
 	if args.mds_type == None:
-		print 'No MDS type given... pefroming non-metric MDS...'
-		args.mds_type='nm'
+		print 'No MDS type given... pefroming metric MDS...'
+		args.mds_type='metric'
 	if args.mds_type not in  ('nm', 'metric', None):
 		print 'ERROR: no such option as', args.mds_type, 'for flag -mt \nPlease see the usage\n\n '
 		sys.exit(1)
@@ -168,7 +168,7 @@ def get_pair_rmsd(pca_traj, sele_grp):
 def mds(input, type):
 	'metric and nonmetric Multidimensional scaling'
 	seed = np.random.RandomState(seed=1)
-	np.savetxt('mds_input.txt', input) ## testing value error
+	#np.savetxt('mds_input.txt', input) ## testing value error
 	if type == 'nm':
 		nmds=MDS(n_components=100, max_iter=3000, metric=False, random_state=seed, dissimilarity="precomputed")
 		print "Performing non-metric MDS.."
