@@ -144,41 +144,71 @@
 <div class="section" id="normal-mode-analysis-nma">
 <h2>Normal Mode Analysis (NMA)<a class="headerlink" href="#normal-mode-analysis-nma" title="Permalink to this headline">¶</a></h2>
 <p>NMA analyses the oscillations of a structure. For proteins, it is useful for studying the large amplitude motions for a selected conformation. The main assumption is that the motions are harmonic. Thus, each normal mode, which is a concerted motion of many atoms, acts as a simple harmonic oscillator and it is independent of all the other normal modes.</p>
-<p>For a harmonic oscillator with a mass m supported on a spring with force constant <em>k</em>, the potential energy of the system, <em>V</em> = <em>kx</em><sup>2</sup>, for an extension <em>x</em> leads to the restoring force,</p>
-<img alt="_images/nma1.png" src="_images/nma1.png" />
-<p>By substituting this Hooke’s Law force into Newton’s Law, <strong>F</strong> = <em>m</em><strong>a</strong> leads to the differential equation,</p>
-<img alt="_images/nma2.png" src="_images/nma2.png" />
-<p>The solution is, <img alt="nma3" src="_images/nma3.png" /> with <img alt="nma4" src="_images/nma4.png" /> being the frequency of the vibration.</p>
-<p>In three dimensions and for a set of <em>N</em> atoms, one has the corresponding generalized equation,</p>
-<p><strong>-HX</strong> = <strong>-</strong> <img alt="nma5" src="_images/nma5.png" /> <strong>X</strong></p>
-<p>where <strong>H</strong> is the 3<em>N</em> x 3<em>N</em> Hessian symmetric matrix of force constants and <strong>X</strong> is the 3<em>N</em> x 1 vector of the positions of the atoms. The solutions of the equation may be cast in the form of an eigenvalue decomposition of <strong>H</strong> where the eigenvectors are the mass weighted displacements of the normal coordinates; i.e. the independent vibrational motions of the collection of atoms. The corresponding eigenvalues are the negative of the squared normal mode frequencies of each mode. <strong>H</strong> has exactly six zero eigenvalues for the translations and rotations of the molecule in three-dimensional space.</p>
+<p>For a harmonic oscillator with a mass <span class="math">\(m\)</span> supported on a spring with force constant <span class="math">\(k\)</span>, the potential energy of the system, <span class="math">\(V = kx^2\)</span>, for an extension <span class="math">\(x\)</span> leads to the restoring force,</p>
+<div class="math">
+\[\mathbf{F} = -\frac{dV}{dx} = -kx\]</div>
+<p>By substituting this Hooke’s Law force into Newton’s Law, <span class="math">\(\mathbf{F} = m\mathbf{a}\)</span> leads to the differential equation,</p>
+<div class="math">
+\[-kx = m\frac{d^2x}{dt^2}\]</div>
+<p>The solution is,</p>
+<div class="math">
+\[-kx = -4{\pi}^2v^2mx\]</div>
+<p>with <span class="math">\(v\)</span> being the frequency of the vibration.</p>
+<p>In three dimensions and for a set of <span class="math">\(N\)</span> atoms, one has the corresponding generalized equation,</p>
+<p><span class="math">\(-\mathbf{HX} = -4{\pi}^2v^2\mathbf{X}\)</span></p>
+<p>where <span class="math">\(\mathbf{H}\)</span> is the <span class="math">\(3N\)</span>x<span class="math">\(3N\)</span> Hessian symmetric matrix of force constants and <span class="math">\(\mathbf{X}\)</span> is the <span class="math">\(3N\)</span>x<span class="math">\(1\)</span> vector of the positions of the atoms. The solutions of the equation may be cast in the form of an eigenvalue decomposition of <span class="math">\(\mathbf{H}\)</span> where the eigenvectors are the mass weighted displacements of the normal coordinates; i.e. the independent vibrational motions of the collection of atoms. The corresponding eigenvalues are the negative of the squared normal mode frequencies of each mode. <span class="math">\(\mathbf{H}\)</span> has exactly six zero eigenvalues for the translations and rotations of the molecule in three-dimensional space.</p>
 <p>In NMA of proteins, it is central to obtain a good representation of the protein for a proper analysis of the available modes of motion. One approach would be to obtain the Hessian matrix from the second derivatives of the energy for the conformation of interest following a very stringent minimization of the molecule. The latter is important as NMA is based on the harmonic assumption which is only a valid approximation at the bottom of the potential energy minima. For the complex potentials representing interactions in proteins in the water environment, these second derivatives may be obtained through numerical methods which are extremely costly.</p>
-<p>Alternatively, <strong>H</strong> may be approximated by the variance-covariance matrix of the protein, obtained from a molecular dynamics (MD) simulation of suitable length. This is relevant as it may be shown through employing statistical mechanics that the average displacements of nodes from a mean structure for an atom i, 🜂<strong>R</strong><sub>i</sub> are related to those of all other atoms through the relationship,</p>
-<p>&lt; 🜂<strong>R</strong><sub>i</sub> ∙ 🜂<strong>R</strong><sub>j</sub> &gt; =3<em>k</em><sub>B</sub><em>T</em>  <strong>H</strong><sup>-1</sup></p>
-<p>It is important to select the length of the MD simulation for this procedure such that the molecule samples only the state of interest,<sup>1</sup> since when more than a single potential energy well along the conformational space of the molecule is sampled, the harmonic assumption would again fail.</p>
-<p>As a third alternative for obtaining the Hessian, one may make use of the elastic network property of a folded protein. Here, the assumption is that, once a protein folds to a functionally relevant conformation, its total energy is represented by a simple harmonic potential such that residues are connected to their nearest neighbors via elastic springs. By further employing the assumption that the spring constants, ϒ, are equivalent in all pairs of interactions, one arrives at the anisotropic network model (ANM).<sup>2</sup></p>
-<p><strong>H</strong> is thus composed of <em>N</em> x <em>N</em> super-elements, i.e.,</p>
-<img alt="_images/nma7.png" src="_images/nma7.png" />
-<p>where each super-element <strong>H</strong><sub>ij</sub>   is a 3 x 3 matrix that holds the anisotropic information regarding the orientation of nodes <em>i</em>,*j*:</p>
-<img alt="_images/nma8.png" src="_images/nma8.png" />
-<p>Denoting the separation between nodes <em>i</em> and <em>j</em> by <img alt="nma9" src="_images/nma9.png" /> , the elements of the off-diagonal super-elements <strong>H</strong><sub>ij</sub> are given by:</p>
-<img alt="_images/nma10.png" src="_images/nma10.png" />
-<p>and those of the diagonal super-elements <strong>H</strong><sub>ii</sub> are obtained via,</p>
-<p><img alt="nma11" src="_images/nma11.png" /> for the diagonal terms</p>
-<p><img alt="nma12" src="_images/nma12.png" /> for the off-diagonal terms.</p>
-<p>In this representation of the protein, the structure is coarse-grained at the level of a residue, usually through the coordinates of Cα or Cβ atoms obtained from the protein data bank. Moreover, pairs of nodes are assumed to interact if they are within a pre-selected cut-off distance, <em>r</em><sub>c</sub>. For large structures such as viruses, further coarse graining may be shown to well describe the most collective modes of motion.</p>
-<p>The selection of <em>r</em><sub>c</sub> has been the cause of much research. While it is clear that there is a lower bound where the condition of six zero eigenvalues of <strong>H</strong> should be satisfied, distances in the range 10-25 Å have been employed in the literature. It has been shown by a systematic study of increasing <em>r</em><sub>c</sub> that the collective modes of motion do not change beyond a certain value for proteins; i.e. selection of too large <em>r</em><sub>c</sub> is safer than a too small value.<sup>3</sup> The reason for this has been explained by expressing <strong>H</strong> as the sum of an essential and a trivial part. The essential part of <strong>H</strong> includes all the local information necessary for the correct representation of the modes. On the other hand, due to the symmetries in a protein originating from the orientational order of closely packed spheres, the effects from the long range neighbors cancel out.</p>
-<ol class="arabic simple">
-<li><ol class="first upperalpha" start="3">
-<li>Atilgan, O.B. Okan, A.R. Atilgan, “Network-based Models as Tools Hinting at Non-evident Protein Functionality,” Annual Review of Biophysics,&nbsp;41, 205-225 (2012).</li>
-</ol>
-</li>
-<li>A.R. Atilgan, S.R., Durell, R.L. Jernigan, M.C. Demirel, O. Keskin, I. Bahar, “Anisotropy of Fluctuation Dynamics of Proteins with an Elastic Network Model,” Biophysical Journal,&nbsp;80, 505-515.</li>
-<li><ol class="first upperalpha" start="3">
-<li>Atilgan, O.B. Okan, A.R. Atilgan, “Orientational Order Governs Collectivity of Folded Proteins,”&nbsp;Proteins: Structure, Function, Bioinformatics, 78, 3363-3375 (2010).</li>
-</ol>
-</li>
-</ol>
+<p>Alternatively, <span class="math">\(\mathbf{H}\)</span> may be approximated by the variance-covariance matrix of the protein, obtained from a molecular dynamics (MD) simulation of suitable length. This is relevant as it may be shown through employing statistical mechanics that the average displacements of nodes from a mean structure for an atom <span class="math">\(i, \Delta \mathbf{R}_{i}\)</span> are related to those of all other atoms through the relationship,</p>
+<div class="math">
+\[&lt; \Delta \mathbf{R}_{i} \cdot \Delta \mathbf{R}_{j} &gt; = 3k_{B}T \mathbf{H}^{-1}\]</div>
+<p>It is important to select the length of the MD simulation for this procedure such that the molecule samples only the state of interest, <a class="footnote-reference" href="#id4" id="id1">[1]</a> since when more than a single potential energy well along the conformational space of the molecule is sampled, the harmonic assumption would again fail.</p>
+<p>As a third alternative for obtaining the Hessian, one may make use of the elastic network property of a folded protein. Here, the assumption is that, once a protein folds to a functionally relevant conformation, its total energy is represented by a simple harmonic potential such that residues are connected to their nearest neighbors via elastic springs. By further employing the assumption that the spring constants, <span class="math">\(\gamma\)</span>, are equivalent in all pairs of interactions, one arrives at the anisotropic network model (ANM). <a class="footnote-reference" href="#id5" id="id2">[2]</a></p>
+<p><span class="math">\(\mathbf{H}\)</span> is thus composed of <span class="math">\(N\)</span>x<span class="math">\(N\)</span> super-elements, i.e.,</p>
+<div class="math">
+\[\begin{split}\mathbf{H} =
+ \begin{bmatrix}
+  \mathbf{H}_{1,1} &amp; \mathbf{H}_{1,2} &amp; \cdots &amp; \mathbf{H}_{1,\mathbf{N}} \\
+  \mathbf{H}_{2,1} &amp;         &amp;        &amp; \mathbf{H}_{2,\mathbf{N}} \\
+  \vdots  &amp;         &amp;        &amp; \vdots  \\
+  \mathbf{H}_{\mathbf{N},1} &amp;         &amp;        &amp; \mathbf{H}_{\mathbf{N},\mathbf{N}}
+ \end{bmatrix}\end{split}\]</div>
+<p>where each super-element <span class="math">\(\mathbf{H_{ij}}\)</span>   is a 3x3 matrix that holds the anisotropic information regarding the orientation of nodes <span class="math">\(i,j\)</span>:</p>
+<div class="math">
+\[\begin{split}\mathbf{H_{ij}} =
+    \begin{bmatrix}
+ \partial ^2 V / \partial X_{i} \partial X_{j} &amp; \partial ^2 V / \partial X_{i} \partial Y_{j} &amp; \partial ^2 V / \partial X_{i} \partial Z_{j} \\
+ \partial ^2 V / \partial Y_{i} \partial X_{j} &amp; \partial ^2 V / \partial Y_{i} \partial Y_{j} &amp; \partial ^2 V / \partial Y_{i} \partial Z_{j} \\
+ \partial ^2 V / \partial Z_{i} \partial X_{j} &amp; \partial ^2 V / \partial Z_{i} \partial Y_{j} &amp; \partial ^2 V / \partial Z_{i} \partial Z_{j} \\
+\end{bmatrix}\end{split}\]</div>
+<p>Denoting the separation between nodes <span class="math">\(i\)</span> and <span class="math">\(j\)</span> by <span class="math">\(S_{ij}\)</span>, the elements of the off-diagonal super-elements <span class="math">\(\mathbf{H_{ij}}\)</span> are given by:</p>
+<div class="math">
+\[\partial ^2 V / \partial X_{i} \partial Y_{j} = -\gamma (X_{j}-X_{i})(Y_{j}-Y_{i})/S^2_{ij}\]</div>
+<p>and those of the diagonal super-elements <span class="math">\(\mathbf{H_{ij}}\)</span> are obtained via,</p>
+<div class="math">
+\[\partial ^2 V / \partial X^2_{i} = \gamma \sum_{j}(X_{j}-X_{i})^2/S^2_{ij} \text{ } \text{ } \text{ for the diagonal terms}\]</div>
+<div class="math">
+\[\partial ^2 V / \partial X_{i} \partial Y_{j} = \gamma \sum_{j} (X_{j}-X_{i})(Y_{j}-Y_{i})/S^2_{ij} \text{ } \text{ } \text{ for the off-diagonal terms.}\]</div>
+<p>In this representation of the protein, the structure is coarse-grained at the level of a residue, usually through the coordinates of <span class="math">\(\mathbf{C_\alpha}\)</span> or <span class="math">\(\mathbf{C_\beta}\)</span> atoms obtained from the protein data bank. Moreover, pairs of nodes are assumed to interact if they are within a pre-selected cut-off distance, <span class="math">\(r_{c}\)</span>. For large structures such as viruses, further coarse graining may be shown to well describe the most collective modes of motion.</p>
+<p>The selection of <span class="math">\(r_{c}\)</span> has been the cause of much research. While it is clear that there is a lower bound where the condition of six zero eigenvalues of <span class="math">\(\mathbf{H}\)</span> should be satisfied, distances in the range 10-25 Å have been employed in the literature. It has been shown by a systematic study of increasing <span class="math">\(r_{c}\)</span> that the collective modes of motion do not change beyond a certain value for proteins; i.e. selection of too large <span class="math">\(r_{c}\)</span> is safer than a too small value. <a class="footnote-reference" href="#id6" id="id3">[3]</a> The reason for this has been explained by expressing <span class="math">\(\mathbf{H}\)</span> as the sum of an essential and a trivial part. The essential part of <span class="math">\(\mathbf{H}\)</span> includes all the local information necessary for the correct representation of the modes. On the other hand, due to the symmetries in a protein originating from the orientational order of closely packed spheres, the effects from the long range neighbors cancel out.</p>
+<p class="rubric">References</p>
+<table class="docutils footnote" frame="void" id="id4" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>C Atilgan, OB Okan, AR Atilgan, “Network-based Models as Tools Hinting at Non-evident Protein Functionality,” Annual Review of Biophysics,&nbsp;41, 205-225 (2012).</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id5" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td>AR Atilgan, SR Durell, RL Jernigan, MC Demirel, O Keskin, I Bahar, “Anisotropy of Fluctuation Dynamics of Proteins with an Elastic Network Model,” Biophysical Journal,&nbsp;80, 505-515.</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id6" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[3]</a></td><td>C Atilgan, OB Okan, AR Atilgan, “Orientational Order Governs Collectivity of Folded Proteins,”&nbsp;Proteins: Structure, Function, Bioinformatics, 78, 3363-3375 (2010).</td></tr>
+</tbody>
+</table>
 </div>
 <div class="section" id="principle-component-analysis-pca">
 <h2>Principle Component Analysis (PCA)<a class="headerlink" href="#principle-component-analysis-pca" title="Permalink to this headline">¶</a></h2>
@@ -187,48 +217,66 @@ respect to a fixed reference frame at a given time. The mean squared positional 
 each atom are readily calculated once the total simulation and sampling times are set. Sufficiency of both
 total observation period and the sampling rate are crucial in collecting the data so as to identify biologically
 relevant motions.
-Let us monitor the variance of each residue’s Cα (or Cβ) atom during a MD simulation of a protein. Suppose
+Let us monitor the variance of each residue’s <span class="math">\(\mathbf{C_\alpha}\)</span> or <span class="math">\(\mathbf{C_\beta}\)</span> atom during a MD simulation of a protein. Suppose
 that these variances do not change significantly in time, like a stationary process. This suggests that within
 the period of observation we have recorded the motion about one (native) conformation. Though constant in
 time for a given residue, the variances do change from one residue to another. It is important to distinguish
 the differences between the variances of different parts of the protein and to explain the root cause of these
 differences; e.g. while loop or disordered regions exhibit high values, relatively rigid parts, such as helices
 or sheets display lower variances.</p>
-<p>PCA<sup>1</sup> operates on the variance-covariance matrix, <strong>C</strong>, of the protein, obtained from a MD simulation of any
+<p>PCA <a class="footnote-reference" href="#id9" id="id7">[4]</a> operates on the variance-covariance matrix, <span class="math">\(\mathbf{C}\)</span>, of the protein, obtained from a MD simulation of any
 length; thus, the observed process need not be stationary. It is useful in distinguishing the different parts of
-the energy landscape sampled during the MD simulation. To obtain <strong>C</strong>, first the protein coordinates are
+the energy landscape sampled during the MD simulation. To obtain <span class="math">\(\mathbf{C}\)</span>, first the protein coordinates are
 superimposed on a reference structure, usually the initial coordinates, or the average coordinates. The
-displacement vector for each residue (described by the Cα or Cβ coordinates of the residue <em>i</em> ) at a time point
-<em>t</em>,🜂<strong>R</strong><sub>i</sub>(t) is obtained. For a set of <em>M</em> recorded coordinates, these are organized in the trajectory fluctuation
-matrix of order 3<em>N</em> x <em>M</em>:</p>
-<img alt="_images/pca1.png" src="_images/pca1.png" />
-<p>The 3<em>N</em> x 3<em>N</em> <strong>C</strong> matrix is then obtained via the operation,</p>
-<img alt="_images/pca2.png" src="_images/pca2.png" />
-<p>If a single energy well along the potential energy surface of a protein is sampled, then <strong>C</strong> approximates the
-inverse Hessian, <strong>H</strong><sup>-1</sup> , as the harmonic approximation applies in this case (see NMA for details). However, if
-different parts of the landscape are sampled, the decomposition of <strong>C</strong> will carry information on all the
+displacement vector for each residue (described by the <span class="math">\(\mathbf{C_\alpha}\)</span> or <span class="math">\(\mathbf{C_\beta}\)</span> coordinates of the residue <span class="math">\(i\)</span>) at a time point
+<span class="math">\(t, \Delta \mathbf{R}_{i}(t)\)</span> is obtained. For a set of <span class="math">\(M\)</span> recorded coordinates, these are organized in the trajectory fluctuation
+matrix of order <span class="math">\(3N\)</span>x<span class="math">\(M\)</span>:</p>
+<div class="math">
+\[\begin{split}\Delta \mathbf{R} =
+    \begin{bmatrix}
+  \Delta \mathbf{R}_{1}(t_{1}) &amp; \Delta \mathbf{R}_{1}(t_{2}) &amp; \cdot &amp; \Delta \mathbf{R}_{1}(t_{M}) \\
+  \Delta \mathbf{R}_{2}(t_{1}) &amp; \Delta \mathbf{R}_{2}(t_{2}) &amp; \cdot &amp; \Delta \mathbf{R}_{2}(t_{M}) \\
+  \Delta \mathbf{R}_{3}(t_{1}) &amp; \Delta \mathbf{R}_{3}(t_{2}) &amp; \cdot &amp; \Delta \mathbf{R}_{3}(t_{M}) \\
+  \cdot &amp; \cdot &amp; \cdot &amp; \cdot \\
+  \cdot &amp; \cdot &amp; \cdot &amp; \cdot \\
+  \Delta \mathbf{R}_{n}(t_{1}) &amp; \Delta \mathbf{R}_{n}(t_{2}) &amp;  &amp; \Delta \mathbf{R}_{n}(t_{M}) \\
+\end{bmatrix}\end{split}\]</div>
+<p>The <span class="math">\(3N\)</span>x<span class="math">\(3N\)</span> <span class="math">\(\mathbf{C}\)</span> matrix is then obtained via the operation,</p>
+<div class="math">
+\[\mathbf{C} = \Delta \mathbf{R} \Delta \mathbf{R}^{\mathbf{T}}\]</div>
+<p>If a single energy well along the potential energy surface of a protein is sampled, then <span class="math">\(\mathbf{C}\)</span> approximates the
+inverse Hessian, <span class="math">\(\mathbf{H}^{-1}\)</span> , as the harmonic approximation applies in this case (see NMA for details). However, if
+different parts of the landscape are sampled, the decomposition of <span class="math">\(\mathbf{C}\)</span> will carry information on all the
 regions entered during the simulation. Thus, the diagonalization,</p>
-<img alt="_images/pca3.png" src="_images/pca3.png" />
-<p>yields the eigenvectors and the corresponding eigenvalues of the <strong>C</strong> matrix. <strong>Ʌ</strong> is the 3<em>N</em> x 3<em>N</em> diagonal
-matrix holding the eigenvalues <em>λ</em><sub>i</sub> with six zero values corresponding to the translations and rotations of the
-molecule. The <em>i</em> <sup>th</sup>  row of the <strong>U</strong> matrix holding the eigenvector corresponding to the <em>i</em> <sup>th</sup> eigenvalue. The
-trajectory <img alt="pca4" src="_images/pca4.png" /> may be projected onto the eigenvectors to obtain the principal components, <em>q</em><sub>i</sub>, which are the rows
-of the 3<em>N</em> x <em>M</em> <strong>Q</strong> matrix.</p>
-<img alt="_images/pca5.png" src="_images/pca5.png" />
+<div class="math">
+\[\mathbf{C = U \Lambda U ^T}\]</div>
+<p>yields the eigenvectors and the corresponding eigenvalues of the <span class="math">\(\mathbf{C}\)</span> matrix. <span class="math">\(\mathbf{\Lambda}\)</span> is the <span class="math">\(3N\)</span>x<span class="math">\(3N\)</span> diagonal
+matrix holding the eigenvalues <span class="math">\(\lambda_i\)</span> with six zero values corresponding to the translations and rotations of the
+molecule. The <span class="math">\(i\mathrm{^{th}}\)</span>  row of the <span class="math">\(\mathbf{U}\)</span> matrix holding the eigenvector corresponding to the <span class="math">\(i\mathrm{^{th}}\)</span> eigenvalue. The
+trajectory <span class="math">\(\Delta \mathbf{R}\)</span>  may be projected onto the eigenvectors to obtain the principal components, <span class="math">\(q_i\)</span>, which are the rows
+of the <span class="math">\(3N\)</span>x<span class="math">\(M\)</span> <span class="math">\(\mathbf{Q}\)</span> matrix.</p>
+<div class="math">
+\[\mathbf{Q = U} \Delta \mathbf{R}\]</div>
 <p>Since a few principal components usually carry the largest amount of information of the trajectory, the
-different regions of the conformational space will manifest as more than one blob in a plot of <em>q</em><sub>i</sub> versus <em>q</em><sub>j</sub>
-where <em>i</em> and <em>j</em> are small. Furthermore, the size of the blobs in the plots will provide information on the width
+different regions of the conformational space will manifest as more than one blob in a plot of <span class="math">\(q_i\)</span> versus <span class="math">\(q_j\)</span>
+where <span class="math">\(i\)</span> and <span class="math">\(j\)</span> are small. Furthermore, the size of the blobs in the plots will provide information on the width
 of the potential wells sampled. Finally, the time points when passage between different wells occur may be
 pinpointed by this method.
-The different implementations of the construction of the <strong>C</strong> matrix and the various ways of decomposing it
-have been discussed in detail in the literature,<sup>2</sup> and implemented in MODE-TASK.</p>
-<ol class="arabic simple">
-<li><ol class="first upperalpha">
-<li>Amadei, A.B.M. Linssen, H.J.C. Berendsen, “Essential Dynamics of Proteins,” Proteins: Structure, Function and Genetics, 17, 412-425 (1993).</li>
-</ol>
-</li>
-<li>C.C. David, D.J. Jacobs, “Principal component analysis: a method for determining the essential dynamics of proteins,” Methods in Molecular Biology, 1084, 193-226 (2014).</li>
-</ol>
+The different implementations of the construction of the <span class="math">\(\mathbf{C}\)</span> matrix and the various ways of decomposing it
+have been discussed in detail in the literature, <a class="footnote-reference" href="#id10" id="id8">[5]</a> and implemented in MODE-TASK.</p>
+<p class="rubric">References</p>
+<table class="docutils footnote" frame="void" id="id9" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id7">[4]</a></td><td>A Amadei, ABM Linssen, HJC Berendsen, “Essential Dynamics of Proteins,” Proteins: Structure, Function and Genetics, 17, 412-425 (1993).</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id10" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id8">[5]</a></td><td>CC David, DJ Jacobs, “Principal component analysis: a method for determining the essential dynamics of proteins,” Methods in Molecular Biology, 1084, 193-226 (2014).</td></tr>
+</tbody>
+</table>
 </div>
 </div>
 
@@ -282,6 +330,7 @@ have been discussed in detail in the literature,<sup>2</sup> and implemented in 
       <script type="text/javascript" src="_static/jquery.js"></script>
       <script type="text/javascript" src="_static/underscore.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 
