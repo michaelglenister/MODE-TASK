@@ -217,8 +217,8 @@ def get_rmsd():
 	my_time = strftime("%Y-%m-%d  %a  %H:%M:%S", gmtime())
 	title = '\tcreated by pca.py\t'
 	legends = '@    title "RMSD"\n\
-	@    xaxis  label "Time"\n\
-	@    yaxis  label "RMSD"\n\
+	@    xaxis  label "Time (ps)"\n\
+	@    yaxis  label "RMSD (\cE\C) "\n\
 	@	TYPE xy\n'
 	
 	pf = open(rmsd_fname, 'w')
