@@ -200,13 +200,13 @@ def get_rmsf(pca_traj, sele_grp, trj_eval, out_dir):
 	rf.close()
 	my_time = strftime("%Y-%m-%d  %a  %H:%M:%S", gmtime())
 	title = '\tcreated by pca.py\t'
-	subtitle='@    subtitle "RMSF"\
+	subtitle='@    subtitle "RMSF (\cE\C)"\
 	@    subtitle font 0\
 	@    subtitle size 1.000000\
 	@    subtitle color 1'
 	legends = '@    title "Un-weighted RMSD modes"\n\
-	@    xaxis  label "Residue"\n\
-	@    yaxis  label "RMSD"\n\
+	@    xaxis  label "#Residue"\n\
+	@    yaxis  label "RMSD (\cE\C)"\n\
 	@	TYPE xy\n'
 	
 	pf = open(pc1_rmsf_fname, 'w')
@@ -227,8 +227,8 @@ def get_rmsf(pca_traj, sele_grp, trj_eval, out_dir):
 	@    subtitle size 1.000000\
 	@    subtitle color 1'
 	legends = '@    title "RMSD modes"\n\
-	@    xaxis  label "Residue"\n\
-	@    yaxis  label "RMSD"\n\
+	@    xaxis  label "#Residue"\n\
+	@    yaxis  label "RMSD (\cE\C)"\n\
 	@	TYPE xy\n'
 	
 	pf = open(pc1_rmsf_fname, 'w')
@@ -249,8 +249,8 @@ def get_rmsf(pca_traj, sele_grp, trj_eval, out_dir):
 	my_time = strftime("%Y-%m-%d  %a  %H:%M:%S", gmtime())
 	title = '\tcreated by pca.py\t'
 	legends = '@    title "RMSD modes"\n\
-	@    xaxis  label "Residue"\n\
-	@    yaxis  label "RMSD"\n\
+	@    xaxis  label "#Residue"\n\
+	@    yaxis  label "RMSD (\cE\C)"\n\
 	@	TYPE xy\n'
 	
 	pf = open(pc2_rmsf_fname, 'w')
