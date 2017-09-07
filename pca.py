@@ -55,7 +55,7 @@ def set_option():
 	parser.add_argument("-pt", "--pca_type", dest="pca_type", help="PCA method. Default is svd (Single Value Decomposition) PCA. Options are:\
 					evd, kpca, svd, ipca. If svd is selected, additional arguments can be passed by flag -st. If KernelPCA is selected kernel type can also be defined by flag -kt") 	
 	parser.add_argument("-nc", "--comp", type=int, dest="comp", help="Number of components to keep in a PCA object. If not set, by default all the components will be kept.")	
-	parser.add_argument("-kt", "--kernel_type", dest="kernel_type", help="Type of kernel for KernalPCA. default is linear. Options are :"
+	parser.add_argument("-kt", "--kernel_type", dest="kernel_type", help="Type of kernel for KernelPCA. default is linear. Options are :"
 					"linear, poly, rbf, sigmoid, cosine, precomputed") 
 	parser.add_argument("-st", "--svd_solver", dest="svd_solver", help="Type of svd_solver for SVD (Single Value Decomposition) PCA. Default is auto. Options are :"				  "auto, full, arpack, randomized") 
 	args = parser.parse_args()	
