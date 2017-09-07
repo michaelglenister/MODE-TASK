@@ -224,7 +224,8 @@ def distance_pca(int_cord1):
 	
 	write_plots('dpca_projection', dpca_reduced, out_dir)
 	write_pcs('dpca_pcs', dpca, out_dir)
-	write_fig('dpca_projection', dpca_reduced, out_dir)
+	title='internal cordinate PCA Projection'
+	write_fig('dpca_projection', dpca_reduced, out_dir, title)
 	
 	pc1_cos=get_cosine(dpca_reduced, 0)
 	print 'cosine content of first PC=',pc1_cos

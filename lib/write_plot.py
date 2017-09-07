@@ -93,19 +93,18 @@ def write_plots(file_name, pca, out_dir):
 	
 	return;
 
-def write_fig(file_name, pca, out_dir):
+def write_fig(file_name, pca, out_dir, title):
 	#========================================
 	# coloured png using matplotlib
 	#=================================================
 	## # plot 1 and 2 PC
-	
 	fname = out_dir+'/'+file_name+'1_2'+'.png'
 	fig=plt.figure()
 	col=range(1,len(pca[:,0])+1) # color map to the number of frames in trajectory 
 	plt.scatter(pca[:,0], pca[:,1], marker='x', c=col)
 	plt.xlabel('PC1')
 	plt.ylabel('PC2')
-	plt.title('Cartesian coordinate PCA')
+	plt.title(title)
 	cbar = plt.colorbar()
 	cbar.set_label('Time [ps]')
 	fig.savefig(fname)
@@ -116,7 +115,7 @@ def write_fig(file_name, pca, out_dir):
 	plt.scatter(pca[:,0], pca[:,2], marker='x', c=col)
 	plt.xlabel('PC1')
 	plt.ylabel('PC3')
-	plt.title('Cartesian coordinate PCA')
+	plt.title(title)
 	cbar = plt.colorbar()
 	cbar.set_label('Time [ps]')
 	fig.savefig(fname)
@@ -127,7 +126,7 @@ def write_fig(file_name, pca, out_dir):
 	plt.scatter(pca[:,1], pca[:,2], marker='x', c=col)
 	plt.xlabel('PC2')
 	plt.ylabel('PC3')
-	plt.title('Cartesian coordinate PCA')
+	plt.title(title)
 	cbar = plt.colorbar()
 	cbar.set_label('Time [ps]')
 	fig.savefig(fname)

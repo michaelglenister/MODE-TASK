@@ -161,7 +161,8 @@ def tsne(input):
 	print "Performing TSNE..."
 	mpos = my_tsne.fit_transform(input)
 	write_plots('tsne_projection', mpos, out_dir)
-	write_fig('tsne_projection', mpos, out_dir)
+	title='t-SNE Projection'
+	write_fig('tsne_projection', mpos, out_dir, title)
 
 	return;
 

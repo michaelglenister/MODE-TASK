@@ -176,7 +176,8 @@ def mds(input, type):
 		
 		# write PC plots
 		write_plots('nmds_projection', npos, out_dir)
-		write_fig('nmds_projection', npos, out_dir)
+		title='nMDS Projection'
+		write_fig('nmds_projection', npos, out_dir, title)
 		# cosine content 
 		
 		pc1_cos=get_cosine(npos, 0)
@@ -195,7 +196,8 @@ def mds(input, type):
 		
 		# write PC plots
 		write_plots('mmds_projection', mpos, out_dir)
-		write_fig('mmds_projection', mpos, out_dir)
+		title='mMDS Projection'
+		write_fig('mmds_projection', mpos, out_dir, title)
 		# cosine content 
 		
 		pc1_cos=get_cosine(mpos, 0)

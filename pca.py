@@ -250,7 +250,8 @@ def svd_pca(svd):
 	# write the plots 
 	
 	write_plots('pca_projection', pca_sele_traj_reduced, out_dir)
-	write_fig('pca_projection', pca_sele_traj_reduced, out_dir)
+	title='PCA Projection'
+	write_fig('pca_projection', pca_sele_traj_reduced, out_dir, title)
 
 	#write the pcs variance
 	write_pcs('pca_variance', pca_sele_traj, out_dir)
@@ -286,7 +287,8 @@ def my_kernelPCA(kernel):
 	
 	#write plots
 	write_plots('kpca_projection', kpca_reduced, out_dir)
-	write_fig('kpca_projection', kpca_reduced, out_dir)
+	title='kPCA Projection'
+	write_fig('kpca_projection', kpca_reduced, out_dir, title)
 
 	#write variance
 	kpca_variance_fname=out_dir+'/kpca_variance'
@@ -326,7 +328,8 @@ def incremental_pca():
 	
 	#write plots
 	write_plots('ipca_projection', ipca_reduced, out_dir)
-	write_fig('ipca_projection', ipca_reduced, out_dir)
+	title='iPCA Projection'
+	write_fig('ipca_projection', ipca_reduced, out_dir, title)
 	#write variance
 	#np.savetxt('ipca_variance', kpca.lambdas_)
 	pc1_cos=get_cosine(ipca_reduced, 0)
@@ -422,7 +425,8 @@ def my_pca():
 	arr_transformed = pca.T.dot(arr.T)
 	print arr_transformed.shape
 	write_plots('pca_projection', arr_transformed, out_dir)
-	write_fig('pca_projection', arr_transformed, out_dir)
+	title='PCA Projection'
+	write_fig('pca_projection', arr_transformed, out_dir, title)
 	
 	## RMSF 
 	get_rmsf(pca_traj, sele_grp, trj_eval, out_dir)
