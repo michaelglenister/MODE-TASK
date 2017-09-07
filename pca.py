@@ -422,7 +422,8 @@ def my_pca():
 	ef.close()
 	#========================================================
 	# transform the input data into choosen pc
-	arr_transformed = pca.T.dot(arr.T)
+	arr_transformed = arr.dot(pca)
+	#arr_transformed = pca.T.dot(arr.T)
 	print arr_transformed.shape
 	write_plots('pca_projection', arr_transformed, out_dir)
 	title='PCA Projection'
