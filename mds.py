@@ -77,7 +77,7 @@ def get_options():
 		sys.exit(1)
 		
 	if args.mds_type == None:
-		print 'No MDS type given... pefroming metric MDS...'
+		print 'No MDS type given... performing metric MDS...'
 		args.mds_type='metric'
 	if args.mds_type not in  ('nm', 'metric', None):
 		print 'ERROR: no such option as', args.mds_type, 'for flag -mt \nPlease see the usage\n\n '
