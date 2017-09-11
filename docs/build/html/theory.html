@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Theory &mdash; NMA-Task  documentation</title>
+  <title>Normal Mode Analysis (NMA) &mdash; Mode-Task  documentation</title>
   
 
   
@@ -33,8 +33,8 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="NMA-Task  documentation" href="index.html"/>
-        <link rel="next" title="NMA Scripts" href="nma.html"/>
+    <link rel="top" title="Mode-Task  documentation" href="index.html"/>
+        <link rel="next" title="NMA Scripts" href="nma_use.html"/>
         <link rel="prev" title="Installation" href="installation.html"/> 
 
   
@@ -53,7 +53,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> NMA-Task
+            <a href="index.html" class="icon icon-home"> Mode-Task
           
 
           
@@ -81,20 +81,24 @@
             
             
                 <p class="caption"><span class="caption-text">Getting started</span></p>
-<ul class="current">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Theory</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#normal-mode-analysis-nma">Normal Mode Analysis (NMA)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#principle-component-analysis-pca">Principle Component Analysis (PCA)</a></li>
 </ul>
-</li>
+<p class="caption"><span class="caption-text">Theory</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Normal Mode Analysis (NMA)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#principle-component-analysis-pca">Principle Component Analysis (PCA)</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Usage</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="nma.html">NMA Scripts</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pca.html">PCA Scripts</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nma_use.html">NMA Scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pca_use.html">PCA Scripts</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="nma_tut.html">NMA Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pca_tut.html">PCA Tutorial</a></li>
 </ul>
 
             
@@ -108,7 +112,7 @@
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="index.html">NMA-Task</a>
+        <a href="index.html">Mode-Task</a>
       </nav>
 
 
@@ -125,7 +129,7 @@
   <ul class="wy-breadcrumbs">
     <li><a href="index.html">Docs</a> &raquo;</li>
       
-    <li>Theory</li>
+    <li>Normal Mode Analysis (NMA)</li>
       <li class="wy-breadcrumbs-aside">
         
           
@@ -139,10 +143,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="theory">
-<h1>Theory<a class="headerlink" href="#theory" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="normal-mode-analysis-nma">
-<h2>Normal Mode Analysis (NMA)<a class="headerlink" href="#normal-mode-analysis-nma" title="Permalink to this headline">¶</a></h2>
+  <div class="section" id="normal-mode-analysis-nma">
+<h1>Normal Mode Analysis (NMA)<a class="headerlink" href="#normal-mode-analysis-nma" title="Permalink to this headline">¶</a></h1>
 <p>NMA analyses the oscillations of a structure. For proteins, it is useful for studying the large amplitude motions for a selected conformation. The main assumption is that the motions are harmonic. Thus, each normal mode, which is a concerted motion of many atoms, acts as a simple harmonic oscillator and it is independent of all the other normal modes.</p>
 <p>For a harmonic oscillator with a mass <span class="math">\(m\)</span> supported on a spring with force constant <span class="math">\(k\)</span>, the potential energy of the system, <span class="math">\(V = kx^2\)</span>, for an extension <span class="math">\(x\)</span> leads to the restoring force,</p>
 <div class="math">
@@ -211,7 +213,7 @@
 </table>
 </div>
 <div class="section" id="principle-component-analysis-pca">
-<h2>Principle Component Analysis (PCA)<a class="headerlink" href="#principle-component-analysis-pca" title="Permalink to this headline">¶</a></h2>
+<h1>Principle Component Analysis (PCA)<a class="headerlink" href="#principle-component-analysis-pca" title="Permalink to this headline">¶</a></h1>
 <p>A molecular dynamics (MD) simulation of a protein provides the positional movements of each atom with
 respect to a fixed reference frame at a given time. The mean squared positional fluctuations (variances) of
 each atom are readily calculated once the total simulation and sampling times are set. Sufficiency of both
@@ -278,7 +280,6 @@ have been discussed in detail in the literature, <a class="footnote-reference" h
 </tbody>
 </table>
 </div>
-</div>
 
 
            </div>
@@ -287,7 +288,7 @@ have been discussed in detail in the literature, <a class="footnote-reference" h
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="nma.html" class="btn btn-neutral float-right" title="NMA Scripts" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="nma_use.html" class="btn btn-neutral float-right" title="NMA Scripts" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="installation.html" class="btn btn-neutral" title="Installation" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>

@@ -1,0 +1,549 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>NMA Tutorial &mdash; Mode-Task  documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Mode-Task  documentation" href="index.html"/>
+        <link rel="next" title="PCA Tutorial" href="pca_tut.html"/>
+        <link rel="prev" title="PCA Scripts" href="pca_use.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Mode-Task
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Theory</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="theory.html">Normal Mode Analysis (NMA)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="theory.html#principle-component-analysis-pca">Principle Component Analysis (PCA)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="nma_use.html">NMA Scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pca_use.html">PCA Scripts</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">NMA Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#aim">Aim</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#create-a-working-directory">Create a working directory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#preparation-of-structures">Preparation of structures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#coarse-grain">Coarse grain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mode-decomposition">Mode decomposition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#indentification-of-modes-that-contribute-to-conformational-change">Indentification of modes that contribute to conformational change</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#conformation-mode">Conformation mode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mode-visualisation">Mode visualisation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mean-square-fluctuation-msf">Mean square fluctuation (MSF)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pca_tut.html">PCA Tutorial</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">Mode-Task</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>NMA Tutorial</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/nma_tut.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="nma-tutorial">
+<h1>NMA Tutorial<a class="headerlink" href="#nma-tutorial" title="Permalink to this headline">¶</a></h1>
+<p>Enterovirus 71 (EV-71) is a human pathogen that predominantly infects small children. The capsid is icoshedral and contains 60 protomer units. In a <strong>mature capsid</strong> the protomers are assembled as a set of 12 pentamers. Each protomer contains a single copy of the proteins VP1-VP4. During infection the virus capsid expands to release its RNA into the host cell. This expanded capsid is known as the <strong>A-particle.</strong></p>
+<div class="section" id="aim">
+<h2>Aim<a class="headerlink" href="#aim" title="Permalink to this headline">¶</a></h2>
+<p>In this tutorial we will apply the ANM model to a single pentamer of the mature EV-71 capsid. We aim to identify the normal modes that contribute to the conformational changes within a pentamer during capsid expansion.</p>
+</div>
+<div class="section" id="create-a-working-directory">
+<h2>Create a working directory<a class="headerlink" href="#create-a-working-directory" title="Permalink to this headline">¶</a></h2>
+<p>First create a directory for all the Mode Task scripts using the linux command:</p>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mkdir</span> <span class="n">ModeTask</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Copy the entire contents of the MODE_TASK Scripts in to the ModeTask directory.</p>
+<p>Within this directory create a folder called <strong>Tutorial:</strong></p>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">ModeTask</span>
+<span class="n">mkdir</span> <span class="n">Tutorial</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>We will run all scripts from the ModeTask directory.</p>
+</div>
+<div class="section" id="preparation-of-structures">
+<h2>Preparation of structures<a class="headerlink" href="#preparation-of-structures" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>Download the 3VBS biological assembly (3VBS.pdb1) of the <strong>mature EV-71 capsid.</strong></li>
+<li>Open 3VBS.pdb1 in PyMol.</li>
+<li>Use the <strong>split_states 3VBS</strong> command to visualise the full capsid.</li>
+<li>Save the capsid: File – Save Molecule – Select the first 5 states. Save as EV71_Pentamer.pdb into the <strong>ModeTask/Tutorial directory.</strong></li>
+</ol>
+<p>Each protomer has 4 subunits: VP1-VP4. VP4 is an internal capsid protein.</p>
+<ul class="simple">
+<li>Number of residues per protomer = 842</li>
+<li>Number of residues per pentamer = 4210</li>
+</ul>
+<p>The estimated run time to perfom ANM on a complex of 4210 residues, using <strong>Mode Task</strong> is 25 hours.</p>
+<p>For the sake of this tutorial we will use the <strong>coarseGrain.py</strong> script to construct a pentamer with lower resolution pentamer.</p>
+</div>
+<div class="section" id="coarse-grain">
+<h2>Coarse grain<a class="headerlink" href="#coarse-grain" title="Permalink to this headline">¶</a></h2>
+<p>The Mode TASK package is designed to analyse both single proteins or larger macromolecules such as a virus capsid. The ANM.cpp script contructs an elastic network model on all CA or CB atoms in a given PDB file. This is ideal from smaller protein complexes. For larger protein complexes the coarseGrained.py script can be used to construct an additional coarse grained PDB file.</p>
+<ol class="arabic simple">
+<li>Create a model of the EV71 Pentamer complex with additional coarse graining set at level 3, selecting CB atoms:</li>
+</ol>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">coarseGrain</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">pdb</span> <span class="n">Tutorial</span><span class="o">/</span><span class="n">EV71_Pentamer</span><span class="o">.</span><span class="n">pdb</span> <span class="o">--</span><span class="n">cg</span> <span class="mi">3</span> <span class="o">--</span><span class="n">startingAtom</span> <span class="mi">1</span> <span class="o">--</span><span class="n">output</span> <span class="n">EV71_CG3</span><span class="o">.</span><span class="n">pdb</span> <span class="o">--</span><span class="n">outdir</span> <span class="n">Tutorial</span> <span class="o">--</span><span class="n">atomType</span> <span class="n">CB</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p><strong>The input paramaters include:</strong></p>
+<blockquote>
+<div><ul class="simple">
+<li>pdb: This is the pdb structure that you wish to coarse grain</li>
+<li>cg: This specifies the level of coarse graining. To select fewer atoms increase the level</li>
+<li>starting atom: This specifies the first residue to be selected in the complex</li>
+<li>output: The filename of the coarse grained pdb file</li>
+<li>outdir: The directory in which to save the coarse grained pdb file</li>
+</ul>
+</div></blockquote>
+<p><strong>Output:</strong></p>
+<ol class="loweralpha simple">
+<li>EV71_CG3.pdb: A coarse grained pdb file that has selected CB atoms from residues that are equally distributed across the complex (Figure 1).</li>
+<li>Command line output</li>
+</ol>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Started</span> <span class="n">at</span><span class="p">:</span> <span class="mi">2017</span><span class="o">-</span><span class="mi">08</span><span class="o">-</span><span class="mi">22</span> <span class="mi">11</span><span class="p">:</span><span class="mi">54</span><span class="p">:</span><span class="mf">19.392835</span>
+<span class="n">No</span><span class="o">.</span> <span class="n">atoms</span> <span class="n">selected</span> <span class="n">per</span> <span class="n">unit</span><span class="p">:</span> <span class="mi">122</span> <span class="kn">from</span> <span class="mi">842</span> <span class="n">orignal</span> <span class="n">residues</span>
+<span class="n">No</span><span class="o">.</span> <span class="n">atoms</span> <span class="n">selected</span> <span class="n">per</span> <span class="n">macromolecule</span><span class="p">:</span> <span class="mi">610</span> <span class="kn">from</span> <span class="mi">4210</span> <span class="n">orignal</span> <span class="n">residues</span>
+<span class="n">Completed</span> <span class="n">at</span><span class="p">:</span> <span class="mi">2017</span><span class="o">-</span><span class="mi">08</span><span class="o">-</span><span class="mi">22</span> <span class="mi">11</span><span class="p">:</span><span class="mi">54</span><span class="p">:</span><span class="mf">19.509456</span>
+<span class="o">-</span> <span class="n">Total</span> <span class="n">time</span><span class="p">:</span> <span class="mi">0</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Note, the same 212 atoms in from each protomer were selected – thus the symmetry of the pentamer is retained.</p>
+<ol class="arabic simple" start="2">
+<li>Create a model of the EV71 Pentamer complex with additional coarse graining set at level 4:</li>
+</ol>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">coarseGrain</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">pdb</span> <span class="n">Tutorial</span><span class="o">/</span><span class="n">EV71_Pentamer</span><span class="o">.</span><span class="n">pdb</span> <span class="o">--</span><span class="n">cg</span> <span class="mi">4</span> <span class="o">--</span><span class="n">startingAtom</span> <span class="mi">1</span> <span class="o">--</span><span class="n">output</span> <span class="n">EV71_CG4</span><span class="o">.</span><span class="n">pdb</span> <span class="o">--</span><span class="n">outdir</span> <span class="n">Tutorial</span> <span class="o">--</span><span class="n">atomType</span> <span class="n">CB</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Started</span> <span class="n">at</span><span class="p">:</span> <span class="mi">2017</span><span class="o">-</span><span class="mi">08</span><span class="o">-</span><span class="mi">22</span> <span class="mi">11</span><span class="p">:</span><span class="mi">54</span><span class="p">:</span><span class="mf">53.484248</span>
+<span class="n">No</span><span class="o">.</span> <span class="n">atoms</span> <span class="n">selected</span> <span class="n">per</span> <span class="n">unit</span><span class="p">:</span> <span class="mi">54</span> <span class="kn">from</span> <span class="mi">842</span> <span class="n">orignal</span> <span class="n">residues</span>
+<span class="n">No</span><span class="o">.</span> <span class="n">atoms</span> <span class="n">selected</span> <span class="n">per</span> <span class="n">macromolecule</span><span class="p">:</span> <span class="mi">270</span> <span class="kn">from</span> <span class="mi">4210</span> <span class="n">orignal</span> <span class="n">residues</span>
+<span class="n">Completed</span> <span class="n">at</span><span class="p">:</span> <span class="mi">2017</span><span class="o">-</span><span class="mi">08</span><span class="o">-</span><span class="mi">22</span> <span class="mi">11</span><span class="p">:</span><span class="mi">54</span><span class="p">:</span><span class="mf">53.586145</span>
+<span class="o">-</span> <span class="n">Total</span> <span class="n">time</span><span class="p">:</span> <span class="mi">0</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span>
+</pre></div>
+</div>
+<div class="figure align-center" id="id1">
+<img alt="_images/nma_tut0.png" src="_images/nma_tut0.png" />
+<p class="caption"><span class="caption-text">Fig 1. Left) Crystal structure of the EV71 Pentamer (3VBS). Right) EV71_CG3.pdb contains 610 CB atoms from 4210 total residues.</span></p>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="mode-decomposition">
+<h2>Mode decomposition<a class="headerlink" href="#mode-decomposition" title="Permalink to this headline">¶</a></h2>
+<p>The ANM.cpp script accepts a PDB file and a cutoff distance. The script constructs the hessian matrix connecting all CB atoms in within the specific cutoff radius.  The script then performs singular value decompostion to return the eigenvalues and eigenvectors of the hessian matrix.</p>
+<p><strong>Input parameters:</strong></p>
+<ul class="simple">
+<li>pdb: path to PDB file</li>
+<li>cutoff: cutoff radius in A. The script will construct an eleastic network model by connecting all atoms that interact within the cutoff distance (default = 24Å)</li>
+<li>outdir: folder in which output is saved</li>
+</ul>
+<p><strong>Output:</strong></p>
+<p>W_values.txt: A list of 3N eigenvalues the normal modes of the system. Eigenvalues are ordered from fastest to slowest mode.</p>
+<p>VT_values.txt: A 3Nx3N list of the eigenvectors for each mode. Eigenvectors are printed as a set of rows.</p>
+<p>U_values.txt: A 3Nx3N list of the eigenvectors for each mode. Eigenvectors are printed as a set of columns.</p>
+<ol class="arabic simple">
+<li>Compile the ANM.cpp script</li>
+</ol>
+<p>The ANM.cpp script requires classes of the AlgLib library. These class can be found in the cpp/src folder in the GitHub Directory. The path to these classes must be specified in the compile command using the -I paramter:</p>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">g</span><span class="o">++</span> <span class="o">-</span><span class="n">I</span> <span class="n">cpp</span><span class="o">/</span><span class="n">src</span><span class="o">/</span> <span class="n">ANM</span><span class="o">.</span><span class="n">cpp</span> <span class="o">-</span><span class="n">o</span> <span class="n">ANM</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>In this tutorial we will perform a comprative analysis between the normal modes of the EV71_CG3.pdb and EV71_CG4.pdb</p>
+<ol class="arabic simple" start="2">
+<li>Run the ./ANM to analyse EV71_CG4.pdb with a cutoff of 24Å</li>
+</ol>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">ANM</span> <span class="o">--</span><span class="n">pdb</span> <span class="n">Tutorial</span><span class="o">/</span><span class="n">EV71_CG4</span><span class="o">.</span><span class="n">pdb</span>  <span class="o">--</span><span class="n">outdir</span> <span class="n">Tutorial</span> <span class="o">--</span><span class="n">atomType</span> <span class="n">CB</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Example of command line output:</p>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Started</span> <span class="n">at</span><span class="p">:</span> <span class="mi">2017</span><span class="o">-</span><span class="mi">08</span><span class="o">-</span><span class="mi">22</span> <span class="mi">11</span><span class="p">:</span><span class="mi">55</span><span class="p">:</span><span class="mi">33</span>
+<span class="n">Starting</span> <span class="n">Decomposition</span>
+<span class="n">Completed</span> <span class="n">at</span><span class="p">:</span> <span class="mi">2017</span><span class="o">-</span><span class="mi">08</span><span class="o">-</span><span class="mi">22</span> <span class="mi">11</span><span class="p">:</span><span class="mi">55</span><span class="p">:</span><span class="mi">47</span>
+<span class="o">-</span> <span class="n">Total</span> <span class="n">time</span><span class="p">:</span> <span class="mi">0</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">13</span>
+</pre></div>
+</div>
+</div></blockquote>
+<ol class="arabic simple" start="3">
+<li>Run the ./ANM to analyse  EV71_CG3.pdb</li>
+</ol>
+<p>3.1) First make a sub-directory to avoid overwriting of your previous ANM outout:</p>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mkdir</span> <span class="n">Tutorial</span><span class="o">/</span><span class="n">CG3</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>3.2)</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">ANM</span> <span class="o">--</span><span class="n">pdb</span> <span class="n">Tutorial</span><span class="o">/</span><span class="n">EV71_CG3</span><span class="o">.</span><span class="n">pdb</span> <span class="o">--</span><span class="n">outdir</span> <span class="n">Tutorial</span><span class="o">/</span><span class="n">CG3</span> <span class="o">--</span><span class="n">atomType</span> <span class="n">CB</span>
+</pre></div>
+</div>
+<p>Example of command line output:</p>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Started</span> <span class="n">at</span><span class="p">:</span> <span class="mi">2017</span><span class="o">-</span><span class="mi">08</span><span class="o">-</span><span class="mi">22</span> <span class="mi">11</span><span class="p">:</span><span class="mi">56</span><span class="p">:</span><span class="mi">42</span>
+<span class="n">Starting</span> <span class="n">Decomposition</span>
+<span class="n">Completed</span> <span class="n">at</span><span class="p">:</span> <span class="mi">2017</span><span class="o">-</span><span class="mi">08</span><span class="o">-</span><span class="mi">22</span> <span class="mi">11</span><span class="p">:</span><span class="mi">59</span><span class="p">:</span><span class="mi">14</span>
+<span class="o">-</span> <span class="n">Total</span> <span class="n">time</span><span class="p">:</span> <span class="mi">0</span><span class="p">:</span><span class="mi">02</span><span class="p">:</span><span class="mi">0</span><span class="o">-</span><span class="mi">704</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="indentification-of-modes-that-contribute-to-conformational-change">
+<h2>Indentification of modes that contribute to conformational change<a class="headerlink" href="#indentification-of-modes-that-contribute-to-conformational-change" title="Permalink to this headline">¶</a></h2>
+<p>We have performed ANM on two separte pentamer complexes. From each model we have obtained a set of eigenvalues and eigenvectors corresponding to each normal mode:</p>
+<ol class="arabic simple">
+<li>EV71_CG4.pdb, total non-trivial mdes = 804</li>
+<li>EV71_CG3.pdb, total non-trivial mdes = 1824</li>
+</ol>
+<p>For each model we will now identify the modes that contribute to the conformational change of a pentamer during capsid expansion.</p>
+<p>We will then compare the modes from the respective models and determine if the additional coarse graining effected the ability to capture such modes.</p>
+<p>To determine if our modes overlap with the direction of conformational change, we must first determine the conformational change between the crystal structures of the <strong>mature</strong> and <strong>A-particle pentamer.</strong> The <strong>conformationMode.py</strong>  scripts take two UNALIGNED pdb files and the set of all eigenvectors determined for the complex. The script aligns the structures, calculates the known conformational change and then identifies which modes contribute to the change.</p>
+</div>
+<div class="section" id="conformation-mode">
+<h2>Conformation mode<a class="headerlink" href="#conformation-mode" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>Compute overlap between all modes of the EV71_CG4 model:</li>
+</ol>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">conformationMode</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">pdbANM</span> <span class="n">Tutorial</span><span class="o">/</span><span class="n">EV71_CG4</span><span class="o">.</span><span class="n">pdb</span> <span class="o">--</span><span class="n">vtMatrix</span> <span class="n">Tutorial</span><span class="o">/</span><span class="n">VT_values</span><span class="o">.</span><span class="n">txt</span>  <span class="o">--</span><span class="n">pdbConf</span> <span class="n">Tutorial</span><span class="o">/</span><span class="n">Apart_Pentamer</span><span class="o">.</span><span class="n">pdb</span> <span class="o">--</span><span class="n">outdir</span> <span class="n">Tutorial</span><span class="o">/</span> <span class="o">--</span><span class="n">atomType</span> <span class="n">CB</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p><strong>Input paramters:</strong></p>
+<p>–pdbANM: This is the PDB file that you use to run ANM. Do not use the aligned file here</p>
+<p>–vtMatrix: The eigenavalues obtained from ANM of the EV71_CG4 model</p>
+<p>–pdbConf: This is the pdb file of the conformational change. In this case the pentamer of the A-particle (The –pdbANM and –pdbConf must NOT BE ALIGNED)</p>
+<p><strong>Output:</strong></p>
+<p>A text file with the overlap and correlation of each mode to the conformational change. The modes are ordered by the absoulte value of their overlap.</p>
+<ol class="arabic simple" start="2">
+<li>Compute overlap between all modes of the EV71_CG3 model (Remember to specify the correct directory):</li>
+</ol>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">conformationMode</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">pdbANM</span> <span class="n">Tutorial</span><span class="o">/</span><span class="n">EV71_CG3</span><span class="o">.</span><span class="n">pdb</span> <span class="o">--</span><span class="n">vtMatrix</span> <span class="n">Tutorial</span><span class="o">/</span><span class="n">CG3</span><span class="o">/</span><span class="n">VT_values</span><span class="o">.</span><span class="n">txt</span>  <span class="o">--</span><span class="n">pdbConf</span> <span class="n">Tutorial</span><span class="o">/</span><span class="n">Apart_PentamerAligned</span><span class="o">.</span><span class="n">pdb</span> <span class="o">--</span><span class="n">outdir</span> <span class="n">Tutorial</span><span class="o">/</span><span class="n">CG3</span> <span class="o">--</span><span class="n">atomType</span> <span class="n">CB</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p><strong>Top output from conformationalMode.py of EV71_CG4:</strong></p>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">MODE</span>           <span class="n">Overlap</span>                      <span class="n">Correlation</span>
+
+<span class="n">Mode</span><span class="p">:</span> <span class="mi">802</span>      <span class="mf">0.464930905363</span>      <span class="mf">0.505024336385</span>
+<span class="n">Mode</span><span class="p">:</span> <span class="mi">799</span>      <span class="mf">0.288299273538</span>      <span class="mf">0.212056909378</span>
+<span class="n">Mode</span><span class="p">:</span> <span class="mi">775</span>      <span class="o">-</span><span class="mf">0.251274270888</span>      <span class="mf">0.102742699068</span>
+<span class="n">Mode</span><span class="p">:</span> <span class="mi">748</span>      <span class="mf">0.247685561536</span>      <span class="mf">0.131291816799</span>
+<span class="n">Mode</span><span class="p">:</span> <span class="mi">788</span>      <span class="mf">0.212254981509</span>      <span class="mf">0.0620242553959</span>
+<span class="n">Mode</span><span class="p">:</span> <span class="mi">705</span>      <span class="mf">0.182970920364</span>      <span class="mf">0.134255823159</span>
+<span class="n">Mode</span><span class="p">:</span> <span class="mi">785</span>      <span class="o">-</span><span class="mf">0.16260558288</span>      <span class="mf">0.230938806173</span>
+<span class="n">Mode</span><span class="p">:</span> <span class="mi">203</span>      <span class="mf">0.161599915581</span>      <span class="mf">0.0168408447117</span>
+<span class="n">Mode</span><span class="p">:</span> <span class="mi">754</span>      <span class="o">-</span><span class="mf">0.152172952906</span>      <span class="mf">0.142214445993</span>
+<span class="n">Mode</span><span class="p">:</span> <span class="mi">397</span>      <span class="mf">0.1331492216</span>         <span class="mf">0.240388245613</span>
+<span class="n">Mode</span><span class="p">:</span> <span class="mi">622</span>      <span class="o">-</span><span class="mf">0.13150716791</span>      <span class="mf">0.13057940904</span>
+<span class="n">Mode</span><span class="p">:</span> <span class="mi">280</span>      <span class="mf">0.12871454907</span>      <span class="mf">0.0444642851196</span>
+<span class="n">Mode</span><span class="p">:</span> <span class="mi">774</span>      <span class="mf">0.123724858059</span>      <span class="mf">0.0394196518151</span>
+<span class="n">Mode</span><span class="p">:</span> <span class="mi">793</span>      <span class="mf">0.116201325237</span>      <span class="mf">0.0236754652566</span>
+<span class="n">Mode</span><span class="p">:</span> <span class="mi">750</span>      <span class="mf">0.116127226795</span>      <span class="mf">0.167416988474</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p><strong>Top output from conformationalMode.py of EV71_CG3:</strong></p>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">MODE</span>           <span class="n">Overlap</span>                       <span class="n">Correlation</span>
+
+<span class="n">Mode</span><span class="p">:</span> <span class="mi">1822</span>     <span class="o">-</span><span class="mf">0.415600190243</span>      <span class="mf">0.247290729903</span>
+<span class="n">Mode</span><span class="p">:</span> <span class="mi">1816</span>     <span class="mf">0.252625858163</span>      <span class="mf">0.113261133544</span>
+<span class="n">Mode</span><span class="p">:</span> <span class="mi">1746</span>     <span class="mf">0.175581842737</span>      <span class="mf">0.306224937911</span>
+<span class="n">Mode</span><span class="p">:</span> <span class="mi">1745</span>     <span class="mf">0.13950940547</span>      <span class="mf">0.303095607429</span>
+<span class="n">Mode</span><span class="p">:</span> <span class="mi">1747</span>     <span class="mf">0.138225569708</span>      <span class="mf">0.297843432141</span>
+<span class="n">Mode</span><span class="p">:</span> <span class="mi">1659</span>     <span class="mf">0.137739698541</span>      <span class="mf">0.272789201446</span>
+<span class="n">Mode</span><span class="p">:</span> <span class="mi">1801</span>     <span class="o">-</span><span class="mf">0.136763146302</span>      <span class="mf">0.210065050974</span>
+<span class="n">Mode</span><span class="p">:</span> <span class="mi">1730</span>     <span class="mf">0.136567023438</span>      <span class="mf">0.299515587264</span>
+<span class="n">Mode</span><span class="p">:</span> <span class="mi">1665</span>     <span class="o">-</span><span class="mf">0.133241326847</span>      <span class="mf">0.354553903803</span>
+<span class="n">Mode</span><span class="p">:</span> <span class="mi">1793</span>     <span class="o">-</span><span class="mf">0.13005798464</span>      <span class="mf">0.202987256131</span>
+<span class="n">Mode</span><span class="p">:</span> <span class="mi">1738</span>     <span class="o">-</span><span class="mf">0.120706064305</span>      <span class="mf">0.220396792939</span>
+<span class="n">Mode</span><span class="p">:</span> <span class="mi">1800</span>     <span class="mf">0.120606594989</span>      <span class="mf">0.178140199695</span>
+<span class="n">Mode</span><span class="p">:</span> <span class="mi">1774</span>     <span class="o">-</span><span class="mf">0.12050356591</span>      <span class="mf">0.126790378565</span>
+<span class="n">Mode</span><span class="p">:</span> <span class="mi">1408</span>     <span class="o">-</span><span class="mf">0.103297837303</span>      <span class="mf">0.346942965669</span>
+<span class="n">Mode</span><span class="p">:</span> <span class="mi">1754</span>     <span class="o">-</span><span class="mf">0.103052988178</span>      <span class="mf">0.312731487395</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="mode-visualisation">
+<h2>Mode visualisation<a class="headerlink" href="#mode-visualisation" title="Permalink to this headline">¶</a></h2>
+<p>From each model we have identified which mode overlaps the most with the direction of the conformational change. We can now visualise these modes.</p>
+<ol class="arabic simple">
+<li>First we must extract the eigenvectors of each mode using the <strong>getEigenVectors.cpp</strong> script. This is a c++ script and must be complied:</li>
+</ol>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">g</span><span class="o">++</span> <span class="o">-</span><span class="n">I</span> <span class="n">cpp</span><span class="o">/</span><span class="nb">input</span><span class="o">/</span> <span class="n">getEigenVectors</span><span class="o">.</span><span class="n">cpp</span> <span class="o">-</span><span class="n">o</span> <span class="n">getEigenVectors</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>1.1)  Obtain eigenvectors for mode 802 of the CG4 model. Note this overlap is postive, thus the vectors act in the opposite direction to conformational change. Therefore we must specify the direction as 1 when extracting the vectors:</p>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">getEigenVectors</span> <span class="o">--</span><span class="n">vtMatrix</span> <span class="n">Tutorial</span><span class="o">/</span><span class="n">VT_values</span><span class="o">.</span><span class="n">txt</span> <span class="o">--</span><span class="n">mode</span> <span class="mi">802</span> <span class="o">--</span><span class="n">direction</span> <span class="mi">1</span> <span class="o">--</span><span class="n">outdir</span> <span class="n">Tutorial</span><span class="o">/</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>1.1)  Obtain eigenvectors for mode 1822 of the CG3 model. However the overlap for this mode was negative, therefore we must specifify direction as -1</p>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">getEigenVectors</span> <span class="o">--</span><span class="n">vt</span> <span class="n">Tutorial</span><span class="o">/</span><span class="n">CG3</span><span class="o">/</span><span class="n">VT_values</span><span class="o">.</span><span class="n">txt</span> <span class="o">--</span><span class="n">mode</span> <span class="mi">1822</span> <span class="o">--</span><span class="n">direction</span> <span class="o">-</span><span class="mi">1</span> <span class="o">--</span><span class="n">outdir</span> <span class="n">Tutorial</span><span class="o">/</span><span class="n">CG3</span>
+</pre></div>
+</div>
+</div></blockquote>
+<ol class="arabic simple" start="2">
+<li>We can now project these vectors onto the respective models using the <strong>visualiseVector.py</strong> script and then visualise them as a set of frames in VMD:</li>
+</ol>
+<p>2.1) Mode 802 of CG4:</p>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">visualiseVector</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">pdb</span> <span class="n">Tutorial</span><span class="o">/</span><span class="n">EV71_CG4</span><span class="o">.</span><span class="n">pdb</span> <span class="o">--</span><span class="n">vectorFile</span> <span class="n">Tutorial</span><span class="o">/</span><span class="n">EVectors802</span><span class="o">.</span><span class="n">txt</span> <span class="o">--</span><span class="n">mode</span> <span class="mi">802</span> <span class="o">--</span><span class="n">outdir</span> <span class="n">Tutorial</span><span class="o">/</span> <span class="o">--</span><span class="n">atomType</span> <span class="n">CB</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>2.2) Mode 1822 of CG3:</p>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">visualiseVector</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">pdb</span> <span class="n">Tutorial</span><span class="o">/</span><span class="n">CG3</span><span class="o">/</span><span class="n">EV71_CG3</span><span class="o">.</span><span class="n">pdb</span>  <span class="o">--</span><span class="n">vectorFile</span> <span class="n">Tutorial</span><span class="o">/</span><span class="n">CG3</span><span class="o">/</span><span class="n">EVectors1822</span><span class="o">.</span><span class="n">txt</span> <span class="o">--</span><span class="n">mode</span> <span class="mi">1822</span> <span class="o">--</span><span class="n">outdir</span> <span class="n">Tutorial</span><span class="o">/</span><span class="n">CG3</span> <span class="o">--</span><span class="n">atomType</span> <span class="n">CB</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p><strong>Output from visualiseVector.py</strong></p>
+<p>The script will produce a folder named VISUALISE. For every mode that you give to <strong>visualiseVector.py</strong> two files will be produced:</p>
+<ol class="arabic simple">
+<li>A VISUAL PDB file. This can be opened in VMD and visualised as a set of 100 frames.</li>
+<li>An VISUAL_ARROWS txt file. This file contains a Tcl script that can be copied into the VMD TK console. The script plots as set of arrows indicating the direction of each atom.</li>
+</ol>
+</div>
+<div class="section" id="mean-square-fluctuation-msf">
+<h2>Mean square fluctuation (MSF)<a class="headerlink" href="#mean-square-fluctuation-msf" title="Permalink to this headline">¶</a></h2>
+<p>Lastly we will use the meanSquareFluctuations.py script to calculate the MSF of the CB atoms. The scripts allows you to calculate:</p>
+<ol class="loweralpha simple">
+<li>the overall MSF, calculated over all modes</li>
+<li>the MSF of the CB atoms for a specific mode, or a specific range of modes.</li>
+</ol>
+<p>The script also allows for comparison of MSF obtained from modes of obtained from different models. We can use the –pdbConf2 paramter to send the script a second PDB model. The script will then calculate the MSF of atoms corresponding to residues that are common between both models.</p>
+<p>In this toturial we will analyse the MSF between EV71_CG4 and EV71_CG3.</p>
+<ol class="arabic simple">
+<li>First we will calculate the MSF of the CG4 model. We will calculate the overall MSF and the MSF for the mode 802.</li>
+</ol>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">meanSquareFluctuation</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">pdb</span> <span class="n">Tutorial</span><span class="o">/</span><span class="n">EV71_CG4</span><span class="o">.</span><span class="n">pdb</span> <span class="o">--</span><span class="n">pdbConf2</span> <span class="n">Tutorial</span><span class="o">/</span><span class="n">EV71_CG3</span><span class="o">.</span><span class="n">pdb</span> <span class="o">--</span><span class="n">firstMode</span> <span class="mi">802</span> <span class="o">--</span><span class="n">lastMode</span> <span class="mi">802</span> <span class="o">--</span><span class="n">wMatrix</span> <span class="n">Tutorial</span><span class="o">/</span><span class="n">W_values</span><span class="o">.</span><span class="n">txt</span> <span class="o">--</span><span class="n">vtMatrix</span> <span class="n">Tutorial</span><span class="o">/</span><span class="n">VT_values</span><span class="o">.</span><span class="n">txt</span> <span class="o">--</span><span class="n">outdir</span> <span class="n">Tutorial</span><span class="o">/</span> <span class="o">--</span><span class="n">atomType</span> <span class="n">CB</span>
+</pre></div>
+</div>
+</div></blockquote>
+<ol class="arabic simple" start="2">
+<li>Next we will calculate the MSF of the CG3 model. We will calculate the overall MSF and the MSF for the mode 1822</li>
+</ol>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">meanSquareFluctuation</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">pdb</span> <span class="n">Tutorial</span><span class="o">/</span><span class="n">EV71_CG3</span><span class="o">.</span><span class="n">pdb</span> <span class="o">--</span><span class="n">pdbConf2</span> <span class="n">Tutorial</span><span class="o">/</span><span class="n">EV71_CG4</span><span class="o">.</span><span class="n">pdb</span> <span class="o">--</span><span class="n">firstMode</span> <span class="mi">1822</span> <span class="o">--</span><span class="n">lastMode</span> <span class="mi">1822</span> <span class="o">--</span><span class="n">wMatrix</span> <span class="n">Tutorial</span><span class="o">/</span><span class="n">CG3</span><span class="o">/</span><span class="n">W_values</span><span class="o">.</span><span class="n">txt</span> <span class="o">--</span><span class="n">vtMatrix</span> <span class="n">Tutorial</span><span class="o">/</span><span class="n">CG3</span><span class="o">/</span><span class="n">VT_values</span><span class="o">.</span><span class="n">txt</span> <span class="o">--</span><span class="n">outdir</span> <span class="n">Tutorial</span><span class="o">/</span><span class="n">CG3</span><span class="o">/</span> <span class="o">--</span><span class="n">atomType</span> <span class="n">CB</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p><strong>Output for Model CG4:</strong></p>
+<p><strong>1) EV71_msf.txt:</strong> Text file of the overall MSF values for all residues</p>
+<p><strong>2) EV71_msfModes802_802.txt:</strong> MSF for all residues for mode 802</p>
+<p><strong>3) EV71CommonResidues_msf.txt:</strong> Overal MSF for residues common between CG4 and CG3.</p>
+<p><strong>4) EV71_CommonResidues_msfModes802_802.txt:</strong> MSF for residues common between CG4 and CG3 calculated for mode 802
+Output for Model CG3:</p>
+<p><strong>1) EV71_msf.txt:</strong> Text file of the overall MSF values for all residues</p>
+<p><strong>2) EV71_msfModes1822_1822.txt:</strong> MSF for all residues for mode 1822</p>
+<p><strong>3) EV71CommonResidues_msf.txt:</strong> overal MSF for residues common between CG3 and CG4.</p>
+<p><strong>4) EV71_CommonResidues_msfModes1822_1822.txt:</strong> MSF for residues common between CG3 and CG3 calculated for mode 1822</p>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="pca_tut.html" class="btn btn-neutral float-right" title="PCA Tutorial" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="pca_use.html" class="btn btn-neutral" title="PCA Scripts" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, CJ Ross, B Nizami, M Glenister, OS Amamuddy, AR Atilgan, C Atilgan and Ö Tastan Bishop.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

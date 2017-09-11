@@ -34,8 +34,8 @@
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="Mode-Task  documentation" href="index.html"/>
-        <link rel="next" title="Tutorials" href="tutorials.html"/>
-        <link rel="prev" title="NMA Scripts" href="nma.html"/> 
+        <link rel="next" title="NMA Tutorial" href="nma_tut.html"/>
+        <link rel="prev" title="NMA Scripts" href="nma_use.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -84,25 +84,33 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="theory.html">Theory</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Theory</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="theory.html">Normal Mode Analysis (NMA)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="theory.html#principle-component-analysis-pca">Principle Component Analysis (PCA)</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Usage</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="nma.html">NMA Scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nma_use.html">NMA Scripts</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">PCA Scripts</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#pca-on-cartesian-cordinates">1.PCA on Cartesian cordinates</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#svd-pca"><strong>1.1 SVD PCA</strong></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#kernel-pca"><strong>1.2 Kernel PCA</strong></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#incrementalpca"><strong>1.3 IncrementalPCA</strong></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#eigenvalue-decomposition-evd-pca"><strong>1.4 Eigenvalue decomposition (EVD) PCA</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pca-on-cartesian-coordinates">PCA on Cartesian coordinates</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#svd-pca"><strong>SVD PCA</strong></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kernel-pca"><strong>Kernel PCA</strong></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#incrementalpca"><strong>IncrementalPCA</strong></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#eigenvalue-decomposition-evd-pca"><strong>Eigenvalue decomposition (EVD) PCA</strong></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#pca-on-internal-cordinates">2.PCA on internal cordinates</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#mds-multi-dimentional-scaling-on-md-trajectory">3.MDS (Multi-dimentional scaling)  on MD trajectory</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#t-sne-on-md-trajectory">4.t-SNE on MD trajectory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pca-on-internal-coordinates">PCA on internal coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mds-multi-dimentional-scaling-on-md-trajectory">MDS (Multi-dimentional scaling)  on MD trajectory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#t-sne-on-md-trajectory">t-SNE on MD trajectory</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="nma_tut.html">NMA Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pca_tut.html">PCA Tutorial</a></li>
 </ul>
 
             
@@ -137,7 +145,7 @@
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="_sources/pca.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/pca_use.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -149,15 +157,15 @@
             
   <div class="section" id="pca-scripts">
 <h1>PCA Scripts<a class="headerlink" href="#pca-scripts" title="Permalink to this headline">¶</a></h1>
-<p>Principal component analysis (PCA) is a useful statistical technique that has found application in detection of correlated motion in MD data. Protein dynamics is manifested as a change in molecular structure, or conformation over a time scale. PCA extract most important motions from a protein’s MD trajectory using a covariance/correlation matrix (C-matrix) constructed from atomic coordinates. Different types of cordinates systems (Cartesian or internal coordinates) can be employed that define atomic movement in each time frame of a trajectory. Modes describing the protein motions can be constructed by diagonalizing the C-matrix. It leads to a complete set of orthonormal (orthogonal and normalized) collective modes (eigenvectors) with each eigenvalues (variance) that characterize the protein dynamics. Eigenvalues with largest value represent the larger spatial motion. When the original mean centered data (MD trajectory) is projected on eigenvectors the result is called Principle Components (PC). Diagonilazation of C-matrix could be done by Eigenvalue decomposition (EVD) or Singular value decomposition (SVD), with later being computationaly efficient.</p>
-<p>As stated esralier different representaion of protein conformation can be used. One can choose cartesian cordinates or internal cordinates such as pairwise distance between atoms, 1-3 angle, torsional angles (psi or phi). Since decomposition of a C-matrix is memory intesive and very often programe will run out of memory, often a course graining is required such as selecting C-alpha atoms. User can select the subset of atoms from the trajectory for the analysis such as C-alpha, backbone atoms or all protein’s atoms. It is highly recomonded that user should strip the water from the trajectory before using with this tools, as it would results in faster loading and alleviate the memory issues.</p>
-<p>PCA uses the linear transformation which may not be sufficient in case where variables are non-linearly related.  In such cases user has option to perform Nonlinear generaliztion of PCA such as Kernel PCA (kPCA). Caustion should be exersice while interpeting the kPCA results since it is mapped to a feature space which is inherently different than conformational space. Neverthless kPCA is useful in understanidng the prtoien’s fucntions in terms of its conformational dynamics.</p>
+<p>Principal component analysis (PCA) is a useful statistical technique that has found application in detection of correlated motion in MD data. Protein dynamics is manifested as a change in molecular structure, or conformation over a time scale. PCA extract most important motions from a protein’s MD trajectory using a covariance/correlation matrix (C-matrix) constructed from atomic coordinates. Different types of coordinates systems (Cartesian or internal coordinates) can be employed that define atomic movement in each time frame of a trajectory. Modes describing the protein motions can be constructed by diagonalizing the C-matrix. It leads to a complete set of orthonormal (orthogonal and normalized) collective modes (eigenvectors) with each eigenvalues (variance) that characterize the protein dynamics. Eigenvalues with largest value represent the larger spatial motion. When the original mean centered data (MD trajectory) is projected on eigenvectors the result is called Principle Components (PC). Diagonilazation of C-matrix could be done by Eigenvalue decomposition (EVD) or Singular value decomposition (SVD), with later being computationally efficient.</p>
+<p>As stated earlier different representation of protein conformation can be used. One can choose cartesian coordinates or internal coordinates such as pairwise distance between atoms, 1-3 angle, torsional angles (psi or phi). Since decomposition of a C-matrix is memory intensive and very often program will run out of memory, often a course graining is required such as selecting C-alpha atoms. User can select the subset of atoms from the trajectory for the analysis such as C-alpha, backbone atoms or all protein’s atoms. It is highly recommended that user should strip the water from the trajectory before hand, as it would result in faster loading and alleviate the memory issues.</p>
+<p>PCA uses the linear transformation which may not be sufficient in case where variables are non-linearly related.  In such cases user has option to perform Nonlinear generalization of PCA such as Kernel PCA (kPCA). Caution should be exercise while interpreting the kPCA results since it is mapped to a feature space which is inherently different than conformational space. Nevertheless, kPCA is useful in understanding the protein’s functions in terms of its conformational dynamics.</p>
 <p><strong>General Usage:</strong></p>
-<p>To perform PCA on a protein’s MD trajectory we need a sufficently sampled MD trajectory and a corresposnding topology file. It can be acehived by running the following command.</p>
+<p>To perform PCA on a protein’s MD trajectory we need a sufficiently sampled MD trajectory and a corresponding topology file. It can be achieved by running the following command.</p>
 <dl class="docutils">
 <dt><strong>Command:</strong></dt>
 <dd><code class="docutils literal"><span class="pre">pca.py</span> <span class="pre">-t</span> <span class="pre">&lt;MD</span> <span class="pre">trajectory&gt;</span> <span class="pre">-p</span> <span class="pre">&lt;topology</span> <span class="pre">file&gt;</span></code></dd>
-<dt>To see the all the availaible options run the following command:</dt>
+<dt>To see the all the available options run the following command:</dt>
 <dd><code class="docutils literal"><span class="pre">pca.py</span> <span class="pre">-h</span></code></dd>
 </dl>
 <p><strong>Inputs:</strong></p>
@@ -279,8 +287,8 @@ color coded according to MD
 time</td>
 </tr>
 <tr class="row-even"><td>Scree plot</td>
-<td>Scree plot of contriution of
-first 100 modes
+<td>Scree plot of contriution
+of first 100 modes
 (eigenvectors)</td>
 </tr>
 <tr class="row-odd"><td>RMSD plot</td>
@@ -294,16 +302,16 @@ Mode (eigenvectors)</td>
 </tr>
 </tbody>
 </table>
-<p>Beside the above mentioned plots it also prints useful informations on terminal such as, Information about trajectory, Kaiser-Meyer-Olkein (KMO) index of the trajectory, and Cosine contents of the first few PCs. KMO value range from 1 to 0, 1 indicating that the MD has been sampled sufficiently. The cosine content of pca projections can be used as an indicator if a simulation is converged. Squared Cosine value should be more than 0.5.</p>
+<p>Beside the above-mentioned plots, it also prints useful information on terminal such as, Information about trajectory, Kaiser-Meyer-Olkein (KMO) index of the trajectory, and Cosine contents of the first few PCs. KMO value range from 1 to 0, 1 indicating that the MD has been sampled sufficiently. The cosine content of pca projections can be used as an indicator if a simulation is converged. Squared Cosine value should be more than 0.5.</p>
 <p><strong>Specific Examples:</strong></p>
-<div class="section" id="pca-on-cartesian-cordinates">
-<h2>1.PCA on Cartesian cordinates<a class="headerlink" href="#pca-on-cartesian-cordinates" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="pca-on-cartesian-coordinates">
+<h2>PCA on Cartesian coordinates<a class="headerlink" href="#pca-on-cartesian-coordinates" title="Permalink to this headline">¶</a></h2>
 <p>Given a trajectory called <code class="docutils literal"><span class="pre">trajectory.xtc</span></code> and a topology file called <code class="docutils literal"><span class="pre">complex.pdb</span></code>, the following command could be used:</p>
 <blockquote>
 <div><code class="docutils literal"><span class="pre">pca.py</span> <span class="pre">-t</span> <span class="pre">trajectory.xtc</span> <span class="pre">-p</span> <span class="pre">complex.pdb</span></code></div></blockquote>
-<p>This will perform SVD based PCA on C-alpha atoms by default. To use other method see the following examples.</p>
+<p>This will perform SVD based PCA on C-alpha atoms by default. To use other method, see the following examples.</p>
 <div class="section" id="svd-pca">
-<h3><strong>1.1 SVD PCA</strong><a class="headerlink" href="#svd-pca" title="Permalink to this headline">¶</a></h3>
+<h3><strong>SVD PCA</strong><a class="headerlink" href="#svd-pca" title="Permalink to this headline">¶</a></h3>
 <p>To perform the singular value decomposition (SVD) PCA on C-alpha atoms of a MD trajectory</p>
 <dl class="docutils">
 <dt><strong>Command:</strong></dt>
@@ -316,7 +324,7 @@ Mode (eigenvectors)</td>
 </dl>
 </div>
 <div class="section" id="kernel-pca">
-<h3><strong>1.2 Kernel PCA</strong><a class="headerlink" href="#kernel-pca" title="Permalink to this headline">¶</a></h3>
+<h3><strong>Kernel PCA</strong><a class="headerlink" href="#kernel-pca" title="Permalink to this headline">¶</a></h3>
 <p>To perform the Kernel PCA with linear kernel</p>
 <dl class="docutils">
 <dt><strong>Command:</strong></dt>
@@ -329,15 +337,15 @@ Mode (eigenvectors)</td>
 </dl>
 </div>
 <div class="section" id="incrementalpca">
-<h3><strong>1.3 IncrementalPCA</strong><a class="headerlink" href="#incrementalpca" title="Permalink to this headline">¶</a></h3>
-<p>IPCA (IncrementalPCA) is a varient of normal PCA, which uses low-rank approximation of the input MD trajectory. It uses the amount of memory to store the input trajectory which is independent of trajectory size. IPCA is very usefull in case the size of trajectory size bigger than availaible computer memory.</p>
+<h3><strong>IncrementalPCA</strong><a class="headerlink" href="#incrementalpca" title="Permalink to this headline">¶</a></h3>
+<p>IPCA (IncrementalPCA) is a variant of normal PCA, which uses low-rank approximation of the input MD trajectory. It uses the amount of memory to store the input trajectory which is independent of trajectory size. IPCA is very useful in case the size of trajectory size bigger than available computer memory.</p>
 <dl class="docutils">
 <dt><strong>Command:</strong></dt>
 <dd><code class="docutils literal"><span class="pre">pca.py</span> <span class="pre">-t</span> <span class="pre">trajectory.xtc</span> <span class="pre">-p</span> <span class="pre">complex.pdb</span> <span class="pre">-ag</span> <span class="pre">CA</span> <span class="pre">-pt</span> <span class="pre">ipca</span></code></dd>
 </dl>
 </div>
 <div class="section" id="eigenvalue-decomposition-evd-pca">
-<h3><strong>1.4 Eigenvalue decomposition (EVD) PCA</strong><a class="headerlink" href="#eigenvalue-decomposition-evd-pca" title="Permalink to this headline">¶</a></h3>
+<h3><strong>Eigenvalue decomposition (EVD) PCA</strong><a class="headerlink" href="#eigenvalue-decomposition-evd-pca" title="Permalink to this headline">¶</a></h3>
 <p>To perform the PCA by eigenvalue decomposition</p>
 <dl class="docutils">
 <dt><strong>Command:</strong></dt>
@@ -350,9 +358,9 @@ Mode (eigenvectors)</td>
 </dl>
 </div>
 </div>
-<div class="section" id="pca-on-internal-cordinates">
-<h2>2.PCA on internal cordinates<a class="headerlink" href="#pca-on-internal-cordinates" title="Permalink to this headline">¶</a></h2>
-<p>User can also performs the PCA on internal cordinates of a MD trajectory. Options are availaible for different types of internal cordinates such as:<em>pairwise distance between atoms</em>, <em>1-3 angle between backbone atoms</em>, <em>psi angle</em>, and <em>phi angle</em>.</p>
+<div class="section" id="pca-on-internal-coordinates">
+<h2>PCA on internal coordinates<a class="headerlink" href="#pca-on-internal-coordinates" title="Permalink to this headline">¶</a></h2>
+<p>User can also perform the PCA on internal coordinates of a MD trajectory. Options are available for different types of internal coordinates such as:<em>pairwise distance between atoms</em>, <em>1-3 angle between backbone atoms</em>, <em>psi angle</em>, and <em>phi angle</em>.</p>
 <p><strong>General Usage:</strong></p>
 <dl class="docutils">
 <dt><strong>Command:</strong></dt>
@@ -404,7 +412,7 @@ backbone = backbone atoms,
 CA= C alpha atoms,
 protein= protein’s atoms</td>
 </tr>
-<tr class="row-even"><td>Cordinate Type</td>
+<tr class="row-even"><td>Coordinate Type</td>
 <td>string</td>
 <td><code class="docutils literal"><span class="pre">-ct</span></code></td>
 <td>Internal cordinate type.
@@ -431,25 +439,25 @@ is grace formatted text file</td>
 </tr>
 <tr class="row-odd"><td>PC plots (.png)</td>
 <td>2D Plot of first 3 PCs. Same
-as above, but point are
+as above, but points are
 color coded according to MD
 time</td>
 </tr>
 <tr class="row-even"><td>Scree plot</td>
-<td>Scree plot of contriution of
-first 100 modes
+<td>Scree plot of contriution
+of first 100 modes
 (eigenvectors)</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Specific Exaples:</strong></p>
-<p><strong>2.1 PCA on pairwise distance between C-alpha atoms:</strong></p>
+<p><strong>Specific Examples:</strong></p>
+<p><strong>PCA on pairwise distance between C-alpha atoms:</strong></p>
 <p>To perform the PCA on pairwise distance between C-alpha atoms of MD trajectory <code class="docutils literal"><span class="pre">trajectory.xtc</span></code> and a topology file called <code class="docutils literal"><span class="pre">complex.pdb</span></code></p>
 <dl class="docutils">
 <dt><strong>Command:</strong></dt>
 <dd><code class="docutils literal"><span class="pre">internal_pca.py</span> <span class="pre">-t</span> <span class="pre">trajectory.xtc</span> <span class="pre">-p</span> <span class="pre">complex.pdb</span> <span class="pre">-ag</span> <span class="pre">CA</span> <span class="pre">-ct</span> <span class="pre">distance</span></code></dd>
 </dl>
-<p><strong>2.2 PCA on psi angles:</strong></p>
+<p><strong>PCA on psi angles:</strong></p>
 <dl class="docutils">
 <dt><strong>Command:</strong></dt>
 <dd><code class="docutils literal"><span class="pre">internal_pca.py</span> <span class="pre">-t</span> <span class="pre">trajectory.xtc</span> <span class="pre">-p</span> <span class="pre">complex.pdb</span> <span class="pre">-ct</span> <span class="pre">psi</span></code></dd>
@@ -461,8 +469,8 @@ first 100 modes
 </dl>
 </div>
 <div class="section" id="mds-multi-dimentional-scaling-on-md-trajectory">
-<h2>3.MDS (Multi-dimentional scaling)  on MD trajectory<a class="headerlink" href="#mds-multi-dimentional-scaling-on-md-trajectory" title="Permalink to this headline">¶</a></h2>
-<p>MDS is a tool to visualize the similarity or dissimilarity in a dataset. Two types of dissimilarity measures can be used in the case of a MD trajectory. First is Euclidean distance between internal cordinates of a protein structure, second is pairwise RMSD between a set of atoms over the frames of a MD trajectory.</p>
+<h2>MDS (Multi-dimentional scaling)  on MD trajectory<a class="headerlink" href="#mds-multi-dimentional-scaling-on-md-trajectory" title="Permalink to this headline">¶</a></h2>
+<p>MDS is a tool to visualize the similarity or dissimilarity in a dataset. Two types of dissimilarity measures can be used in the case of a MD trajectory. First is Euclidean distance between internal coordinates of a protein structure, second is pairwise RMSD between a set of atoms over the frames of a MD trajectory.</p>
 <p><strong>General Usage:</strong></p>
 <dl class="docutils">
 <dt><strong>command:</strong></dt>
@@ -526,13 +534,13 @@ nm=non-metric, metric=metric</td>
 <td>Type of dissimilarity matrix
 to use. euc = Euclidean
 distance between internal
-cordinates, rmsd= pairwise
+coordinates, rmsd= pairwise
 RMSD. Default is rmsd</td>
 </tr>
-<tr class="row-even"><td>Cordinate type</td>
+<tr class="row-even"><td>Coordinate type</td>
 <td>String</td>
 <td><code class="docutils literal"><span class="pre">-ct</span></code></td>
-<td>Internal cordinates type.
+<td>Internal coordinates type.
 Default is pairwise distance
 Only used if Dissimilarity
 type is euclidean</td>
@@ -540,7 +548,7 @@ type is euclidean</td>
 <tr class="row-odd"><td>Atom indices</td>
 <td>String</td>
 <td><code class="docutils literal"><span class="pre">-ai</span></code></td>
-<td>group of atom for pairwise
+<td>Group of atom for pairwise
 distance. Default is C-alpha
 atoms. Other options are:
 all= all atoms,backbone =
@@ -569,20 +577,20 @@ is grace formatted text file</td>
 </tr>
 <tr class="row-odd"><td>PC plots (.png)</td>
 <td>2D Plot of first 3 PCs. Same
-as above, but point are
+as above, but points are
 color coded according to MD
 time</td>
 </tr>
 </tbody>
 </table>
 <p><strong>Specific Examples:</strong></p>
-<p><strong>3.1 MDS on pairwise RMSD:</strong></p>
+<p><strong>MDS on pairwise RMSD:</strong></p>
 <p>To perform the MDS on pairwise RMSD between C-alpha atoms</p>
 <dl class="docutils">
 <dt><strong>Command:</strong></dt>
 <dd><code class="docutils literal"><span class="pre">mds.py</span> <span class="pre">-t</span> <span class="pre">trajectory.xtc</span> <span class="pre">-p</span> <span class="pre">complex.pdb</span> <span class="pre">-dt</span> <span class="pre">rmsd</span> <span class="pre">-ag</span> <span class="pre">CA</span></code></dd>
 </dl>
-<p><strong>3.2 MDS on internal cordinates:</strong></p>
+<p><strong>MDS on internal coordinates:</strong></p>
 <p>To perform the MDS on pairwise distance between C-alpha atoms</p>
 <dl class="docutils">
 <dt><strong>Command:</strong></dt>
@@ -595,8 +603,8 @@ time</td>
 </dl>
 </div>
 <div class="section" id="t-sne-on-md-trajectory">
-<h2>4.t-SNE on MD trajectory<a class="headerlink" href="#t-sne-on-md-trajectory" title="Permalink to this headline">¶</a></h2>
-<p>t-SNE (t-distributed Stochastic Neighbor Embedding) is a tool for dimentionality reduction. It is a varient of stochastic  neighbor embedding technique. t-SNE uses a measure of dissimilarity, which in case of MD trajecotry could be euclidean distance between internal cordinates or pairwise RMSD.</p>
+<h2>t-SNE on MD trajectory<a class="headerlink" href="#t-sne-on-md-trajectory" title="Permalink to this headline">¶</a></h2>
+<p>t-SNE (t-distributed Stochastic Neighbor Embedding) is a tool for dimensionality reduction. It is a variant of stochastic  neighbor embedding technique. t-SNE uses a measure of dissimilarity, which in case of MD trajectory could be Euclidean distance between internal coordinates or pairwise RMSD.</p>
 <p><strong>General Usage:</strong></p>
 <dl class="docutils">
 <dt><strong>Command:</strong></dt>
@@ -648,10 +656,10 @@ backbone = backbone atoms,
 CA= C alpha atoms,
 protein= protein’s atoms</td>
 </tr>
-<tr class="row-even"><td>Cordinate type</td>
+<tr class="row-even"><td>Coordinate type</td>
 <td>String</td>
 <td><code class="docutils literal"><span class="pre">-ct</span></code></td>
-<td>Internal cordinates type.
+<td>Internal coordinates type.
 Default is pairwise distance
 . Only used if Dissimilarity
 type is euclidean</td>
@@ -662,13 +670,13 @@ type is euclidean</td>
 <td>Type of dissimilarity matrix
 to use. euc = Euclidean
 distance between internal
-cordinates, rmsd= pairwise
+coordinates, rmsd= pairwise
 RMSD. Default is rmsd</td>
 </tr>
 <tr class="row-even"><td>Atom indices</td>
 <td>String</td>
 <td><code class="docutils literal"><span class="pre">-ai</span></code></td>
-<td>group of atom for pairwise
+<td>Group of atom for pairwise
 distance. Default is C-alpha
 atoms. Other options are:
 all= all atoms,backbone =
@@ -704,13 +712,13 @@ time</td>
 </tbody>
 </table>
 <p><strong>specific example:</strong></p>
-<p><strong>4.1 t-SNE on C-alpha atoms:</strong>
+<p><strong>t-SNE on C-alpha atoms:</strong>
 To perform the t-SNE using pairwise RMSD of C-alpha atoms as index of dissimilarity.</p>
 <dl class="docutils">
 <dt><strong>command:</strong></dt>
 <dd><code class="docutils literal"><span class="pre">tsne.py</span> <span class="pre">-t</span> <span class="pre">trajectory.xtc</span> <span class="pre">-p</span> <span class="pre">complex.pdb</span> <span class="pre">-ag</span> <span class="pre">CA</span> <span class="pre">-dt</span> <span class="pre">rmsd</span></code></dd>
 </dl>
-<p>To perform the t-SNE using euclidean space between pairwise distance of C-alpha atoms as index of dissimilarity.</p>
+<p>To perform the t-SNE using Euclidean space between pairwise distance of C-alpha atoms as index of dissimilarity.</p>
 <dl class="docutils">
 <dt><strong>command:</strong></dt>
 <dd><code class="docutils literal"><span class="pre">tsne.py</span> <span class="pre">-t</span> <span class="pre">trajectory.xtc</span> <span class="pre">-p</span> <span class="pre">complex.pdb</span> <span class="pre">-ag</span> <span class="pre">CA</span> <span class="pre">-dt</span> <span class="pre">euc</span> <span class="pre">-ai</span> <span class="pre">alpha</span></code></dd>
@@ -731,10 +739,10 @@ To perform the t-SNE using pairwise RMSD of C-alpha atoms as index of dissimilar
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="tutorials.html" class="btn btn-neutral float-right" title="Tutorials" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="nma_tut.html" class="btn btn-neutral float-right" title="NMA Tutorial" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="nma.html" class="btn btn-neutral" title="NMA Scripts" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="nma_use.html" class="btn btn-neutral" title="NMA Scripts" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

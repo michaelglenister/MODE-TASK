@@ -1,0 +1,363 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>PCA Tutorial &mdash; Mode-Task  documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Mode-Task  documentation" href="index.html"/>
+        <link rel="prev" title="NMA Tutorial" href="nma_tut.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Mode-Task
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Theory</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="theory.html">Normal Mode Analysis (NMA)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="theory.html#principle-component-analysis-pca">Principle Component Analysis (PCA)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="nma_use.html">NMA Scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pca_use.html">PCA Scripts</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="nma_tut.html">NMA Tutorial</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">PCA Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#pca-of-a-md-trajectory">PCA of a MD trajectory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mds-multi-dimensional-scaling-on-a-md-trajectory">MDS (Multi-dimensional scaling) on a MD trajectory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#t-sne-on-a-md-trajectory">t-SNE on a MD trajectory</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">Mode-Task</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>PCA Tutorial</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/pca_tut.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="pca-tutorial">
+<h1>PCA Tutorial<a class="headerlink" href="#pca-tutorial" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="pca-of-a-md-trajectory">
+<h2>PCA of a MD trajectory<a class="headerlink" href="#pca-of-a-md-trajectory" title="Permalink to this headline">¶</a></h2>
+<p>In this tutorial, we will be performing PCA on a MD trajectory of protein. Before doing the PCA we need to prepare the trajectory which includes, removing periodicity, removing water molecules. Most of the MD packages have options to do this. We will be using GROMACS for this tutorial purpose. We will be using .xtc format for trajectory and .pdb for topology file. Any other common trajectory format should also work with the MODE-TASK.</p>
+<p><strong>1. Preparation of trajectory</strong></p>
+<p><strong>1.1. Remove periodicity</strong></p>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">gmx_mpi</span> <span class="n">trjconv</span> <span class="o">-</span><span class="n">s</span> <span class="n">md_01</span><span class="o">.</span><span class="n">tpr</span> <span class="o">-</span><span class="n">f</span> <span class="n">md_01</span><span class="o">.</span><span class="n">xtc</span> <span class="o">-</span><span class="n">o</span> <span class="n">md_01_noPBC</span><span class="o">.</span><span class="n">xtc</span> <span class="o">-</span><span class="n">pbc</span> <span class="n">mol</span> <span class="o">-</span><span class="n">ur</span> <span class="n">compact</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>select system to apply it.</p>
+<p><strong>1.2. Remove water</strong></p>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">gmx_mpi</span> <span class="n">trjconv</span> <span class="o">-</span><span class="n">s</span> <span class="n">md_01</span><span class="o">.</span><span class="n">tpr</span> <span class="o">-</span><span class="n">f</span> <span class="n">md_01_noPBC</span><span class="o">.</span><span class="n">xtc</span> <span class="o">-</span><span class="n">o</span> <span class="n">md_01_noWAT</span><span class="o">.</span><span class="n">xtc</span> <span class="o">-</span><span class="n">n</span> <span class="n">index</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>and select protein</p>
+<p><strong>2. Create a working directory</strong></p>
+<p>First create a directory for all the Mode Task scripts using the linux command:</p>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mkdir</span> <span class="n">ModeTask</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Copy the entire contents of the MODE_TASK Scripts in to the ModeTask directory.</p>
+<p>Within this directory create a folder called Tutorial:</p>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">ModeTask</span>
+<span class="n">mkdir</span> <span class="n">Tutorial</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>We will run all scripts from the MODE-TASK directory. Move the trajectory (md_01_noWAT.xtc) and topology file (complex.pdb) in to the Tutorial directory.</p>
+<p><strong>3. Running PCA</strong></p>
+<p>MODE-TASK includes tools to perform PCA on Cartesian coordinates as well as internal coordinates system. It also allows users to run different variant of PCA on a protein MD trajectory.</p>
+<p><strong>3.1. PCA on Cartesian coordinates</strong></p>
+<p>Run the following command to perform the singular value decomposition (SVD) PCA on C-alpha atoms.</p>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pca</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">t</span> <span class="n">Tutorial</span><span class="o">/</span><span class="n">md_01_noWAT</span><span class="o">.</span><span class="n">xtc</span> <span class="o">-</span><span class="n">p</span> <span class="n">Tutorial</span><span class="o">/</span><span class="nb">complex</span><span class="o">.</span><span class="n">pdb</span> <span class="o">-</span><span class="n">ag</span> <span class="n">CA</span> <span class="o">-</span><span class="n">pt</span> <span class="n">svd</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p><strong>Output:</strong></p>
+<p><strong>(a).</strong> Various output files are written to out_md_01_noWAT.xtc directory.
+2D Plot of first 3 PCs, Scree plot, RMSD plot, and RMSD Modes Plot.
+For details about these output files please refer to the MODE-TASK documentation.</p>
+<p><strong>(b).</strong> Command line output: Following output is redirected to command line.</p>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Results</span> <span class="n">will</span> <span class="n">be</span> <span class="n">written</span> <span class="ow">in</span> <span class="n">out_md_01_noWAT</span><span class="o">.</span><span class="n">xtc</span>
+<span class="n">Reading</span> <span class="n">trajectory</span> <span class="n">Tutorial</span><span class="o">/</span><span class="n">md_01_noWAT</span><span class="o">.</span><span class="n">xtc</span> <span class="o">...</span>
+<span class="n">No</span> <span class="n">reference</span> <span class="n">structure</span> <span class="n">given</span><span class="p">,</span> <span class="n">RMSD</span> <span class="n">will</span> <span class="n">be</span> <span class="n">computed</span> <span class="n">to</span> <span class="n">the</span> <span class="n">first</span> <span class="n">frame</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">trajectory</span>
+<span class="n">Trajectory</span> <span class="n">info</span><span class="p">:</span>
+<span class="n">Total</span> <span class="mi">101</span> <span class="n">frames</span> <span class="n">read</span> <span class="kn">from</span> <span class="nn">Tutorial</span><span class="o">/</span><span class="n">md_01_noWAT</span><span class="o">.</span><span class="n">xtc</span>
+<span class="n">MD</span> <span class="n">time</span> <span class="ow">is</span> <span class="kn">from</span> <span class="mf">199000.0</span> <span class="n">to</span> <span class="mf">200000.0</span> <span class="n">ps</span>
+<span class="mi">13244</span> <span class="n">atoms</span> <span class="ow">and</span> <span class="mi">861</span> <span class="n">residues</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">trajectory</span>
+<span class="n">Atom</span> <span class="n">group</span> <span class="n">selected</span> <span class="k">for</span> <span class="n">PCA</span><span class="p">:</span> <span class="n">CA</span>
+<span class="n">Total</span> <span class="mi">860</span> <span class="n">CA</span> <span class="n">atoms</span> <span class="n">selected</span> <span class="k">for</span> <span class="n">analysis</span>
+<span class="n">KMO</span> <span class="k">for</span> <span class="nb">input</span> <span class="n">trajectory</span> <span class="ow">is</span> <span class="mf">5.25051335835e-06</span>
+<span class="n">RMSD</span> <span class="n">written</span> <span class="n">to</span> <span class="n">rmsd</span><span class="o">.</span><span class="n">agr</span>
+<span class="n">Performing</span> <span class="n">SVD</span> <span class="p">(</span><span class="n">Single</span> <span class="n">Value</span> <span class="n">Decomposition</span><span class="p">)</span> <span class="n">PCA</span> <span class="k">with</span> <span class="s1">&#39;auto&#39;</span> <span class="n">svd_solver</span>
+<span class="n">Trace</span> <span class="n">of</span> <span class="n">the</span> <span class="n">covariance</span> <span class="n">matrix</span> <span class="ow">is</span><span class="p">:</span>  <span class="mf">4.9427056479</span>
+<span class="n">cosine</span> <span class="n">content</span> <span class="n">of</span> <span class="n">first</span> <span class="n">PC</span><span class="o">=</span> <span class="mf">0.777934456531</span>
+<span class="n">cosine</span> <span class="n">content</span> <span class="n">of</span> <span class="n">second</span> <span class="n">PC</span><span class="o">=</span> <span class="mf">0.643848137376</span>
+<span class="n">cosine</span> <span class="n">content</span> <span class="n">of</span> <span class="mi">3</span><span class="n">rd</span> <span class="n">PC</span><span class="o">=</span> <span class="mf">0.70061477062</span>
+<span class="n">cosine</span> <span class="n">content</span> <span class="n">of</span> <span class="mi">4</span><span class="n">th</span> <span class="n">PC</span><span class="o">=</span> <span class="mf">0.530112237076</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p><strong>3.2. Visualizing the results</strong></p>
+<p>2D Plot of first 3 PCs in grace and png format are written. In order to open the .agr file with xmgrace run the following command.</p>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">xmgrace</span> <span class="n">out_pca_test_trj</span><span class="o">.</span><span class="n">xtc</span><span class="o">/</span><span class="n">pca_projection1_2</span><span class="o">.</span><span class="n">agr</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>You can also visualize the .png format figure plot by opening it with your favorite picture visualizer.  Same way open the rmsd.agr and pca_variance.agr also.</p>
+<div class="figure align-center" id="id1">
+<img alt="_images/pca_tut1.png" src="_images/pca_tut1.png" />
+<p class="caption"><span class="caption-text">Fig: plot of PC1 and PC2</span></p>
+</div>
+<div class="figure align-center" id="id2">
+<img alt="_images/pca_tut2.png" src="_images/pca_tut2.png" />
+<p class="caption"><span class="caption-text">Fig: plot of PC1 and PC3</span></p>
+</div>
+<div class="figure align-center" id="id3">
+<img alt="_images/pca_tut3.png" src="_images/pca_tut3.png" />
+<p class="caption"><span class="caption-text">Fig: Explained variance of PCs</span></p>
+</div>
+<p><strong>3.2. PCA on Internal coordinates</strong></p>
+<p>One can also do PCA on internal coordinates of a MD trajectory. Options are available for different types of internal coordinates such as, pairwise distance between atoms, 1-3 angle between backbone atoms, psi angle, and phi angle. Run the following command to PCA on pairwise distance between C-alpha atoms.</p>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">internal_pca</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">t</span> <span class="n">Tutorial</span><span class="o">/</span><span class="n">md_01_noWAT</span><span class="o">.</span><span class="n">xtc</span> <span class="o">-</span><span class="n">p</span> <span class="n">Tutorial</span><span class="o">/</span><span class="nb">complex</span><span class="o">.</span><span class="n">pdb</span> <span class="o">-</span><span class="n">ag</span> <span class="n">CA</span> <span class="o">-</span><span class="n">ct</span> <span class="n">distance</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Run the following command to PCA on backbone psi angles.</p>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">internal_pca</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">t</span> <span class="n">Tutorial</span><span class="o">/</span><span class="n">md_01_noWAT</span><span class="o">.</span><span class="n">xtc</span> <span class="o">-</span><span class="n">p</span> <span class="n">Tutorial</span><span class="o">/</span><span class="nb">complex</span><span class="o">.</span><span class="n">pdb</span> <span class="o">-</span><span class="n">ag</span> <span class="n">CA</span> <span class="o">-</span><span class="n">ct</span> <span class="n">psi</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Output files include 2D plot of first 3 PCs and scree plot. Which can be visualize using xmgrace as described earlier.</p>
+</div>
+<div class="section" id="mds-multi-dimensional-scaling-on-a-md-trajectory">
+<h2>MDS (Multi-dimensional scaling) on a MD trajectory<a class="headerlink" href="#mds-multi-dimensional-scaling-on-a-md-trajectory" title="Permalink to this headline">¶</a></h2>
+<p>To perform the MDS on pairwise RMSD between C-alpha atoms, run the following command.</p>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mds</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">t</span> <span class="n">Tutorial</span><span class="o">/</span><span class="n">md_01_noWAT</span><span class="o">.</span><span class="n">xtc</span> <span class="o">-</span><span class="n">p</span> <span class="n">Tutorial</span><span class="o">/</span><span class="nb">complex</span><span class="o">.</span><span class="n">pdb</span> <span class="o">-</span><span class="n">ag</span> <span class="n">CA</span> <span class="o">-</span><span class="n">dt</span> <span class="n">rmsd</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Output files include 2D plot of first 3 PCs. Which can be visualize using xmgrace as described earlier.</p>
+<div class="figure align-center" id="id4">
+<img alt="_images/mmds1.png" src="_images/mmds1.png" />
+<p class="caption"><span class="caption-text">Fig: plot of PC1 and PC2</span></p>
+</div>
+<div class="figure align-center" id="id5">
+<img alt="_images/mmds2.png" src="_images/mmds2.png" />
+<p class="caption"><span class="caption-text">Fig: plot of PC1 and PC3</span></p>
+</div>
+</div>
+<div class="section" id="t-sne-on-a-md-trajectory">
+<h2>t-SNE on a MD trajectory<a class="headerlink" href="#t-sne-on-a-md-trajectory" title="Permalink to this headline">¶</a></h2>
+<p>Run the following command to perform the t-SNE using pairwise RMSD of C-alpha atoms as index of dissimilarity.</p>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">tsne</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">t</span> <span class="n">Tutorial</span><span class="o">/</span><span class="n">md_01_noWAT</span><span class="o">.</span><span class="n">xtc</span> <span class="o">-</span><span class="n">p</span> <span class="n">Tutorial</span><span class="o">/</span><span class="nb">complex</span><span class="o">.</span><span class="n">pdb</span> <span class="o">-</span><span class="n">ag</span> <span class="n">CA</span> <span class="o">-</span><span class="n">dt</span> <span class="n">rmsd</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Output files include 2D plot of first 3 PCs. Which can be visualize using xmgrace as described earlier.</p>
+<blockquote>
+<div><div class="figure align-center" id="id6">
+<img alt="_images/tsne1.png" src="_images/tsne1.png" />
+<p class="caption"><span class="caption-text">Fig: plot of PC1 and PC2</span></p>
+</div>
+</div></blockquote>
+<div class="figure align-center" id="id7">
+<img alt="_images/tsne2.png" src="_images/tsne2.png" />
+<p class="caption"><span class="caption-text">Fig: plot of PC1 and PC3</span></p>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="nma_tut.html" class="btn btn-neutral" title="NMA Tutorial" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, CJ Ross, B Nizami, M Glenister, OS Amamuddy, AR Atilgan, C Atilgan and Ö Tastan Bishop.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
