@@ -1,21 +1,21 @@
-PCA Scripts
+﻿PCA Scripts
 ====================================
 
-Principal component analysis (PCA) is a useful statistical technique that has found application in detection of correlated motion in MD data. Protein dynamics is manifested as a change in molecular structure, or conformation over a time scale. PCA extract most important motions from a protein's MD trajectory using a covariance/correlation matrix (C-matrix) constructed from atomic coordinates. Different types of cordinates systems (Cartesian or internal coordinates) can be employed that define atomic movement in each time frame of a trajectory. Modes describing the protein motions can be constructed by diagonalizing the C-matrix. It leads to a complete set of orthonormal (orthogonal and normalized) collective modes (eigenvectors) with each eigenvalues (variance) that characterize the protein dynamics. Eigenvalues with largest value represent the larger spatial motion. When the original mean centered data (MD trajectory) is projected on eigenvectors the result is called Principle Components (PC). Diagonilazation of C-matrix could be done by Eigenvalue decomposition (EVD) or Singular value decomposition (SVD), with later being computationaly efficient.  
+Principal component analysis (PCA) is a useful statistical technique that has found application in detection of correlated motion in MD data. Protein dynamics is manifested as a change in molecular structure, or conformation over a time scale. PCA extract most important motions from a protein's MD trajectory using a covariance/correlation matrix (C-matrix) constructed from atomic coordinates. Different types of coordinates systems (Cartesian or internal coordinates) can be employed that define atomic movement in each time frame of a trajectory. Modes describing the protein motions can be constructed by diagonalizing the C-matrix. It leads to a complete set of orthonormal (orthogonal and normalized) collective modes (eigenvectors) with each eigenvalues (variance) that characterize the protein dynamics. Eigenvalues with largest value represent the larger spatial motion. When the original mean centered data (MD trajectory) is projected on eigenvectors the result is called Principle Components (PC). Diagonalization of C-matrix could be done by Eigenvalue decomposition (EVD) or Singular value decomposition (SVD), with later being computationally efficient.  
 
-As stated esralier different representaion of protein conformation can be used. One can choose cartesian cordinates or internal cordinates such as pairwise distance between atoms, 1-3 angle, torsional angles (psi or phi). Since decomposition of a C-matrix is memory intesive and very often programe will run out of memory, often a course graining is required such as selecting C-alpha atoms. User can select the subset of atoms from the trajectory for the analysis such as C-alpha, backbone atoms or all protein's atoms. It is highly recomonded that user should strip the water from the trajectory before using with this tools, as it would results in faster loading and alleviate the memory issues.     
+As stated earlier different representation of protein conformation can be used. One can choose cartesian coordinates or internal coordinates such as pairwise distance between atoms, 1-3 angle, torsional angles (psi or phi). Since decomposition of a C-matrix is memory intensive and very often program will run out of memory, often a course graining is required such as selecting C-alpha atoms. User can select the subset of atoms from the trajectory for the analysis such as C-alpha, backbone atoms or all protein's atoms. It is highly recommended that user should strip the water from the trajectory before hand, as it would result in faster loading and alleviate the memory issues.     
 
-PCA uses the linear transformation which may not be sufficient in case where variables are non-linearly related.  In such cases user has option to perform Nonlinear generaliztion of PCA such as Kernel PCA (kPCA). Caustion should be exersice while interpeting the kPCA results since it is mapped to a feature space which is inherently different than conformational space. Neverthless kPCA is useful in understanidng the prtoien's fucntions in terms of its conformational dynamics.  
+PCA uses the linear transformation which may not be sufficient in case where variables are non-linearly related.  In such cases user has option to perform Nonlinear generaliztion of PCA such as Kernel PCA (kPCA). Caution should be exercise while interpreting the kPCA results since it is mapped to a feature space which is inherently different than conformational space. Nevertheless, kPCA is useful in understanding the protein's functions in terms of its conformational dynamics.  
 
 
 **General Usage:** 
 
-To perform PCA on a protein's MD trajectory we need a sufficently sampled MD trajectory and a corresposnding topology file. It can be acehived by running the following command. 
+To perform PCA on a protein's MD trajectory we need a sufficently sampled MD trajectory and a corresponding topology file. It can be achieved by running the following command. 
 
 **Command:** 
 	``pca.py -t <MD trajectory> -p <topology file>``	
 
-To see the all the availaible options run the following command:
+To see the all the available options run the following command:
 	``pca.py -h``
 
 **Inputs:**
@@ -89,7 +89,8 @@ To see the all the availaible options run the following command:
 |                        | color coded according to MD |
 |                        | time                        |
 +------------------------+-----------------------------+
-| Scree plot 	         | Scree plot of contriution of|
+| Scree plot 	         | Scree plot of contribution  |
+|                        | of                          |
 |                        | first 100 modes             |
 |                        | (eigenvectors)              | 
 +------------------------+-----------------------------+
@@ -101,13 +102,13 @@ To see the all the availaible options run the following command:
 |                        | Mode (eigenvectors)         |
 +------------------------+-----------------------------+
 
-Beside the above mentioned plots it also prints useful informations on terminal such as, Information about trajectory, Kaiser-Meyer-Olkein (KMO) index of the trajectory, and Cosine contents of the first few PCs. KMO value range from 1 to 0, 1 indicating that the MD has been sampled sufficiently. The cosine content of pca projections can be used as an indicator if a simulation is converged. Squared Cosine value should be more than 0.5.  
+Beside the above mentioned plots, it also prints useful information on terminal such as, Information about trajectory, Kaiser-Meyer-Olkein (KMO) index of the trajectory, and Cosine contents of the first few PCs. KMO value range from 1 to 0, 1 indicating that the MD has been sampled sufficiently. The cosine content of pca projections can be used as an indicator if a simulation is converged. Squared Cosine value should be more than 0.5.  
 
 
 
 **Specific Examples:**
 
-1.PCA on Cartesian cordinates
+1.PCA on Cartesian coordinates
 -------------------------------
 
 Given a trajectory called ``trajectory.xtc`` and a topology file called ``complex.pdb``, the following command could be used:
@@ -149,7 +150,7 @@ To perform the Kernel PCA with rbf kernel
 **1.3 IncrementalPCA** 
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-IPCA (IncrementalPCA) is a varient of normal PCA, which uses low-rank approximation of the input MD trajectory. It uses the amount of memory to store the input trajectory which is independent of trajectory size. IPCA is very usefull in case the size of trajectory size bigger than availaible computer memory.
+IPCA (IncrementalPCA) is a variant of normal PCA, which uses low-rank approximation of the input MD trajectory. It uses the amount of memory to store the input trajectory which is independent of trajectory size. IPCA is very useful in case the size of trajectory size bigger than available computer memory.
 
 **Command:** 
 	  ``pca.py -t trajectory.xtc -p complex.pdb -ag CA -pt ipca``
@@ -168,10 +169,10 @@ Run the following command to see the detailed usage and other options:
 	``pca.py -h``
 
 
-2.PCA on internal cordinates
+2.PCA on internal coordinates
 -----------------------------
 
-User can also performs the PCA on internal cordinates of a MD trajectory. Options are availaible for different types of internal cordinates such as:*pairwise distance between atoms*, *1-3 angle between backbone atoms*, *psi angle*, and *phi angle*. 
+User can also performs the PCA on internal coordinates of a MD trajectory. Options are availaible for different types of internal coordinates such as:*pairwise distance between atoms*, *1-3 angle between backbone atoms*, *psi angle*, and *phi angle*. 
 
 **General Usage:**
 
@@ -221,12 +222,13 @@ User can also performs the PCA on internal cordinates of a MD trajectory. Option
 |                        | color coded according to MD |
 |                        | time                        |
 +------------------------+-----------------------------+
-| Scree plot 	         | Scree plot of contriution of|
+| Scree plot 	         | Scree plot of contribution  |
+|                        | of                          |
 |                        | first 100 modes             |
 |                        | (eigenvectors)              | 
 +------------------------+-----------------------------+
 
-**Specific Exaples:**
+**Specific Examples:**
 
 **2.1 PCA on pairwise distance between C-alpha atoms:** 
 
@@ -245,10 +247,10 @@ To perform the PCA on pairwise distance between C-alpha atoms of MD trajectory `
 Run the following command to see the detailed usage and other options:
 	``internal_pca.py -h``
 
-3.MDS (Multi-dimentional scaling)  on MD trajectory
+3.MDS (Multi-dimensional scaling)  on MD trajectory
 ---------------------------------------------------
 
-MDS is a tool to visualize the similarity or dissimilarity in a dataset. Two types of dissimilarity measures can be used in the case of a MD trajectory. First is Euclidean distance between internal cordinates of a protein structure, second is pairwise RMSD between a set of atoms over the frames of a MD trajectory.
+MDS is a tool to visualize the similarity or dissimilarity in a dataset. Two types of dissimilarity measures can be used in the case of a MD trajectory. First is Euclidean distance between internal coordinates of a protein structure, second is pairwise RMSD between a set of atoms over the frames of a MD trajectory.
 
 **General Usage:**
 
@@ -285,10 +287,10 @@ MDS is a tool to visualize the similarity or dissimilarity in a dataset. Two typ
 | Dissimilarity type     | String     | ``-dt``            | Type of dissimilarity matrix|
 |                        |            |                    | to use. euc = Euclidean     |
 |                        |            |                    | distance between internal   |
-|                        |            |                    | cordinates, rmsd= pairwise  |
+|                        |            |                    | coordinates, rmsd= pairwise  |
 |                        |            |                    | RMSD. Default is rmsd       |
 +------------------------+------------+--------------------+-----------------------------+
-| Cordinate type         | String     | ``-ct``		   | Internal cordinates type.   |
+| Cordinate type         | String     | ``-ct``		   | Internal coordinates type.   |
 |                        |            |                    | Default is pairwise distance|
 |                        |            |                    | Only used if Dissimilarity  |
 |                        |            |                    | type is euclidean           |
@@ -327,7 +329,7 @@ To perform the MDS on pairwise RMSD between C-alpha atoms
 **Command:** 
 	``mds.py -t trajectory.xtc -p complex.pdb -dt rmsd -ag CA``
 
-**3.2 MDS on internal cordinates:**  
+**3.2 MDS on internal coordinates:**  
 
 To perform the MDS on pairwise distance between C-alpha atoms 
 
@@ -342,7 +344,7 @@ Run the following command to see the detailed usage and other options:
 4.t-SNE on MD trajectory
 --------------------------------------------------------------------
 
-t-SNE (t-distributed Stochastic Neighbor Embedding) is a tool for dimentionality reduction. It is a varient of stochastic  neighbor embedding technique. t-SNE uses a measure of dissimilarity, which in case of MD trajecotry could be euclidean distance between internal cordinates or pairwise RMSD.   
+t-SNE (t-distributed Stochastic Neighbor Embedding) is a tool for dimensionality reduction. It is a variant of stochastic  neighbor embedding technique. t-SNE uses a measure of dissimilarity, which in case of MD trajectory could be Euclidean distance between internal coordinates or pairwise RMSD.   
 
 
 
@@ -375,7 +377,7 @@ t-SNE (t-distributed Stochastic Neighbor Embedding) is a tool for dimentionality
 |                        |            |                    | CA= C alpha atoms,          |
 |                        |            |                    | protein= protein's atoms    |
 +------------------------+------------+--------------------+-----------------------------+
-| Cordinate type         | String     | ``-ct``		   | Internal cordinates type.   |
+| Cordinate type         | String     | ``-ct``		   | Internal coordinates type.   |
 |                        |            |                    | Default is pairwise distance|
 |                        |            |                    | . Only used if Dissimilarity|
 |                        |            |                    | type is euclidean           |
@@ -383,7 +385,7 @@ t-SNE (t-distributed Stochastic Neighbor Embedding) is a tool for dimentionality
 | Dissimilarity type     | String     | ``-dt``            | Type of dissimilarity matrix|
 |                        |            |                    | to use. euc = Euclidean     |
 |                        |            |                    | distance between internal   |
-|                        |            |                    | cordinates, rmsd= pairwise  |
+|                        |            |                    | coordinates, rmsd= pairwise  |
 |                        |            |                    | RMSD. Default is rmsd       |
 +------------------------+------------+--------------------+-----------------------------+
 | Atom indices           | String     | ``-ai``            | group of atom for pairwise  |
@@ -419,7 +421,7 @@ To perform the t-SNE using pairwise RMSD of C-alpha atoms as index of dissimilar
 **command:**
 	``tsne.py -t trajectory.xtc -p complex.pdb -ag CA -dt rmsd``
 
-To perform the t-SNE using euclidean space between pairwise distance of C-alpha atoms as index of dissimilarity.
+To perform the t-SNE using Euclidean space between pairwise distance of C-alpha atoms as index of dissimilarity.
 
 **command:**
 	``tsne.py -t trajectory.xtc -p complex.pdb -ag CA -dt euc -ai alpha``
