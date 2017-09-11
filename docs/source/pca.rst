@@ -5,12 +5,12 @@ Principal component analysis (PCA) is a useful statistical technique that has fo
 
 As stated earlier different representation of protein conformation can be used. One can choose cartesian coordinates or internal coordinates such as pairwise distance between atoms, 1-3 angle, torsional angles (psi or phi). Since decomposition of a C-matrix is memory intensive and very often program will run out of memory, often a course graining is required such as selecting C-alpha atoms. User can select the subset of atoms from the trajectory for the analysis such as C-alpha, backbone atoms or all protein's atoms. It is highly recommended that user should strip the water from the trajectory before hand, as it would result in faster loading and alleviate the memory issues.     
 
-PCA uses the linear transformation which may not be sufficient in case where variables are non-linearly related.  In such cases user has option to perform Nonlinear generaliztion of PCA such as Kernel PCA (kPCA). Caution should be exercise while interpreting the kPCA results since it is mapped to a feature space which is inherently different than conformational space. Nevertheless, kPCA is useful in understanding the protein's functions in terms of its conformational dynamics.  
+PCA uses the linear transformation which may not be sufficient in case where variables are non-linearly related.  In such cases user has option to perform Nonlinear generalization of PCA such as Kernel PCA (kPCA). Caution should be exercise while interpreting the kPCA results since it is mapped to a feature space which is inherently different than conformational space. Nevertheless, kPCA is useful in understanding the protein's functions in terms of its conformational dynamics.  
 
 
 **General Usage:** 
 
-To perform PCA on a protein's MD trajectory we need a sufficently sampled MD trajectory and a corresponding topology file. It can be achieved by running the following command. 
+To perform PCA on a protein's MD trajectory we need a sufficiently sampled MD trajectory and a corresponding topology file. It can be achieved by running the following command. 
 
 **Command:** 
 	``pca.py -t <MD trajectory> -p <topology file>``	
@@ -98,11 +98,11 @@ To see the all the available options run the following command:
 |                        | the MD time                 |
 +------------------------+-----------------------------+
 | RMSD Modes             | Plot of contribution of     |
-|                        | each resdiues toward first 3|
+|                        | each residues toward first 3|
 |                        | Mode (eigenvectors)         |
 +------------------------+-----------------------------+
 
-Beside the above mentioned plots, it also prints useful information on terminal such as, Information about trajectory, Kaiser-Meyer-Olkein (KMO) index of the trajectory, and Cosine contents of the first few PCs. KMO value range from 1 to 0, 1 indicating that the MD has been sampled sufficiently. The cosine content of pca projections can be used as an indicator if a simulation is converged. Squared Cosine value should be more than 0.5.  
+Beside the above-mentioned plots, it also prints useful information on terminal such as, Information about trajectory, Kaiser-Meyer-Olkein (KMO) index of the trajectory, and Cosine contents of the first few PCs. KMO value range from 1 to 0, 1 indicating that the MD has been sampled sufficiently. The cosine content of pca projections can be used as an indicator if a simulation is converged. Squared Cosine value should be more than 0.5.  
 
 
 
@@ -115,7 +115,7 @@ Given a trajectory called ``trajectory.xtc`` and a topology file called ``comple
 
 	``pca.py -t trajectory.xtc -p complex.pdb``
 
-This will perform SVD based PCA on C-alpha atoms by default. To use other method see the following examples. 
+This will perform SVD based PCA on C-alpha atoms by default. To use other method, see the following examples. 
 
 
 
@@ -172,7 +172,7 @@ Run the following command to see the detailed usage and other options:
 2.PCA on internal coordinates
 -----------------------------
 
-User can also performs the PCA on internal coordinates of a MD trajectory. Options are availaible for different types of internal coordinates such as:*pairwise distance between atoms*, *1-3 angle between backbone atoms*, *psi angle*, and *phi angle*. 
+User can also perform the PCA on internal coordinates of a MD trajectory. Options are available for different types of internal coordinates such as:*pairwise distance between atoms*, *1-3 angle between backbone atoms*, *psi angle*, and *phi angle*. 
 
 **General Usage:**
 
@@ -203,7 +203,7 @@ User can also performs the PCA on internal coordinates of a MD trajectory. Optio
 |                        |            |                    | CA= C alpha atoms,          |
 |                        |            |                    | protein= protein's atoms    |
 +------------------------+------------+--------------------+-----------------------------+
-| Cordinate Type         | string     | ``-ct``            | Internal cordinate type.    |
+| Coordinate Type        | string     | ``-ct``            | Internal coordinate type.   |
 |                        |            |                    | Options are: distance,      |
 |                        |            |                    | angles, phi and, psi        |
 +------------------------+------------+--------------------+-----------------------------+
@@ -218,7 +218,7 @@ User can also performs the PCA on internal coordinates of a MD trajectory. Optio
 |                        | is grace formatted text file|
 +------------------------+-----------------------------+
 | PC plots (.png)	 | 2D Plot of first 3 PCs. Same|
-|                        | as above, but point are     |
+|                        | as above, but points are    |
 |                        | color coded according to MD |
 |                        | time                        |
 +------------------------+-----------------------------+
@@ -287,10 +287,10 @@ MDS is a tool to visualize the similarity or dissimilarity in a dataset. Two typ
 | Dissimilarity type     | String     | ``-dt``            | Type of dissimilarity matrix|
 |                        |            |                    | to use. euc = Euclidean     |
 |                        |            |                    | distance between internal   |
-|                        |            |                    | coordinates, rmsd= pairwise  |
+|                        |            |                    | coordinates, rmsd= pairwise |
 |                        |            |                    | RMSD. Default is rmsd       |
 +------------------------+------------+--------------------+-----------------------------+
-| Cordinate type         | String     | ``-ct``		   | Internal coordinates type.   |
+| Cordinate type         | String     | ``-ct``		   | Internal coordinates type.  |
 |                        |            |                    | Default is pairwise distance|
 |                        |            |                    | Only used if Dissimilarity  |
 |                        |            |                    | type is euclidean           |
@@ -315,7 +315,7 @@ MDS is a tool to visualize the similarity or dissimilarity in a dataset. Two typ
 |                        | is grace formatted text file|
 +------------------------+-----------------------------+
 | PC plots (.png)	 | 2D Plot of first 3 PCs. Same|
-|                        | as above, but point are     |
+|                        | as above, but points are    |
 |                        | color coded according to MD |
 |                        | time                        |
 +------------------------+-----------------------------+
@@ -377,7 +377,7 @@ t-SNE (t-distributed Stochastic Neighbor Embedding) is a tool for dimensionality
 |                        |            |                    | CA= C alpha atoms,          |
 |                        |            |                    | protein= protein's atoms    |
 +------------------------+------------+--------------------+-----------------------------+
-| Cordinate type         | String     | ``-ct``		   | Internal coordinates type.   |
+| Cordinate type         | String     | ``-ct``		   | Internal coordinates type.  |
 |                        |            |                    | Default is pairwise distance|
 |                        |            |                    | . Only used if Dissimilarity|
 |                        |            |                    | type is euclidean           |
@@ -385,7 +385,7 @@ t-SNE (t-distributed Stochastic Neighbor Embedding) is a tool for dimensionality
 | Dissimilarity type     | String     | ``-dt``            | Type of dissimilarity matrix|
 |                        |            |                    | to use. euc = Euclidean     |
 |                        |            |                    | distance between internal   |
-|                        |            |                    | coordinates, rmsd= pairwise  |
+|                        |            |                    | coordinates, rmsd= pairwise |
 |                        |            |                    | RMSD. Default is rmsd       |
 +------------------------+------------+--------------------+-----------------------------+
 | Atom indices           | String     | ``-ai``            | group of atom for pairwise  |
