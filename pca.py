@@ -236,7 +236,7 @@ get_rmsd()
 def svd_pca(svd):
 	'single value decomposition based PCA'
 	pca_traj.superpose(pca_traj, 0, atom_indices=sele_grp) 			# Superpose each conformation in the trajectory upon first frame
-	sele_trj = pca_traj.xyz[:,sele_grp,:]												# select cordinates of selected atom groups
+	sele_trj = pca_traj.xyz[:,sele_grp,:]												# select coordinates of selected atom groups
 	sele_traj_reshaped = sele_trj.reshape(pca_traj.n_frames, len(sele_grp) * 3)
 	sele_traj_reshaped = sele_traj_reshaped.astype(float) ## to avoid numpy Conversion Error during scaling
 	sele_traj_reshaped_scaled = preprocessing.scale(sele_traj_reshaped, axis=0, with_std=False) # center to the mean
@@ -275,7 +275,7 @@ def svd_pca(svd):
 # ==============================================================
 def my_kernelPCA(kernel):
 	pca_traj.superpose(pca_traj, 0, atom_indices=sele_grp) 			# Superpose each conformation in the trajectory upon first frame
-	sele_trj = pca_traj.xyz[:,sele_grp,:]												# select cordinates of selected atom groups
+	sele_trj = pca_traj.xyz[:,sele_grp,:]												# select coordinates of selected atom groups
 	sele_traj_reshaped = sele_trj.reshape(pca_traj.n_frames, len(sele_grp) * 3)
 	sele_traj_reshaped = sele_traj_reshaped.astype(float) ## to avoid numpy Conversion Error during scaling
 	sele_traj_reshaped_scaled = preprocessing.scale(sele_traj_reshaped, axis=0, with_std=False) # center to the mean
@@ -317,7 +317,7 @@ def incremental_pca():
 	typically used for such cases. '
 	
 	pca_traj.superpose(pca_traj, 0, atom_indices=sele_grp) 			# Superpose each conformation in the trajectory upon first frame
-	sele_trj = pca_traj.xyz[:,sele_grp,:]												# select cordinates of selected atom groups
+	sele_trj = pca_traj.xyz[:,sele_grp,:]												# select coordinates of selected atom groups
 	sele_traj_reshaped = sele_trj.reshape(pca_traj.n_frames, len(sele_grp) * 3)
 	sele_traj_reshaped = sele_traj_reshaped.astype(float) ## to avoid numpy Conversion Error during scaling
 	sele_traj_reshaped_scaled = preprocessing.scale(sele_traj_reshaped, axis=0, with_std=False) # center to the mean
@@ -351,7 +351,7 @@ def incremental_pca():
 def my_pca():
 	'eigenvales decomposition PCA'
 	pca_traj.superpose(pca_traj, 0, atom_indices=sele_grp) 			# Superpose each conformation in the trajectory upon first frame
-	sele_trj = pca_traj.xyz[:,sele_grp,:]												# select cordinates of selected atom groups
+	sele_trj = pca_traj.xyz[:,sele_grp,:]												# select coordinates of selected atom groups
 	sele_traj_reshaped = sele_trj.reshape(pca_traj.n_frames, len(sele_grp)* 3)
 	#arr1=sele_traj_reshaped
 	sele_traj_reshaped = sele_traj_reshaped.astype(float) ## to avoid numpy Conversion Error during scaling

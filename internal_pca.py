@@ -19,7 +19,7 @@ def main():
 #==============================================================================#
 #											Internal PCA MD 
 #
-#			This programe performs the PCA on internal cordinates of a MD trajectory
+#			This programe performs the PCA on internal coordinates of a MD trajectory
 #
 # 								Author : Bilal Nizami
 # 						  	 Rhodes University, 2017
@@ -41,7 +41,7 @@ def set_option():
 	parser.add_argument("-out", "--out", dest="out_dir", help="Name of the output directory. Default is out")	
 	parser.add_argument("-nc", "--comp", type=int, dest="comp", help="Number of components to keep in a PCA object. If not set, by default all the components will be kept.")	
 	parser.add_argument("-ag", "--ag", dest="atm_grp", help="group of atom for PCA. Default is C alpha atoms. Other options are :"				  "all= all atoms, backbone = backbone atoms, CA= C alpha atoms, protein= protein's atoms")	
-	parser.add_argument("-ct", "--ref", dest="cordinate_type", help="internal cordinate type. Options are: distance, angles, phi and, psi") 
+	parser.add_argument("-ct", "--ref", dest="coordinate_type", help="internal coordinate type. Options are: distance, angles, phi and, psi") 
 	args = parser.parse_args()	
 	
 	
@@ -71,9 +71,9 @@ def set_option():
 		print('\nERROR: {0} not found....:(  Please check the path\n' .format(args.topology ))
 		parser.print_help()
 		sys.exit(1)
-	if args.cordinate_type is None:
-		print "No arguments given for -ct...using distance as internal cordinate\n"
-		args.cordinate_type='distance'
+	if args.coordinate_type is None:
+		print "No arguments given for -ct...using distance as internal coordinate\n"
+		args.coordinate_type='distance'
 	return args
 	
 args = set_option()
@@ -167,19 +167,19 @@ print_kmo(pca_traj, traj, atm_name, sele_grp)
 
 #===========================================================
 #
-# Internal cordinate type
+# Internal coordinate type
 #
 #===========================================================
-def get_internal_cordinates():
-	'get the different types of internal cordinates as per user selections'
+def get_internal_coordinates():
+	'get the different types of internal coordinates as per user selections'
 	calpha_idx=top.select_atom_indices('alpha')
-	if args.cordinate_type == 'distance':
+	if args.coordinate_type == 'distance':
 		print "Pair wise atomic distance selected\n "
 		atom_pairs = list(combinations(calpha_idx, 2)) # all unique pairs of elements 
 		pairwise_distances = md.geometry.compute_distances(pca_traj, atom_pairs)
 		int_cord=pairwise_distances
 		#print int_cord.shape
-	if args.cordinate_type == 'phi':
+	if args.coordinate_type == 'phi':
 		print  "phi torsions  selected\n"
 		atom_pairs = list(combinations(calpha_idx, 3)) 
 		angle=md.compute_phi(pca_traj)
@@ -188,7 +188,7 @@ def get_internal_cordinates():
 		#print np.array(angle[1]).shape
 		#print int_cord[0]
 	
-	if args.cordinate_type == 'psi':
+	if args.coordinate_type == 'psi':
 		print "psi torsions  selected\n"
 		atom_pairs = list(combinations(calpha_idx, 3)) 
 		angle=md.compute_psi(pca_traj)
@@ -196,7 +196,7 @@ def get_internal_cordinates():
 		int_cord=angle[1] ## apparently compute_psi returns tupple of atoms indices and psi angles, index 1 has psi angles 
 		#print np.array(angle[1]).shape
 		
-	if args.cordinate_type == 'angle':
+	if args.coordinate_type == 'angle':
 		print "1-3 angle selected between N,CA and C"
 		nrow=len(top.select("name CA")) # to get the number of amino acid ignoring ligand etc. 
 		ncol=3
@@ -224,7 +224,7 @@ def distance_pca(int_cord1):
 	
 	write_plots('dpca_projection', dpca_reduced, out_dir)
 	write_pcs('dpca_pcs', dpca, out_dir)
-	title='internal cordinate PCA Projection'
+	title='internal coordinate PCA Projection'
 	write_fig('dpca_projection', dpca_reduced, out_dir, title)
 	
 	pc1_cos=get_cosine(dpca_reduced, 0)
@@ -237,7 +237,7 @@ def distance_pca(int_cord1):
 	print 'cosine content of 4th PC=', pc4_cos
 	return;
 
-int_cord=get_internal_cordinates()
+int_cord=get_internal_coordinates()
 distance_pca(int_cord)
 
 if __name__=="__main__":

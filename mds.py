@@ -8,7 +8,7 @@ import numpy as np
 from sklearn.metrics import euclidean_distances
 from sklearn.manifold import MDS
 from lib.write_plot import write_plots, write_pcs, write_fig
-from lib.traj_info import trajectory_info, get_internal_cordinates, get_trajectory, get_cosine, print_kmo
+from lib.traj_info import trajectory_info, get_internal_coordinates, get_trajectory, get_cosine, print_kmo
 from lib.utils import welcome_msg
 
 def main():
@@ -41,9 +41,9 @@ def get_options():
 	parser.add_argument("-p", "--top", dest="topology",				help="topology file")
 	parser.add_argument("-out", "--out", dest="out_dir", help="Name of the output directory. Default is out")
 	parser.add_argument("-mt", "--mds_type", dest="mds_type",				help="Type of MDS. Options are nm=non-metric, metric=metric")
-	parser.add_argument("-dt", "--dissimilarity_type",  dest="dissimilarity_type",				help="Type of dissimilarity matrix to use. euc = Euclidean distance between internal cordinates, rmsd= pairwise RMSD. Default is rmsd")
+	parser.add_argument("-dt", "--dissimilarity_type",  dest="dissimilarity_type",				help="Type of dissimilarity matrix to use. euc = Euclidean distance between internal coordinates, rmsd= pairwise RMSD. Default is rmsd")
 	parser.add_argument("-ag", "--ag", dest="atm_grp", help="group of atom for MDS. Default is C alpha atoms. Other options are :"				  "all= all atoms, backbone = backbone atoms, CA= C alpha atoms, protein= protein's atoms")	
-	parser.add_argument("-ct", "--cordinate_type",  dest="cordinate_type",				help="Internal cordinates type. Default is pairwise distance")
+	parser.add_argument("-ct", "--coordinate_type",  dest="coordinate_type",				help="Internal coordinates type. Default is pairwise distance")
 	parser.add_argument("-ai", "--atom_indices",  dest="atom_indices",				help="group of atom for pairwise distance. Default is C alpha atoms. Other options are :"				  "all= all atoms, backbone = backbone atoms, alpha= C alpha atoms, heavy= all non hydrogen atoms, minimal=CA,CB,C,N,O atoms")
 
 	args = parser.parse_args()
@@ -83,8 +83,8 @@ def get_options():
 		print 'ERROR: no such option as', args.mds_type, 'for flag -mt \nPlease see the usage\n\n '
 		sys.exit(1)
 		
-	if args.cordinate_type not in  ('distance', 'phi', 'psi', 'angle', None):
-		print 'ERROR: no such option as', args.cordinate_type, 'for flag -ct \nPlease see the usage\n\n '
+	if args.coordinate_type not in  ('distance', 'phi', 'psi', 'angle', None):
+		print 'ERROR: no such option as', args.coordinate_type, 'for flag -ct \nPlease see the usage\n\n '
 		parser.print_help()
 		sys.exit(1)
 	
@@ -222,11 +222,11 @@ if args.dissimilarity_type == 'rmsd' or args.dissimilarity_type == None:
 	mds(pair_rmsd, type)
 	print 'FINISHED!'
 if args.dissimilarity_type == 'euc':
-	if args.cordinate_type == None:
-		args.cordinate_type = "distance"
+	if args.coordinate_type == None:
+		args.coordinate_type = "distance"
 		print "Using pairwise distance by default"
-	print 'using Euclidean space of', args.cordinate_type
-	int_cord=get_internal_cordinates(top, args.cordinate_type, pca_traj, atom_indices)
+	print 'using Euclidean space of', args.coordinate_type
+	int_cord=get_internal_coordinates(top, args.coordinate_type, pca_traj, atom_indices)
 	similarities = euclidean_distances(int_cord)
 	mds(similarities, type)
 	print 'FINISHED!'

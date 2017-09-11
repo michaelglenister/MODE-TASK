@@ -33,33 +33,33 @@ def trajectory_info(pca_traj, traj, atm_name=None, sele_grp=None):
 
 #===========================================================
 #
-# Internal cordinate type
+# Internal coordinate type
 #
 #===========================================================
-def get_internal_cordinates(top, cordinate_type, pca_traj, atom_indices):
-	'get the different types of internal cordinates as per user selections'
+def get_internal_coordinates(top, coordinate_type, pca_traj, atom_indices):
+	'get the different types of internal coordinates as per user selections'
 	calpha_idx=top.select_atom_indices(atom_indices)
-	if cordinate_type == 'distance':
+	if coordinate_type == 'distance':
 		print "Pair wise atomic distance selected\n "
 		atom_pairs = list(combinations(calpha_idx, 2)) # all unique pairs of elements 
 		pairwise_distances = md.geometry.compute_distances(pca_traj, atom_pairs)
 		int_cord=pairwise_distances
 		
-	if cordinate_type == 'phi':
+	if coordinate_type == 'phi':
 		print  "phi torsions  selected\n"
 		atom_pairs = list(combinations(calpha_idx, 3)) 
 		angle=md.compute_phi(pca_traj)
 		
 		int_cord=angle[1] ## apparently compute_phi returns tupple of atoms indices and phi angles, index 1 has phi angles 
 	
-	if cordinate_type == 'psi':
+	if coordinate_type == 'psi':
 		print "psi torsions  selected\n"
 		atom_pairs = list(combinations(calpha_idx, 3)) 
 		angle=md.compute_psi(pca_traj)
 		
 		int_cord=angle[1] ## apparently compute_psi returns tupple of atoms indices and psi angles, index 1 has psi angles 
 		
-	if cordinate_type == 'angle':
+	if coordinate_type == 'angle':
 		print "1-3 angle selected between N,CA and C"
 		nrow=len(top.select("name CA")) # to get the number of amino acid ignoring ligand etc. 
 		ncol=3
@@ -146,7 +146,7 @@ def get_kmo(input):
 	return;
 	
 def print_kmo(pca_traj, traj, atm_name, sele_grp):
-	sele_trj = pca_traj.xyz[:,sele_grp,:]												# select cordinates of selected atom groups
+	sele_trj = pca_traj.xyz[:,sele_grp,:]												# select coordinates of selected atom groups
 	sele_traj_reshaped = sele_trj.reshape(pca_traj.n_frames, len(sele_grp) * 3)
 	arr = sele_traj_reshaped
 	#===============================================
@@ -160,7 +160,7 @@ def print_kmo(pca_traj, traj, atm_name, sele_grp):
 def get_rmsf(pca_traj, sele_grp, trj_eval, out_dir):
 	'calculates the RMSD mode'
 	pca_traj.superpose(pca_traj, 0, atom_indices=sele_grp) 			# Superpose each conformation in the trajectory upon first frame
-	sele_trj = pca_traj.xyz[:,sele_grp,:]												# select cordinates of selected atom groups
+	sele_trj = pca_traj.xyz[:,sele_grp,:]												# select coordinates of selected atom groups
 	sele_traj_reshaped = sele_trj.reshape(pca_traj.n_frames, len(sele_grp) * 3)
 	arr = sele_traj_reshaped
 	
