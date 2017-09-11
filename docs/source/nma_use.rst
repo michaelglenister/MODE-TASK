@@ -69,16 +69,16 @@ ANM
 +------------------------+-----------------------------+
 | Output                 | Description                 |
 +========================+=============================+
-| W matrix               | Text file of 3*N*           |
+| W matrix               | Text file of :math:`3N`     |
 |                        | eigenvalues                 |
 +------------------------+-----------------------------+
-| VT matrix              | Text file of 3*N*\ x3*N*    |
-|                        | eigenvectors. Printed in    |
-|                        | rows                        |
+| VT matrix              | Text file of :math:`3N`\ x\ |
+|                        | :math:`3N` eigenvectors.    |
+|                        | Printed in rows             |
 +------------------------+-----------------------------+
-| U matrix               | Text file of 3*N*\ x3*N*    |
-|                        | eigenvectors. Printed in    |
-|                        | columns                     |
+| U matrix               | Text file of :math:`3N`\ x\ |
+|                        | :math:`3N` eigenvectors.    |
+|                        | Printed in columns          |
 +------------------------+-----------------------------+
 
 Get eigen vectors

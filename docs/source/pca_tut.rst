@@ -1,17 +1,8 @@
-Tutorials
+PCA Tutorial
 ====================================
 
-NMA
--------------------------------
-
-.. raw:: html
-   :file: nma_tut.html
-
-PCA
--------------------------------
-
 PCA of a MD trajectory
-^^^^^^^^^^^^^^^^^^^^^^^^^
+-------------------------------
 
 In this tutorial, we will be performing PCA on a MD trajectory of protein. Before doing the PCA we need to prepare the trajectory which includes, removing periodicity, removing water molecules. Most of the MD packages have options to do this. We will be using GROMACS for this tutorial purpose. We will be using .xtc format for trajectory and .pdb for topology file. Any other common trajectory format should also work with the MODE-TASK. 
 
@@ -140,7 +131,7 @@ Run the following command to PCA on backbone psi angles.
 Output files include 2D plot of first 3 PCs and scree plot. Which can be visualize using xmgrace as described earlier. 
 
 MDS (Multi-dimensional scaling) on a MD trajectory
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+----------------------------------------------------
 
 To perform the MDS on pairwise RMSD between C-alpha atoms, run the following command.
 
@@ -159,7 +150,7 @@ Output files include 2D plot of first 3 PCs. Which can be visualize using xmgrac
    Fig: plot of PC1 and PC3  
 
 t-SNE on a MD trajectory
-^^^^^^^^^^^^^^^^^^^^^^^^^
+-------------------------------
 
 Run the following command to perform the t-SNE using pairwise RMSD of C-alpha atoms as index of dissimilarity.
 

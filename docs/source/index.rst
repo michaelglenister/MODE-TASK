@@ -12,12 +12,24 @@ NMA-Task's documentation
 
    intro
    installation
+
+
+.. toctree::
+   :caption: Theory
+
    theory
 
 
-.. toctree::   
+.. toctree::
+   :maxdepth: 2
    :caption: Usage
    
-   nma
-   pca 
-   tutorials
+   nma_use
+   pca_use
+
+
+.. toctree::   
+   :caption: Tutorials
+
+   nma_tut
+   pca_tut

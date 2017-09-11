@@ -45,7 +45,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'NMA-Task'
+project = u'Mode-Task'
 copyright = u'2017, CJ Ross, B Nizami, M Glenister, OS Amamuddy, AR Atilgan, C Atilgan and Ö Tastan Bishop'
 
 author = u'CJ Ross, B Nizami, M Glenister, OS Amamuddy, AR Atilgan, C Atilgan and Ö Tastan Bishop'
