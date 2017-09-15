@@ -163,13 +163,13 @@
 </div>
 <div class="section" id="create-a-working-directory">
 <h2>Create a working directory<a class="headerlink" href="#create-a-working-directory" title="Permalink to this headline">¶</a></h2>
-<p>First create a directory for all the Mode Task scripts using the linux command:</p>
+<p>First create a directory for all the MODE-TASK scripts using the Linux command:</p>
 <blockquote>
 <div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mkdir</span> <span class="n">ModeTask</span>
 </pre></div>
 </div>
 </div></blockquote>
-<p>Copy the entire contents of the MODE_TASK Scripts in to the ModeTask directory.</p>
+<p>Copy the entire contents of the MODE-TASK Scripts in to the MODE-TASK directory.</p>
 <p>Within this directory create a folder called <strong>Tutorial:</strong></p>
 <blockquote>
 <div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">ModeTask</span>
@@ -197,7 +197,7 @@
 </div>
 <div class="section" id="coarse-grain">
 <h2>Coarse grain<a class="headerlink" href="#coarse-grain" title="Permalink to this headline">¶</a></h2>
-<p>The Mode TASK package is designed to analyse both single proteins or larger macromolecules such as a virus capsid. The ANM.cpp script contructs an elastic network model on all CA or CB atoms in a given PDB file. This is ideal from smaller protein complexes. For larger protein complexes the coarseGrained.py script can be used to construct an additional coarse grained PDB file.</p>
+<p>The MODE-TASK package is designed to analyse both single proteins or larger macromolecules such as a virus capsid. The ANM.cpp script contructs an elastic network model on all CA or CB atoms in a given PDB file. This is ideal from smaller protein complexes. For larger protein complexes the coarseGrained.py script can be used to construct an additional coarse grained PDB file.</p>
 <ol class="arabic simple">
 <li>Create a model of the EV71 Pentamer complex with additional coarse graining set at level 3, selecting CB atoms:</li>
 </ol>
@@ -257,7 +257,7 @@
 <p><strong>Input parameters:</strong></p>
 <ul class="simple">
 <li>pdb: path to PDB file</li>
-<li>cutoff: cutoff radius in A. The script will construct an eleastic network model by connecting all atoms that interact within the cutoff distance (default = 24Å)</li>
+<li>cutoff: cutoff radius in A. The script will construct an eleastic network model by connecting all atoms that interact within the cutoff distance (default = 15Å)</li>
 <li>outdir: folder in which output is saved</li>
 </ul>
 <p><strong>Output:</strong></p>
@@ -435,8 +435,17 @@
 <p><strong>Output from visualiseVector.py</strong></p>
 <p>The script will produce a folder named VISUALISE. For every mode that you give to <strong>visualiseVector.py</strong> two files will be produced:</p>
 <ol class="arabic simple">
-<li>A VISUAL PDB file. This can be opened in VMD and visualised as a set of 100 frames.</li>
+<li>A VISUAL PDB file. This can be opened in VMD and visualised as a set of 50 frames.</li>
 <li>An VISUAL_ARROWS txt file. This file contains a Tcl script that can be copied into the VMD TK console. The script plots as set of arrows indicating the direction of each atom.</li>
+</ol>
+<p><strong>Visualising the results in VMD</strong></p>
+<ol class="arabic simple">
+<li>Open VMD.</li>
+<li>To load the VISUAL_802.pdb file click the following tabs: <code class="docutils literal"><span class="pre">File</span> <span class="pre">&gt;&gt;</span> <span class="pre">New</span> <span class="pre">Molecule</span> <span class="pre">&gt;&gt;</span> <span class="pre">Browse</span> <span class="pre">&gt;&gt;</span> <span class="pre">Select</span> <span class="pre">VISUAL_802.pdb.</span></code></li>
+<li>The VISUAL_802.pdb file contains a set of 50 frames of the eigenvectors of mode 802. This can be visualised as a movie by click on the Play button. The frame set can also be coloured to the user’s desire using the options under the Graphics &gt;&gt; Representations tab.</li>
+<li>The VISUAL_ARROWS txt file contains a script that can be copied and pasted straight into the Tk Console in VMD: Extensions &gt;&gt; Tk Console</li>
+<li>To obtain a clearer observation change the background to white: Graphics &gt;&gt; Colors &gt;&gt; Categories &gt;&gt; Display &gt;&gt; Names &gt;&gt; Background &gt;&gt; Colors &gt;&gt; White</li>
+<li>To obtain only the arrows, delete all frames of the VISUAL_802.pdb molecules: Right click on the number of frames &gt;&gt; Delete frames &gt;&gt; Delete frames 0 to 49.</li>
 </ol>
 </div>
 <div class="section" id="mean-square-fluctuation-msf">
