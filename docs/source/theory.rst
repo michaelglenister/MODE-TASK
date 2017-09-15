@@ -2,7 +2,7 @@
 Normal Mode Analysis (NMA)
 --------------------------
 
-NMA analyses the oscillations of a structure. For proteins, it is useful for studying the large amplitude motions for a selected conformation. The main assumption is that the motions are harmonic. Thus, each normal mode, which is a concerted motion of many atoms, acts as a simple harmonic oscillator and it is independent of all the other normal modes.
+NMA analyses the oscillations of a structure. For proteins, it is useful for studying the large amplitude motions for a selected conformation. The main assumption is that the motions are harmonic. Thus, each normal mode, which is a concerted motion of many atoms, acts as a simple harmonic oscillator, and it is independent of all the other normal modes.
 
 For a harmonic oscillator with a mass :math:`m` supported on a spring with force constant :math:`k`, the potential energy of the system, :math:`V = kx^2`, for an extension :math:`x` leads to the restoring force,
 
@@ -23,9 +23,10 @@ with :math:`v` being the frequency of the vibration.
 
 In three dimensions and for a set of :math:`N` atoms, one has the corresponding generalized equation,
 
-:math:`-\mathbf{HX} = -4{\pi}^2v^2\mathbf{X}`
+.. math::
+	-\mathbf{HX} = -4{\pi}^2v^2\mathbf{X}
 
-where :math:`\mathbf{H}` is the :math:`3N`\ x\ :math:`3N` Hessian symmetric matrix of force constants and :math:`\mathbf{X}` is the :math:`3N`\ x\ :math:`1` vector of the positions of the atoms. The solutions of the equation may be cast in the form of an eigenvalue decomposition of :math:`\mathbf{H}` where the eigenvectors are the mass weighted displacements of the normal coordinates; i.e. the independent vibrational motions of the collection of atoms. The corresponding eigenvalues are the negative of the squared normal mode frequencies of each mode. :math:`\mathbf{H}` has exactly six zero eigenvalues for the translations and rotations of the molecule in three-dimensional space.
+where :math:`\mathbf{H}` is the :math:`3N`\ x\ :math:`3N` Hessian symmetric matrix of force constants and :math:`\mathbf{X}` is the :math:`3N`\ x\ :math:`1` vector of the positions of the atoms. The solutions of the equation may be cast in the form of an eigenvalue decomposition of :math:`\mathbf{H}` where the eigenvectors are the mass weighted displacements of the normal coordinates; i.e. the independent vibrational motions of the collection of atoms. The corresponding eigenvalues are the negative of the squared normal mode frequencies of each mode. :math:`\mathbf{H}` has exactly six zero eigenvalues for the translations and rotations of the molecule in three dimensional space.
 
 In NMA of proteins, it is central to obtain a good representation of the protein for a proper analysis of the available modes of motion. One approach would be to obtain the Hessian matrix from the second derivatives of the energy for the conformation of interest following a very stringent minimization of the molecule. The latter is important as NMA is based on the harmonic assumption which is only a valid approximation at the bottom of the potential energy minima. For the complex potentials representing interactions in proteins in the water environment, these second derivatives may be obtained through numerical methods which are extremely costly.
 

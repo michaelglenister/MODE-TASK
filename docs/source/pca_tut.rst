@@ -4,7 +4,7 @@ PCA Tutorial
 PCA of a MD trajectory
 -------------------------------
 
-In this tutorial, we will be performing PCA on a MD trajectory of protein. Before doing the PCA we need to prepare the trajectory which includes, removing periodicity, removing water molecules. Most of the MD packages have options to do this. We will be using GROMACS for this tutorial purpose. We will be using .xtc format for trajectory and .pdb for topology file. Any other common trajectory format should also work with the MODE-TASK. 
+In this tutorial, we will be performing PCA on a MD trajectory of protein. Before doing the PCA we need to prepare the trajectory which includes removing periodicity and removing water molecules. Most of the MD packages have options to do this. We will be using GROMACS for this tutorial purpose. We will be using .xtc format for trajectory and .pdb for topology file. Any other common trajectory format should also work with the MODE-TASK. 
 
 **1. Preparation of trajectory**
 
@@ -26,13 +26,13 @@ and select protein
 
 **2. Create a working directory**
 
-First create a directory for all the Mode Task scripts using the linux command:
+First create a directory for all the MODE-TASK scripts using the Linux command:
 
  ::
 
 	mkdir ModeTask
 
-Copy the entire contents of the MODE_TASK Scripts in to the ModeTask directory.
+Copy the entire contents of the MODE-TASK scripts into the MODE-TASK directory.
 
 Within this directory create a folder called Tutorial:
 
@@ -41,7 +41,7 @@ Within this directory create a folder called Tutorial:
 	cd ModeTask
 	mkdir Tutorial
 
-We will run all scripts from the MODE-TASK directory. Move the trajectory (md_01_noWAT.xtc) and topology file (complex.pdb) in to the Tutorial directory.   
+We will run all scripts from the MODE-TASK directory. Move the trajectory (md_01_noWAT.xtc) and topology file (complex.pdb) into the Tutorial directory.   
 
 **3. Running PCA**
 
@@ -93,7 +93,7 @@ For details about these output files please refer to the MODE-TASK documentation
 
 	xmgrace out_pca_test_trj.xtc/pca_projection1_2.agr
 
-You can also visualize the .png format figure plot by opening it with your favorite picture visualizer.  Same way open the rmsd.agr and pca_variance.agr also. 
+You can also visualize the .png format figure plot by opening it with your favorite picture visualizer.  Same way open the rmsd.agr and pca_variance.agr. 
 
 
 .. figure:: ../img/pca_tut1.png
@@ -114,7 +114,7 @@ You can also visualize the .png format figure plot by opening it with your favor
 
 
 
-**3.2. PCA on Internal coordinates**
+**3.2. PCA on internal coordinates**
 
 One can also do PCA on internal coordinates of a MD trajectory. Options are available for different types of internal coordinates such as, pairwise distance between atoms, 1-3 angle between backbone atoms, psi angle, and phi angle. Run the following command to PCA on pairwise distance between C-alpha atoms. 
 
@@ -128,7 +128,7 @@ Run the following command to PCA on backbone psi angles.
 
 	internal_pca.py -t Tutorial/md_01_noWAT.xtc -p Tutorial/complex.pdb -ag CA -ct psi
 
-Output files include 2D plot of first 3 PCs and scree plot. Which can be visualize using xmgrace as described earlier. 
+Output files include 2D plot of first 3 PCs and scree plot, which can be visualized using xmgrace as described earlier. 
 
 MDS (Multi-dimensional scaling) on a MD trajectory
 ----------------------------------------------------

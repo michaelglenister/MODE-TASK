@@ -11,13 +11,13 @@ In this tutorial we will apply the ANM model to a single pentamer of the mature 
 Create a working directory
 -------------------------------
 
-First create a directory for all the Mode Task scripts using the linux command:
+First create a directory for all the MODE-TASK scripts using the Linux command:
 
  ::
 
 	mkdir ModeTask
 
-Copy the entire contents of the MODE_TASK Scripts in to the ModeTask directory.
+Copy the entire contents of the MODE-TASK Scripts in to the MODE-TASK directory.
 
 Within this directory create a folder called **Tutorial:**
 
@@ -52,7 +52,7 @@ For the sake of this tutorial we will use the **coarseGrain.py** script to const
 Coarse grain
 -------------------------------
 
-The Mode TASK package is designed to analyse both single proteins or larger macromolecules such as a virus capsid. The ANM.cpp script contructs an elastic network model on all CA or CB atoms in a given PDB file. This is ideal from smaller protein complexes. For larger protein complexes the coarseGrained.py script can be used to construct an additional coarse grained PDB file. 
+The MODE-TASK package is designed to analyse both single proteins or larger macromolecules such as a virus capsid. The ANM.cpp script contructs an elastic network model on all CA or CB atoms in a given PDB file. This is ideal from smaller protein complexes. For larger protein complexes the coarseGrained.py script can be used to construct an additional coarse grained PDB file. 
 
 1) Create a model of the EV71 Pentamer complex with additional coarse graining set at level 3, selecting CB atoms:
 
@@ -113,7 +113,7 @@ The ANM.cpp script accepts a PDB file and a cutoff distance. The script construc
 **Input parameters:**
 
 * pdb: path to PDB file
-* cutoff: cutoff radius in A. The script will construct an eleastic network model by connecting all atoms that interact within the cutoff distance (default = 24Å)
+* cutoff: cutoff radius in A. The script will construct an eleastic network model by connecting all atoms that interact within the cutoff distance (default = 15Å)
 * outdir: folder in which output is saved
 
 
@@ -301,9 +301,19 @@ From each model we have identified which mode overlaps the most with the directi
 
 The script will produce a folder named VISUALISE. For every mode that you give to **visualiseVector.py** two files will be produced:
 
-1) A VISUAL PDB file. This can be opened in VMD and visualised as a set of 100 frames.
+1) A VISUAL PDB file. This can be opened in VMD and visualised as a set of 50 frames.
 
 2) An VISUAL_ARROWS txt file. This file contains a Tcl script that can be copied into the VMD TK console. The script plots as set of arrows indicating the direction of each atom.
+
+
+**Visualising the results in VMD**
+
+1) Open VMD.
+2) To load the VISUAL_802.pdb file click the following tabs: ``File >> New Molecule >> Browse >> Select VISUAL_802.pdb.``
+3) The VISUAL_802.pdb file contains a set of 50 frames of the eigenvectors of mode 802. This can be visualised as a movie by click on the Play button. The frame set can also be coloured to the user's desire using the options under the Graphics >> Representations tab.
+4) The VISUAL_ARROWS txt file contains a script that can be copied and pasted straight into the Tk Console in VMD: Extensions >> Tk Console
+5) To obtain a clearer observation change the background to white: Graphics >> Colors >> Categories >> Display >> Names >> Background >> Colors >> White
+6) To obtain only the arrows, delete all frames of the VISUAL_802.pdb molecules: Right click on the number of frames >> Delete frames >> Delete frames 0 to 49.
 
 
 Mean square fluctuation (MSF)

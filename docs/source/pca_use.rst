@@ -1,16 +1,16 @@
 PCA Scripts
 ====================================
 
-Principal component analysis (PCA) is a useful statistical technique that has found application in detection of correlated motion in MD data. Protein dynamics is manifested as a change in molecular structure, or conformation over a time scale. PCA extract most important motions from a protein's MD trajectory using a covariance/correlation matrix (C-matrix) constructed from atomic coordinates. Different types of coordinates systems (Cartesian or internal coordinates) can be employed that define atomic movement in each time frame of a trajectory. Modes describing the protein motions can be constructed by diagonalizing the C-matrix. It leads to a complete set of orthonormal (orthogonal and normalized) collective modes (eigenvectors) with each eigenvalues (variance) that characterize the protein dynamics. Eigenvalues with largest value represent the larger spatial motion. When the original mean centered data (MD trajectory) is projected on eigenvectors the result is called Principle Components (PC). Diagonilazation of C-matrix could be done by Eigenvalue decomposition (EVD) or Singular value decomposition (SVD), with later being computationally efficient.  
+Principal component analysis (PCA) is a useful statistical technique that has found applications in detection of correlated motion in MD data. Protein dynamics is manifested as a change in molecular structure, or conformation over a time scale. PCA extracts most important motions from a protein's MD trajectory using a covariance/correlation matrix (C-matrix) constructed from atomic coordinates. Different types of coordinate systems (Cartesian or internal coordinates) can be employed to define atomic movement in each time frame of a trajectory. Modes describing the protein motions can be constructed by diagonalizing the C-matrix. It leads to a complete set of orthonormal (orthogonal and normalized) collective modes (eigenvectors) with each eigenvalues (variance) that characterize the protein dynamics. Eigenvalues with largest value represent the larger spatial motion. When the original mean centered data (MD trajectory) is projected on eigenvectors the result is called Principle Components (PC). Diagonilazation of C-matrix could be done by Eigenvalue decomposition (EVD) or Singular value decomposition (SVD), with later being computationally efficient.  
 
-As stated earlier different representation of protein conformation can be used. One can choose cartesian coordinates or internal coordinates such as pairwise distance between atoms, 1-3 angle, torsional angles (psi or phi). Since decomposition of a C-matrix is memory intensive and very often program will run out of memory, often a course graining is required such as selecting C-alpha atoms. User can select the subset of atoms from the trajectory for the analysis such as C-alpha, backbone atoms or all protein's atoms. It is highly recommended that user should strip the water from the trajectory before hand, as it would result in faster loading and alleviate the memory issues. 
+As stated earlier different representation of protein conformation can be used. One can choose Cartesian coordinates or internal coordinates such as pairwise distance between atoms, 1-3 angle, torsional angles (psi or phi). Since decomposition of a C-matrix is memory intensive and very often program will run out of memory, often a course graining is required such as selecting C-alpha atoms. User can select the subset of atoms from the trajectory for the analysis such as C-alpha, backbone atoms or all protein's atoms. It is highly recommended that user should strip the water from the trajectory before hand, as it would result in faster loading and alleviate the memory issues. 
 
-PCA uses the linear transformation which may not be sufficient in case where variables are non-linearly related.  In such cases user has option to perform Nonlinear generalization of PCA such as Kernel PCA (kPCA). Caution should be exercise while interpreting the kPCA results since it is mapped to a feature space which is inherently different than conformational space. Nevertheless, kPCA is useful in understanding the protein's functions in terms of its conformational dynamics.   
+PCA uses the linear transformation which may not be sufficient in case where variables are non-linearly related.  In such cases user has option to perform Nonlinear generalization of PCA such as Kernel PCA (kPCA). Caution should be given while interpreting the kPCA results since it is mapped to a feature space which is inherently different than conformational space. Nevertheless, kPCA is useful in understanding the protein's functions in terms of its conformational dynamics.   
 
 
 **General Usage:** 
 
-To perform PCA on a protein's MD trajectory we need a sufficiently sampled MD trajectory and a corresponding topology file. It can be achieved by running the following command.  
+To perform PCA on a protein's MD trajectory we need a sufficiently sampled MD trajectory and a corresponding topology file. This can be achieved by running the following command.  
 
 **Command:** 
 	``pca.py -t <MD trajectory> -p <topology file>``	
@@ -34,7 +34,7 @@ To see the all the available options run the following command:
 |                        |            |                    | .Default is out suffixed by |
 |                        |            |                    | trajectory name             |
 +------------------------+------------+--------------------+-----------------------------+
-| Atom group             | String     |``-ag``             | group of atom for PCA.      |
+| Atom group             | String     |``-ag``             | Group of atom for PCA.      |
 |                        |            |                    | Default is C-alpha atoms.   |
 | 			 |	      | 		   | Other options are:          |
 |                        |            |                    | all= all atoms,             |
@@ -42,7 +42,7 @@ To see the all the available options run the following command:
 |                        |            |                    | CA= C alpha atoms,          |
 |                        |            |                    | protein= protein's atoms    |
 +------------------------+------------+--------------------+-----------------------------+
-| Reference structure    | File       | ``-r``             | reference structure for RMSD|
+| Reference structure    | File       | ``-r``             | Reference structure for RMSD|
 |                        |            |                    | Default: First frame of MD  |
 |                        |            |                    | trajectory                  |
 +------------------------+------------+--------------------+-----------------------------+
@@ -101,7 +101,7 @@ To see the all the available options run the following command:
 |                        | Mode (eigenvectors)         |
 +------------------------+-----------------------------+
 
-Beside the above-mentioned plots, it also prints useful information on terminal such as, Information about trajectory, Kaiser-Meyer-Olkein (KMO) index of the trajectory, and Cosine contents of the first few PCs. KMO value range from 1 to 0, 1 indicating that the MD has been sampled sufficiently. The cosine content of pca projections can be used as an indicator if a simulation is converged. Squared Cosine value should be more than 0.5.   
+Beside the above-mentioned plots, it also prints useful information on terminal such as, Information about trajectory, Kaiser-Meyer-Olkein (KMO) index of the trajectory, and Cosine contents of the first few PCs. KMO value range from 1 to 0, 1 indicating that the MD has been sampled sufficiently. The Cosine content of PCA projections can be used as an indicator if a simulation is converged. Squared Cosine value should be more than 0.5.   
 
 
 **Specific Examples:**
@@ -113,13 +113,13 @@ Given a trajectory called ``trajectory.xtc`` and a topology file called ``comple
 
 	``pca.py -t trajectory.xtc -p complex.pdb``
 
-This will perform SVD based PCA on C-alpha atoms by default. To use other method, see the following examples.
+This will perform the singular value decomposition (SVD) based PCA on C-alpha atoms by default. To use other method, see the following examples.
 
 
 **SVD PCA**
 ^^^^^^^^^^^^^^^
 
-To perform the singular value decomposition (SVD) PCA on C-alpha atoms of a MD trajectory
+To perform SVD PCA on C-alpha atoms of a MD trajectory
 
 **Command:** 
 	``pca.py -t trajectory.xtc -p complex.pdb -ag CA -pt svd``
@@ -144,10 +144,10 @@ To perform the Kernel PCA with rbf kernel
 **Command:** 
 	``pca.py -t trajectory.xtc -p complex.pdb -ag CA -pt kpca -kt rbf``
 
-**IncrementalPCA** 
+**Incremental PCA** 
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-IPCA (IncrementalPCA) is a variant of normal PCA, which uses low-rank approximation of the input MD trajectory. It uses the amount of memory to store the input trajectory which is independent of trajectory size. IPCA is very useful in case the size of trajectory size bigger than available computer memory. 
+Incremental PCA (IPCA) is a variant of normal PCA, which uses low-rank approximation of the input MD trajectory. It uses the amount of memory to store the input trajectory which is independent of trajectory size. IPCA is very useful in case the size of trajectory is bigger than available computer memory.
 
 **Command:** 
 	  ``pca.py -t trajectory.xtc -p complex.pdb -ag CA -pt ipca``
@@ -192,7 +192,7 @@ User can also perform the PCA on internal coordinates of a MD trajectory. Option
 |                        |            |                    | . Default is out suffixed by|
 |                        |            |                    | trajectory name             |
 +------------------------+------------+--------------------+-----------------------------+
-| Atom group             | String     |``-ag``             | group of atom for PCA.      |
+| Atom group             | String     |``-ag``             | Group of atom for PCA.      |
 |                        |            |                    | Default is C-alpha atoms.   |
 | 			 |	      | 		   | Other options are:          |
 |                        |            |                    | all= all atoms,             |
@@ -269,7 +269,7 @@ MDS is a tool to visualize the similarity or dissimilarity in a dataset. Two typ
 |                        |            |                    | . Default is out suffixed by|
 |                        |            |                    | trajectory name             |
 +------------------------+------------+--------------------+-----------------------------+
-| Atom group             | String     |``-ag``             | group of atom for MDS.      |
+| Atom group             | String     |``-ag``             | Group of atom for MDS.      |
 |                        |            |                    | Default is C-alpha atoms.   |
 |                        |            |                    | Other options are:          |
 |                        |            |                    | all= all atoms,             |
@@ -340,7 +340,7 @@ Run the following command to see the detailed usage and other options:
 t-SNE on MD trajectory
 --------------------------------------------------------------------
 
-t-SNE (t-distributed Stochastic Neighbor Embedding) is a tool for dimensionality reduction. It is a variant of stochastic  neighbor embedding technique. t-SNE uses a measure of dissimilarity, which in case of MD trajectory could be Euclidean distance between internal coordinates or pairwise RMSD.    
+t-distributed Stochastic Neighbor Embedding (t-SNE) is a tool for dimensionality reduction. It is a variant of stochastic  neighbor embedding technique. t-SNE uses a measure of dissimilarity, which in case of MD trajectory could be Euclidean distance between internal coordinates or pairwise RMSD.    
 
 
 **General Usage:**
@@ -364,7 +364,7 @@ t-SNE (t-distributed Stochastic Neighbor Embedding) is a tool for dimensionality
 |                        |            |                    | . Default is out suffixed by|
 |                        |            |                    | trajectory name             |
 +------------------------+------------+--------------------+-----------------------------+
-| Atom group             | String     |``-ag``             | group of atom for t-SNE.    |
+| Atom group             | String     |``-ag``             | Group of atom for t-SNE.    |
 |                        |            |                    | Default is C-alpha atoms.   |
 | 			 |	      | 		   | Other options are:          |
 |                        |            |                    | all= all atoms,             |
@@ -408,7 +408,7 @@ t-SNE (t-distributed Stochastic Neighbor Embedding) is a tool for dimensionality
 |                        | time                        |
 +------------------------+-----------------------------+
 
-**specific example:**
+**Specific Example:**
 
 **t-SNE on C-alpha atoms:**
 To perform the t-SNE using pairwise RMSD of C-alpha atoms as index of dissimilarity.
@@ -425,5 +425,3 @@ To perform the t-SNE using Euclidean space between pairwise distance of C-alpha 
 
 Run the following command to see the detailed usage and other options:
 	``tsne.py -h``
-
-*Page created by: Bilal Nizami*

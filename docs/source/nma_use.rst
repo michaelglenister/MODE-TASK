@@ -5,7 +5,6 @@ Coarse grain
 -------------------------------
 
 Takes a protomer structure and coarse grains to select a set amount of C-Beta atoms
-
 **Command:** ::
 	
 	coarseGrain.py <options> --pdbFile <pdb file>
@@ -17,6 +16,7 @@ Takes a protomer structure and coarse grains to select a set amount of C-Beta at
 +========================+============+====================+=============================+
 | PDB file *        	 | File       |``--pdb``           | PDB structure to coarse     |
 |                        |            |                    | grain                       |
+|                        |            |                    |                             |
 +------------------------+------------+--------------------+-----------------------------+
 | Course grain level     | Integer    |``--cg``            | Level by which to coarse    |
 |                        |            |                    | grain the protein. Lower    |
@@ -61,7 +61,7 @@ ANM
 |                        |            |                    |                             |
 +------------------------+------------+--------------------+-----------------------------+
 | Cutoff                 | Integer    |``--cutoff``        | Cuttoff radius in Å.        |
-|                        |            |                    | Default: 24                 |
+|                        |            |                    | Default: 15                 |
 +------------------------+------------+--------------------+-----------------------------+
 
 **Outputs:**
@@ -120,12 +120,12 @@ Get eigen vectors
 Mean square fluctuation
 -------------------------------
 
-Calculates and Returns Diagonals of Correlated Matrix for a given set of modes
+Calculates and returns diagonals of correlated matrix for a given set of modes.
 
-Lets say that the user has performed NMA on two coarse grained models of the same protein and now wants to compare
+Lets say that the user has performed NMA on two coarse grained models of the same protein, and now wants to compare
 to see if the additional coarse graining decreased the accuracy. If we obtain the same mean square fluctuations for
 each residue then in each model then we can say that the results are comparable regardless of the coarse graining
-level. But obviously must compare only the residues that are common in each model. hence we specify commonResidues
+level. But obviously must compare only the residues that are common in each model. hence we specify common residues
 
 **Command:** ::
 
@@ -170,7 +170,7 @@ level. But obviously must compare only the residues that are common in each mode
 Conformation mode
 -------------------------------
 
-Identifies Modes responsible for conformational change for a molecule wth 15 copies of each atom
+Identifies modes responsible for conformational change for a molecule with 15 copies of each atom
 
 **Command:** ::
 

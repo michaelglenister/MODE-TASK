@@ -4,7 +4,7 @@ Installation
 Platform compatibility
 -------------------------------
 
-NMA-TASK is compatible with most platforms which are able to run Python 2.7 and g++
+MODE-TASK is compatible with most platforms which are able to run Python 2.7 and g++.
 
 
 Install system dependencies
@@ -45,11 +45,11 @@ It is recommended to create a Python virtual environment for installing and mana
 Download the project
 -------------------------------
 
-NMA-TASK can be cloned from it's GitHub repository ::
+MODE-TASK can be cloned from it's GitHub repository ::
 
 	git clone https://github.com/RUBi-ZA/NMA-TASK.git
 	cd NMA-TASK
 
-Activate the virtual environment you created in the previous step when using NMA-TASK. with::
+Activate the virtual environment you created in the previous step when using MODE-TASK with::
 
 	source venv/bin/activate

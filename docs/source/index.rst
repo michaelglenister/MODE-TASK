@@ -1,9 +1,9 @@
-.. NMA-Task documentation master file, created by
+.. MODE-TASK documentation master file, created by
    sphinx-quickstart on Fri Jun 23 12:31:07 2017.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-NMA-Task's documentation
+MODE-TASK's documentation
 ====================================
 
 .. toctree::
