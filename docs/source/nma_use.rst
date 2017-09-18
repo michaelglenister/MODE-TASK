@@ -4,7 +4,7 @@ NMA Scripts
 Coarse grain
 -------------------------------
 
-Takes a protomer structure and coarse grains to select a set amount of C-Beta atoms
+Takes a protomer structure and coarse grains to select a set amount of CB atoms
 **Command:** ::
 	
 	coarseGrain.py <options> --pdbFile <pdb file>
@@ -81,7 +81,7 @@ ANM
 |                        | Printed in columns          |
 +------------------------+-----------------------------+
 
-Get eigen vectors
+Extract eigenvectors
 -------------------------------
 
 **Compile:** ::
@@ -120,12 +120,12 @@ Get eigen vectors
 Mean square fluctuation
 -------------------------------
 
-Calculates and returns diagonals of correlated matrix for a given set of modes.
+Calculates and returns the diagonals of the correlation matrix for a given set of modes.
 
-Lets say that the user has performed NMA on two coarse grained models of the same protein, and now wants to compare
-to see if the additional coarse graining decreased the accuracy. If we obtain the same mean square fluctuations for
-each residue then in each model then we can say that the results are comparable regardless of the coarse graining
-level. But obviously must compare only the residues that are common in each model. hence we specify common residues
+Let's say that the user has performed NMA on two coarse grained models of the same protein, and now wants to compare
+if the additional coarse graining decreased the accuracy. If we obtain the same mean square fluctuations for
+each residue, then in each model we can say that the results are comparable regardless of the coarse graining
+level. Obviously, we must compare only the residues that are common in each model. Hence we specify common residues
 
 **Command:** ::
 
@@ -170,7 +170,7 @@ level. But obviously must compare only the residues that are common in each mode
 Conformation mode
 -------------------------------
 
-Identifies modes responsible for conformational change for a molecule with 15 copies of each atom
+Identifies modes responsible for the conformational change of a molecule.
 
 **Command:** ::
 
