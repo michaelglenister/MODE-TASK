@@ -4,7 +4,7 @@ PCA Tutorial
 PCA of a MD trajectory
 -------------------------------
 
-In this tutorial, we will be performing PCA on a MD trajectory of protein. Before doing the PCA we need to prepare the trajectory which includes removing periodicity and removing water molecules. Most of the MD packages have options to do this. We will be using GROMACS for this tutorial purpose. We will be using .xtc format for trajectory and .pdb for topology file. Any other common trajectory format should also work with the MODE-TASK. 
+In this tutorial, we will be performing PCA on a MD trajectory of protein. Before doing the PCA we need to prepare the trajectory which includes removing periodicity and removing water molecules. Most of the MD packages have options to do this. We will be using GROMACS in this tutorial. We will be using .xtc format for trajectory and .pdb for topology file. Any other common trajectory format should also work with MODE-TASK. 
 
 **1. Preparation of trajectory**
 
@@ -45,11 +45,11 @@ We will run all scripts from the MODE-TASK directory. Move the trajectory (md_01
 
 **3. Running PCA**
 
-MODE-TASK includes tools to perform PCA on Cartesian coordinates as well as internal coordinates system. It also allows users to run different variant of PCA on a protein MD trajectory. 
+MODE-TASK includes tools to perform PCA on Cartesian coordinates as well as internal coordinates. It also allows users to run different variants of PCA on a single MD trajectory. 
 
 **3.1. PCA on Cartesian coordinates**
 
-Run the following command to perform the singular value decomposition (SVD) PCA on C-alpha atoms.
+Run the following command to perform the singular value decomposition (SVD) PCA on CA atoms.
 
  ::
 
@@ -57,11 +57,11 @@ Run the following command to perform the singular value decomposition (SVD) PCA 
 
 **Output:**
 
-**(a).** Various output files are written to out_md_01_noWAT.xtc directory. 
-2D Plot of first 3 PCs, Scree plot, RMSD plot, and RMSD Modes Plot. 
+**(a)-** Various output files are written to the out_md_01_noWAT.xtc directory. 
+2D Plot of first 3 PCs, Scree plot, RMSD plot, and RMSD Modes plot. 
 For details about these output files please refer to the MODE-TASK documentation. 
 
-**(b).** Command line output: Following output is redirected to command line. 
+**(b)-** Command line output: Following output is redirected to command line. 
 
  ::
 
@@ -87,13 +87,13 @@ For details about these output files please refer to the MODE-TASK documentation
 
 **3.2. Visualizing the results**
 
-2D Plot of first 3 PCs in grace and png format are written. In order to open the .agr file with xmgrace run the following command.
+2D Plot of the first 3 PCs in grace and png format are written. In order to open the .agr file with xmgrace run the following command.
 
  ::
 
 	xmgrace out_pca_test_trj.xtc/pca_projection1_2.agr
 
-You can also visualize the .png format figure plot by opening it with your favorite picture visualizer.  Same way open the rmsd.agr and pca_variance.agr. 
+You can also visualize the .png format figure plot by opening it with your favorite picture visualizer.  In the same way, open the rmsd.agr and pca_variance.agr. 
 
 
 .. figure:: ../img/pca_tut1.png
@@ -116,13 +116,13 @@ You can also visualize the .png format figure plot by opening it with your favor
 
 **3.2. PCA on internal coordinates**
 
-One can also do PCA on internal coordinates of a MD trajectory. Options are available for different types of internal coordinates such as, pairwise distance between atoms, 1-3 angle between backbone atoms, psi angle, and phi angle. Run the following command to PCA on pairwise distance between C-alpha atoms. 
+One can also do PCA on internal coordinates of a MD trajectory. Options are available for different types of internal coordinates such as, pairwise distance between atoms, 1-3 angle between backbone atoms, psi angle, and phi angle. Run the following command to do PCA on pairwise distance between CA atoms. 
 
  ::
 
 	internal_pca.py -t Tutorial/md_01_noWAT.xtc -p Tutorial/complex.pdb -ag CA -ct distance
 
-Run the following command to PCA on backbone psi angles.
+Run the following command to do PCA on backbone psi angles.
  
  ::
 
@@ -154,13 +154,13 @@ Output files include 2D plot of first 3 PCs. Which can be visualize using xmgrac
 t-SNE on a MD trajectory
 -------------------------------
 
-Run the following command to perform the t-SNE using pairwise RMSD of C-alpha atoms as index of dissimilarity.
+Run the following command to perform t-SNE using pairwise RMSD of CA atoms as the index of dissimilarity.
 
  ::
 
 	tsne.py -t Tutorial/md_01_noWAT.xtc -p Tutorial/complex.pdb -ag CA -dt rmsd
 
-Output files include 2D plot of first 3 PCs. Which can be visualize using xmgrace as described earlier. 
+Output files include 2D plot of the first 3 PCs, which can be visualize using xmgrace as described earlier. 
 
  .. figure:: ../img/tsne1.png
    :align: center
