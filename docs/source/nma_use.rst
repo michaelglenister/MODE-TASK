@@ -4,7 +4,7 @@ NMA Scripts
 Coarse grain
 -------------------------------
 
-Takes a protomer structure and coarse grains to select a set amount of CB atoms
+Takes a protein structure or biological assembly and coarse grains to select a set amount of CB atoms
 **Command:** ::
 	
 	coarseGrain.py <options> --pdbFile <pdb file>
@@ -44,6 +44,8 @@ Takes a protomer structure and coarse grains to select a set amount of CB atoms
 ANM
 -------------------------------
 
+Construct an elastic network model of a protein complex and solves for the eigenvalues and eigenvectors of the system. 
+
 **Compile:** ::
 
     g++ -I cpp/src/ ANM.cpp -o ANM
@@ -81,7 +83,7 @@ ANM
 |                        | Printed in columns          |
 +------------------------+-----------------------------+
 
-Extract eigenvectors
+Get eigenvectors
 -------------------------------
 
 **Compile:** ::
@@ -113,8 +115,10 @@ Extract eigenvectors
 +------------------------+-----------------------------+
 | Output                 | Description                 |
 +========================+=============================+
-| Eigen vectors file     | Text file containing a      |
-|                        | list of eigen vectors       |
+| Eigenvector file       | Text file containing a      |
+|                        | list of extracted           |
+|                        | eigenvectors for a specific |
+|                        | modes.                      |
 +------------------------+-----------------------------+
 
 Mean square fluctuation
@@ -122,7 +126,7 @@ Mean square fluctuation
 
 Calculates and returns the diagonals of the correlation matrix for a given set of modes.
 
-Let's say that the user has performed NMA on two coarse grained models of the same protein, and now wants to compare
+The user can also compare the msf between two protein complexes. Let's say that the user has performed NMA on two coarse grained models of the same protein, and now wants to compare
 if the additional coarse graining decreased the accuracy. If we obtain the same mean square fluctuations for
 each residue, then in each model we can say that the results are comparable regardless of the coarse graining
 level. Obviously, we must compare only the residues that are common in each model. Hence we specify common residues
@@ -162,8 +166,22 @@ level. Obviously, we must compare only the residues that are common in each mode
 +------------------------+-----------------------------+
 | Output                 | Description                 |
 +========================+=============================+
-| Beta values file       | Text file listing beta      |
-|                        | values for common residues  |
+| MSF text file          | Mean square fluctuations for|
+|                        | all residues, calculated    |
+|                        | over all modes.             |
++------------------------------------------------------+
+| MSF modes text file    | Mean square fluctuations for|
+|                        | all residues, calculated    |
+|                        | for a specific mode range.  |
++------------------------+-----------------------------+
+| common residue MSF text| Mean square fluctuations for|
+| file                   | all common residues,        |
+|                        | calculated over all modes.  |
++------------------------+-----------------------------+
+| common residue MSF     | Mean square fluctuations for|
+| modes text file        | all common residues,        |
+|                        | calculated over a specific  |
+|                        | mode range.                 |
 +------------------------+-----------------------------+
 
 
@@ -174,14 +192,14 @@ Identifies modes responsible for the conformational change of a molecule.
 
 **Command:** ::
 
-	conformationMode.py <options> --pdbConfAligned <PDB file> --pdbProtAligned <PDB file> --pdbANM <PDB file> --vtProtomer <text file>
+	conformationMode.py <options> --pdbConf <PDB file> --pdbANM <PDB file> --vtMatrix <text file>
 
 **Inputs:**
 
 +------------------------+------------+--------------------+-----------------------------+
 | Input (*\*required*)   | Input type | Flag               | Description                 |
 +========================+============+====================+=============================+
-| Aligned PDB file *     | File       |``--pdbConfAligned``| PDB file of the             |
+| Unaligned PDB file *   | File       |``--pdbConf``       | PDB file of the             |
 |                        |            |                    | conformational change       |
 +------------------------+------------+--------------------+-----------------------------+
 | PDB *                  | File       |``--pdbANM``        | PDB file that was useed to  |
@@ -213,7 +231,7 @@ Generates a trajectory with arrows that can be viewed in the tool VMD
 
 **Command:** ::
 
-	visualiseVector.py <options> --pdb <PDB file> --vectorFile <text file>
+	visualiseVector.py <options> --pdb <PDB file> --vectorFile <text file> --mode <int>
 
 **Inputs:**
 
@@ -223,7 +241,7 @@ Generates a trajectory with arrows that can be viewed in the tool VMD
 | Coarse grained PDB     | File       |``--pdb``           | Coarse grained PDB input    |
 | file *                 |            |                    | file                        |
 +------------------------+------------+--------------------+-----------------------------+
-| Mode index value       | Ingeter    |``--mode``          | Value specifying the index  |
+| Mode index value *     | Ingeter    |``--mode``          | Value specifying the index  |
 |                        |            |                    | of the mode                 |
 +------------------------+------------+--------------------+-----------------------------+
 | Vector file *          | File       |``--vectorFile``    | File containing eigen       |
@@ -237,7 +255,7 @@ Outputs are generated in output/VISUALISE directory by default.
 +------------------------+-----------------------------+
 | Output                 | Description                 |
 +========================+=============================+
-| PDB file               | Output PDM to be opened in  |
+| PDB file               | Output PDB to be opened in  |
 |                        | VMD                         |
 +------------------------+-----------------------------+
 | Arrows file            | Tcl script that can be      |
