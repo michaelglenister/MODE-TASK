@@ -31,7 +31,7 @@ We will run all scripts from the ModeTask directory.
 Preparation of structures
 -------------------------------
 
-1) Download the 3VBS biological assembly (3VBS.pdb1) of the **mature EV-71 capsid.**
+1) Download the 3VBS biological assembly (3VBS.pdb1) of the **mature EV-71 capsid** from the PDB.
 
 2) Open 3VBS.pdb1 in PyMol.
 
@@ -52,7 +52,7 @@ For the sake of this tutorial we will use the **coarseGrain.py** script to const
 Coarse grain
 -------------------------------
 
-The MODE-TASK package is designed to analyse both single proteins or larger macromolecules such as a virus capsid. The ANM.cpp script contructs an elastic network model on all CA or CB atoms in a given PDB file. This is ideal from smaller protein complexes. For larger protein complexes the coarseGrained.py script can be used to construct an additional coarse grained PDB file. 
+The MODE-TASK package is designed to analyse both single proteins or larger macromolecules such as a virus capsid. The ANM.cpp script contructs an elastic network model on all CA or CB atoms in a given PDB file. This is ideal for smaller protein complexes. For larger protein complexes the coarseGrained.py script can be used to construct an additional coarse grained PDB file. 
 
 1) Create a model of the EV71 Pentamer complex with additional coarse graining set at level 3, selecting CB atoms:
 
@@ -70,7 +70,7 @@ The MODE-TASK package is designed to analyse both single proteins or larger macr
 
 **Output:**
 
-a) EV71_CG3.pdb: A coarse grained pdb file that has selected CB atoms from residues that are equally distributed across the complex (Figure 1).
+a) EV71_CG3.pdb: A coarse grained pdb file that has the coordinates of selected CB atoms from residues that are equally distributed across the complex (Figure 1).
 
 b) Command line output
 
@@ -82,7 +82,7 @@ b) Command line output
 	Completed at: 2017-08-22 11:54:19.509456
 	- Total time: 0:00:00
 
-Note, the same 212 atoms in from each protomer were selected – thus the symmetry of the pentamer is retained.
+Note that, the same 212 atoms in from each protomer were selected – thus the symmetry of the pentamer is retained.
 
 
 2) Create a model of the EV71 Pentamer complex with additional coarse graining set at level 4:
@@ -108,7 +108,7 @@ Note, the same 212 atoms in from each protomer were selected – thus the symmet
 Mode decomposition
 -------------------------------
 
-The ANM.cpp script accepts a PDB file and a cutoff distance. The script constructs the hessian matrix connecting all CB atoms in within the specific cutoff radius.  The script then performs singular value decompostion to return the eigenvalues and eigenvectors of the hessian matrix. 
+The ANM.cpp script accepts a PDB file and a cutoff distance. The script constructs the Hessian matrix connecting all CB atoms within the specific cutoff radius.  The script then performs singular value decompostion to return the eigenvalues and eigenvectors of the Hessian matrix. 
 
 **Input parameters:**
 
@@ -128,7 +128,7 @@ U_values.txt: A 3Nx3N list of the eigenvectors for each mode. Eigenvectors are p
 
 1) Compile the ANM.cpp script
 
-The ANM.cpp script requires classes of the AlgLib library. These class can be found in the cpp/src folder in the GitHub Directory. The path to these classes must be specified in the compile command using the -I paramter:
+The ANM.cpp script requires classes of the AlgLib library. These classes can be found in the cpp/src folder in the GitHub Directory. The path to these classes must be specified in the compile command using the -I paramter:
 
  ::
 
@@ -143,7 +143,7 @@ In this tutorial we will perform a comprative analysis between the normal modes 
 
 	./ANM --pdb Tutorial/EV71_CG4.pdb  --outdir Tutorial --atomType CB
 
-Example of command line output:
+Example of the command line output:
 
  ::
 
@@ -173,18 +173,18 @@ Example of command line output:
 	Completed at: 2017-08-22 11:59:14
 	- Total time: 0:02:0-704
 
-Indentification of modes that contribute to conformational change
+Indentification of modes that contribute to the conformational change
 -------------------------------------------------------------------
 
-We have performed ANM on two separte pentamer complexes. From each model we have obtained a set of eigenvalues and eigenvectors corresponding to each normal mode:
+We have performed ANM on two separate pentamer complexes. From each model we have obtained a set of eigenvalues and eigenvectors corresponding to each normal mode:
 
-1) EV71_CG4.pdb, total non-trivial mdes = 804
+1) EV71_CG4.pdb, total non-trivial modes = 804
 
-2) EV71_CG3.pdb, total non-trivial mdes = 1824
+2) EV71_CG3.pdb, total non-trivial modes = 1824
 
 For each model we will now identify the modes that contribute to the conformational change of a pentamer during capsid expansion.
 
-We will then compare the modes from the respective models and determine if the additional coarse graining effected the ability to capture such modes. 
+We will then compare the modes from the respective models and determine if the additional coarse graining affected the ability to capture such modes. 
 
 To determine if our modes overlap with the direction of conformational change, we must first determine the conformational change between the crystal structures of the **mature** and **A-particle pentamer.** The **conformationMode.py**  scripts take two UNALIGNED pdb files and the set of all eigenvectors determined for the complex. The script aligns the structures, calculates the known conformational change and then identifies which modes contribute to the change.
 
@@ -207,7 +207,7 @@ Conformation mode
 
 **Output:**
 
-A text file with the overlap and correlation of each mode to the conformational change. The modes are ordered by the absoulte value of their overlap.
+A text file with the overlap and correlation of each mode to the conformational change. The modes are ordered by the absolute value of their overlap.
 
 2) Compute overlap between all modes of the EV71_CG3 model (Remember to specify the correct directory):
 
@@ -271,13 +271,13 @@ From each model we have identified which mode overlaps the most with the directi
 
 	g++ -I cpp/input/ getEigenVectors.cpp -o getEigenVectors
 
-1.1)  Obtain eigenvectors for mode 802 of the CG4 model. Note this overlap is postive, thus the vectors act in the opposite direction to conformational change. Therefore we must specify the direction as 1 when extracting the vectors:
+1.1)  Obtain eigenvectors for mode 802 of the CG4 model. Note this overlap is positive, thus the vectors act in the opposite direction to conformational change. Therefore we must specify the direction as 1 when extracting the vectors:
 
  ::
 
 	./getEigenVectors --vtMatrix Tutorial/VT_values.txt --mode 802 --direction 1 --outdir Tutorial/
 
-1.1)  Obtain eigenvectors for mode 1822 of the CG3 model. However the overlap for this mode was negative, therefore we must specifify direction as -1
+1.1)  Obtain eigenvectors for mode 1822 of the CG3 model. However, the overlap for this mode was negative, therefore we must specifify direction as -1
 
  ::
 
@@ -303,29 +303,29 @@ The script will produce a folder named VISUALISE. For every mode that you give t
 
 1) A VISUAL PDB file. This can be opened in VMD and visualised as a set of 50 frames.
 
-2) An VISUAL_ARROWS txt file. This file contains a Tcl script that can be copied into the VMD TK console. The script plots as set of arrows indicating the direction of each atom.
+2) A VISUAL_ARROWS text file. This file contains a Tcl script that can be copied into the VMD TK console. The script plots as set of arrows indicating the direction of each atom.
 
 
 **Visualising the results in VMD**
 
 1) Open VMD.
 2) To load the VISUAL_802.pdb file click the following tabs: ``File >> New Molecule >> Browse >> Select VISUAL_802.pdb.``
-3) The VISUAL_802.pdb file contains a set of 50 frames of the eigenvectors of mode 802. This can be visualised as a movie by click on the Play button. The frame set can also be coloured to the user's desire using the options under the Graphics >> Representations tab.
-4) The VISUAL_ARROWS txt file contains a script that can be copied and pasted straight into the Tk Console in VMD: Extensions >> Tk Console
-5) To obtain a clearer observation change the background to white: Graphics >> Colors >> Categories >> Display >> Names >> Background >> Colors >> White
+3) The VISUAL_802.pdb file contains a set of 50 frames of the eigenvectors of mode 802. This can be visualised as a movie by clicking on the Play button. The frame set can also be coloured to the user's desire using the options under the Graphics >> Representations tab.
+4) The VISUAL_ARROWS text file contains a script that can be copied and pasted straight into the Tk Console in VMD: Extensions >> Tk Console
+5) To obtain a clearer observation, change the background to white: Graphics >> Colors >> Categories >> Display >> Names >> Background >> Colors >> White
 6) To obtain only the arrows, delete all frames of the VISUAL_802.pdb molecules: Right click on the number of frames >> Delete frames >> Delete frames 0 to 49.
 
 
 Mean square fluctuation (MSF)
 -------------------------------
 
-Lastly we will use the meanSquareFluctuations.py script to calculate the MSF of the CB atoms. The scripts allows you to calculate:
+Lastly, we will use the meanSquareFluctuations.py script to calculate the MSF of the CB atoms. The scripts allows you to calculate:
 
 a) the overall MSF, calculated over all modes
 
 b) the MSF of the CB atoms for a specific mode, or a specific range of modes.
 
-The script also allows for comparison of MSF obtained from modes of obtained from different models. We can use the –pdbConf2 paramter to send the script a second PDB model. The script will then calculate the MSF of atoms corresponding to residues that are common between both models. 
+The script also allows for comparison of MSF obtained from modes of different models. We can use the –pdbConf2 parameter to send the script a second PDB model. The script will then calculate the MSF of atoms corresponding to residues that are common between both models. 
 
 In this toturial we will analyse the MSF between EV71_CG4 and EV71_CG3.
 
@@ -336,7 +336,7 @@ In this toturial we will analyse the MSF between EV71_CG4 and EV71_CG3.
 
 	meanSquareFluctuation.py --pdb Tutorial/EV71_CG4.pdb --pdbConf2 Tutorial/EV71_CG3.pdb --firstMode 802 --lastMode 802 --wMatrix Tutorial/W_values.txt --vtMatrix Tutorial/VT_values.txt --outdir Tutorial/ --atomType CB
 
-2) Next we will calculate the MSF of the CG3 model. We will calculate the overall MSF and the MSF for the mode 1822
+2) Next, we will calculate the MSF of the CG3 model. We will calculate the overall MSF and the MSF for mode 1822
 
  ::
 
@@ -352,7 +352,7 @@ In this toturial we will analyse the MSF between EV71_CG4 and EV71_CG3.
 **3) EV71CommonResidues_msf.txt:** Overal MSF for residues common between CG4 and CG3.
 
 **4) EV71_CommonResidues_msfModes802_802.txt:** MSF for residues common between CG4 and CG3 calculated for mode 802
-Output for Model CG3:
+output for Model CG3:
 
 **1) EV71_msf.txt:** Text file of the overall MSF values for all residues
 
