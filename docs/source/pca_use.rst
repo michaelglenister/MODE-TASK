@@ -30,7 +30,7 @@ To see the all the available options run the following command:
 | Topology file *        | File       |``-p``              | Topology file               |
 |                        |            |                    | (.gro, .pdb etc)            |
 +------------------------+------------+--------------------+-----------------------------+
-| Output directory       | string     |``-out``            | Name of the output directory|
+| Output directory       | String     |``-out``            | Name of the output directory|
 |                        |            |                    | .Default is out suffixed by |
 |                        |            |                    | trajectory name             |
 +------------------------+------------+--------------------+-----------------------------+
@@ -81,7 +81,7 @@ To see the all the available options run the following command:
 +------------------------+-----------------------------+
 | Output                 | Description                 |
 +========================+=============================+
-| PC plots               | 2D Plot of first 3 PCs. Its |
+| PC plots               | 2D Plot of first 3 PCs. It  |
 |                        | is grace formatted text file|
 +------------------------+-----------------------------+
 | PC plots (.png)	 | 2D Plot of first 3 PCs. Same|
@@ -211,7 +211,7 @@ User can also perform the PCA on internal coordinates of a MD trajectory. Option
 +------------------------+-----------------------------+
 | Output                 | Description                 |
 +========================+=============================+
-| PC plots               | 2D Plot of first 3 PCs. It's|
+| PC plots               | 2D Plot of first 3 PCs. It  |
 |                        | is grace formatted text file|
 +------------------------+-----------------------------+
 | PC plots (.png)	 | 2D Plot of first 3 PCs. Same|
