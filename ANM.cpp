@@ -237,9 +237,9 @@ const std::string currentDateTime() {
 int main(int argc, char *argv[])
 {	
 	//Init vars
-	double cutoff = 24;// this must be user define
+	double cutoff = 15;// this must be user define
 	string pdbInput, outdir = "output";
-        string atype="CA";
+	string atype="X";
 	bool hasPdb = false;
 
 	// Welcome message
@@ -295,7 +295,10 @@ int main(int argc, char *argv[])
 		cout<<"A PDB file is required, use '-h' to view help"<<endl;
 		return -1;
 	}
-	
+		if (atype=="X") {
+        	cout<<endl<<"**************************************"<<endl<<"ERROR: ATOM TYPE MUST BE SPECIFIED"<<endl<<"Input Options:"<<endl<<"CA: to select alpha carbon atoms"<<endl<<"CB: to select beta carbon atoms"<<endl<<"Exiting..."<<endl<<"**************************************"<<endl;
+		return -1;
+        }//if
         ifstream mfile (pdbInput.c_str());// This is the PDB file that will be coarse grained. 
 	if (mfile.good() == false) {
         	cout<<endl<<"**************************************"<<endl<<"ERROR: Specified PDB file does not exist. Exiting..."<<endl<<"**************************************"<<endl;
@@ -320,9 +323,8 @@ int main(int argc, char *argv[])
 	int sec;
 	std::cout << "Started at: " << currentDateTime() << std::endl;
 	clock_t tStart = clock();
-        
-        char newline = '\n';
-        if (atype!="CA" and atype!="CB")
+
+        if (atype!="CA" && atype!="CB")
         {
         cout<<endl<<"**************************************"<<endl<<"Unrecognised atom type"<<endl<<"Input Options:"<<endl<<"CA: to select alpha carbon atoms"<<endl<<"CB: to select beta carbon atoms"<<endl<<"**************************************"<<endl;
         return -1;

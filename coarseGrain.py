@@ -233,11 +233,11 @@ if __name__ == "__main__":
     parser.add_argument("--outdir", help="Output directory", default="output")
 
     # custom arguments
-    parser.add_argument("--output", help="File name for Coarse Grained PDB", default = 'ComplexCG.pdb')#output = "3VBSPent"
-    parser.add_argument("--pdb", help="PDB input file")  # 3VBSPent.pdb
+    parser.add_argument("--output", help="File name for Coarse Grained PDB", default='ComplexCG.pdb')
+    parser.add_argument("--pdb", help="PDB input file")
     parser.add_argument("--cg", help="Course grain level [int]: Increase level to increase amount of coarse graining", default=4, type=int)
     parser.add_argument("--startingAtom", help="Residue number of first carbon atom to be selected [int]", default=1, type=int)
-    parser.add_argument("--atomType", help="Enter CA to select alpha carbons or CB to select beta carbons", default='CA')
+    parser.add_argument("--atomType", help="Enter CA to select alpha carbons or CB to select beta carbons", default='X')
     # parser.add_argument("--protomerAtoms", help="", default=0, type=int)
 
     args = parser.parse_args()
@@ -245,7 +245,7 @@ if __name__ == "__main__":
     if args.welcome == "true":
         welcome_msg("Coarse grain", "Caroline Ross (caroross299@gmail.com)")
 
-        # Check if required directories exist
+    # Check if required directories exist
     if not os.path.isdir(args.outdir):
         os.makedirs(args.outdir)
 

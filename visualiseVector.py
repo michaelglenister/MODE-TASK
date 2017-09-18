@@ -61,15 +61,22 @@ def main(args):
         c_beta_atoms[i] = a
 
     # Determine Connections
+    
+    colours = ['red','blue','ochre','purple','yellow','red','cyan','pink','silver','violet','ochre','blue2','cyan2','iceblue','lime','green2','green3','violet','violet2','mauve']
+    colourByChain = {}
     conect = []
     conect_chain = []
     atom1 = c_beta_atoms[0]
     chain1 = atom1.split()[4].strip()
 
+    countColour = 0
     for i, atom in enumerate(c_beta_atoms, 1):
         if "TER" in atom or "END" in atom:
             continue
         chain = atom.split()[4].strip()
+	if chain not in colourByChain and countColour<len(colours):
+		colourByChain[chain]=colours[countColour]
+		countColour+=1
         if chain == chain1:
             conect_chain.append(i)
         else:
@@ -78,6 +85,19 @@ def main(args):
             conect_chain.append(i)
             chain1 = chain
     conect.append(conect_chain)
+
+    #Default to black if too many chains
+    startColourBlack = False
+    if countColour>len(colours):
+	for chain in colourByChain:
+            colourByChain[chain] = 'black'
+	    startColourBlack = True
+
+    keysC = colourByChain.keys()
+    keysC.sort()
+    print "ARROW COLOUR KEY BY CHAIN"
+    for k in keysC:
+        print k+': '+colourByChain[k]
 
     # Get the vectors
     # CHANGE HERE # may not be correct change, double check
@@ -93,7 +113,7 @@ def main(args):
     #Write VISUALISE
     try:
         w = open(args.outdir + "/" + "VISUALISE/" + structure + '_' + str(mode) + ".pdb", 'w')
-        for i in range(0, 100):
+        for i in range(0, 50):
             v_index = -1
             for atom in c_beta_atoms:
                 if "ATOM" in atom:
@@ -129,31 +149,29 @@ def main(args):
         # write arrows
 
         arrows = []
-        steps = [0, 5]
+        steps = [0, 8]
         v_index = -1
         chainbreaks = []
         for cb in conect:
     	    chainbreaks.append(cb[-1])
-        colours = ['green','red','blue','orange','yellow','pink','cyan','silver','magenta','violet','ochre']
 
-        colourByChain=False
-        if len(chainbreaks)<10:
-	    colourByChain=True
+        if startColourBlack:
 	    arrows.append('proc vmd_draw_arrow {mol start end} {\n    set middle [vecadd $start [vecscale 0.9 [vecsub $end '
-              '$start]]]\n    graphics $mol cylinder $start $middle radius 0.20\n    graphics $mol cone $middle $end '
-              'radius 0.35\n}\ndraw color green\n')
+              '$start]]]\n    graphics $mol cylinder $start $middle radius 0.80\n    graphics $mol cone $middle $end '
+              'radius 2.20\n}\ndraw color black\n')
         else:
             arrows.append('proc vmd_draw_arrow {mol start end} {\n    set middle [vecadd $start [vecscale 0.9 [vecsub $end '
-              '$start]]]\n    graphics $mol cylinder $start $middle radius 0.20\n    graphics $mol cone $middle $end '
-              'radius 0.35\n}\ndraw color black\n')
+              '$start]]]\n    graphics $mol cylinder $start $middle radius 0.80\n    graphics $mol cone $middle $end '
+              'radius 2.20\n}\ndraw color '+colours[0]+'\n')
 
     
 
-        indexOfCB = 0
-
-        for atom in c_beta_atoms:
+     
+	nextAtom=[]
+        for n,atom in enumerate(c_beta_atoms,1):
+	    
             if "ATOM" in atom:
-
+		chain = atom.split()[4].strip()
                 v_index += 1
 	        v = vectors[v_index].split()	
                 vx = float(v[0].strip())
@@ -166,12 +184,16 @@ def main(args):
                 x2 = round(float(atom[30:38].strip()) + (vx * steps[1]), 3)
                 y2 = round(float(atom[38:46].strip()) + (vy * steps[1]), 3)
                 z2 = round(float(atom[46:54].strip()) + (vz * steps[1]), 3)
+	
                 arrows.append('draw arrow {' + str(x1) + ' ' + str(y1) + ' ' + str(z1) + '} {' + str(x2) + ' ' + str(y2) + ' ' + str(z2) + '}\n')
-	        if colourByChain:
-                    if v_index + 1 == chainbreaks[indexOfCB]:
-                        arrows.append('draw color '+colours[indexOfCB+1]+'\n')
-		        indexOfCB+=1
-	    
+		if n in chainbreaks:
+		    nextAtom = c_beta_atoms[n:]
+		    for a in nextAtom:			
+			if "ATOM" in a:
+			    chain = a.split()[4].strip()
+			    break		    
+                    arrows.append('draw color '+colourByChain[chain]+'\n')
+		    
   
 
         w = open(args.outdir + "/" + "VISUALISE/" + structure + '_ARROWS_' + str(mode) + ".txt", 'w')
@@ -209,7 +231,7 @@ if __name__ == "__main__":
     parser.add_argument("--pdb", help="Coarse grained PDB file")  # '3VBSProtomer3_SCA.pdb'
     parser.add_argument("--mode", help="[int]", type=int)
     parser.add_argument("--vectorFile", help="File containing eigen vectors")  # 'ProtomerMode'
-    parser.add_argument("--atomType", help="Enter CA to select alpha carbons or CB to select beta carbons", default='CA')
+    parser.add_argument("--atomType", help="Enter CA to select alpha carbons or CB to select beta carbons", default='X')
 
     args = parser.parse_args()
 

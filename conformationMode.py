@@ -27,7 +27,7 @@ def main(args):
 
     atomT = args.atomType.upper()
     if atomT!='CA' and atomT!='CB':
-	print '\n**************************************\nUnrecognised atom type\nInput Options:\nCa: to select alpha carbon atoms\CB: to select beta carbon atoms\n**************************************'
+	print '\n**************************************\nUnrecognised atom type\nInput Options:\nCA: to select alpha carbon atoms\nCB: to select beta carbon atoms\n**************************************'
 	sys.exit()
 
 
@@ -56,31 +56,62 @@ def main(args):
 
     empty_residues = {}
     full_residues = {}
-
     common_residues = {}
 
     #determine the number of assymetric units
-    number_of_protomers = 0
+    number_of_protomersN = 0
     currentResidue = 0
+    currentChain = ''
+  
 
     for line in nma:
         if line.startswith("ATOM"):
             info = line.split()
             atype = info[2].strip()
             res_type = info[3].strip()
+            chain = (info[4].strip())
             res = int(info[5].strip())
             if atype == atomT or (atype == "CA" and res_type == "GLY"):
-		if currentResidue == 0:
+		if currentResidue == 0 and currentChain=='':
+			currentChain = chain
 			currentResidue = res
-			number_of_protomers+=1	
-		elif res==currentResidue:
-			number_of_protomers+=1
-		else:
-			break
+			number_of_protomersN+=1	
+		elif res==currentResidue and chain==currentChain:
+			number_of_protomersN+=1
+		
+   
    
 
-    #determine co-ords of residues common in both PDB files		
+    #determine the number of assymetric units
+    number_of_protomersE = 0
+    currentResidue = 0
+    currentChain = ''
+  
 
+    for line in lines_empty:
+        if line.startswith("ATOM"):
+            info = line.split()
+            atype = info[2].strip()
+            res_type = info[3].strip()
+            chain = (info[4].strip())
+            res = int(info[5].strip())
+            if atype == atomT or (atype == "CA" and res_type == "GLY"):
+		if currentResidue == 0 and currentChain=='':
+			currentChain = chain
+			currentResidue = res
+			number_of_protomersE+=1	
+		elif res==currentResidue and chain==currentChain:
+			number_of_protomersE+=1
+		
+   
+    if number_of_protomersN != number_of_protomersE:
+        print '\n**************************************\nERROR!!!:\nConformations contain a different number of assymetric units.\nCheck PDB files!!!\n**************************************\n'
+	system.exit()
+
+
+   
+    #determine co-ords of residues common in both PDB files		
+    		
     for line in lines_empty:
         if line.startswith("ATOM"):
             info = line.split()
@@ -121,13 +152,41 @@ def main(args):
 	    else:
 		break
 
-    
-    
-   
-    
-    selected_full = {}
-    for ch in common_residues:
-	selected_full[ch] = []
+    commonK = common_residues.keys()
+    commonK.sort()
+    totalC = 0
+    for k in commonK:
+	totalC +=len(common_residues[k])
+
+
+
+
+    if not any(common_residues):
+        print '\n**************************************\nPDB Conformations are not compatable:\nSuggested error: Chain IDs do not match between PDB Files\n**************************************\n'
+        system.exit()
+
+   #Print warnings to user
+  
+    if len(full_residues.keys())>len(common_residues.keys()) or len(empty_residues.keys())>len(common_residues.keys()):
+        print '\n*****************************************************************\nWARNING!!!:\nNot all chains from PDB files were selected\nSuggested: Chain IDs do not match between PDB Files\n'
+        print "**************************************************************\nCorrelations calculated across "+str(totalC*number_of_protomersN)+" common residues ("+str(totalC)+" per "+str(number_of_protomersN)+" assymetric units).\nBreakdown per chain:\n"
+        for k in commonK:
+            print k+": "+str(len(common_residues[k]))+ " residues per assymetric unit"
+	    resS=''
+	    for r in common_residues[k]:
+		    resS+=str(r)+" "
+	    print "Residues selected include: "+resS+'\n'
+        print"*****************************************************************\n"
+    else:   
+        print "\n**************************************************************\nCorrelations calculated across "+str(totalC*number_of_protomersN)+" common residues ("+str(totalC)+" per "+str(number_of_protomersN)+" assymetric units).\nBreakdown per chain:\n"
+        for k in commonK:
+            print k+": "+str(len(common_residues[k]))+ " residues per assymetric unit"
+	    resS=''
+	    for r in common_residues[k]:
+		    resS+=str(r)+" "
+	    print "Residues selected include: "+resS+'\n'
+        print"*****************************************************************\n"
+
 
     count_common = 0
     empty_cords = []
@@ -159,8 +218,6 @@ def main(args):
             res = int(info[5].strip())
 	    if chain in common_residues:		
                 if res in common_residues[chain]:
-                    if res not in selected_full[chain]:
-                        selected_full[chain].append(res)
                     if atype == atomT or (atype == "CA" and res_type == "GLY"):
                         x = float(line[30:38].strip())
                         y = float(line[38:46].strip())
@@ -168,27 +225,58 @@ def main(args):
                         cod = [x, y, z]
                         full_cords.append(cod)
 
-
-    target = np.zeros((count_common,3))
+   
+    struc = np.zeros((count_common,3))
     for i,res in enumerate(empty_cords):
 	for j,c in enumerate(res):
-		target[i,j] = c
+		struc[i,j] = c
 	
-
-    struc = np.zeros((count_common,3))
+   
+    target = np.zeros((count_common,3))
     for i,res in enumerate(full_cords):
 	for j,c in enumerate(res):
-		struc[i,j] = c
+		target[i,j] = c
     confAligned = sdrms.superpose3D(struc, target)
-    alignedFull = confAligned[0]
+    alignedConf = confAligned[0]
     rmsd = confAligned[1]
     
     print '\nRMSD between '+args.pdbANM+' and '+args.pdbConf+' = '+str(rmsd)+'\n'
+    '''print alignedConf
+    output = []
+    print len(alignedConf)
+    iatom = 0
+    for atom in lines_empty:
+	if atom.startswith('ATOM'):
+            info = atom.split()
+            atype = info[2].strip()
+            res_type = info[3].strip()
+            chain = info[4].strip()
+            res = int(info[5].strip())
+            if atype == atomT or (atype == "CA" and res_type == "GLY"):
+                if chain in common_residues:
+                    if res in common_residues[chain]:	
+		        x = round(alignedConf[iatom][0],3)
+                        xspace = ' ' * (len(atom[30:38]) - len(str(x)))
+                        y = round(alignedConf[iatom][1],3)
+                        yspace = ' ' * (len(atom[38:46]) - len(str(y)))
+                        z = round(alignedConf[iatom][2],3)
+                        zspace = ' ' * (len(atom[46:54]) - len(str(z)))
+                        atom = atom[0:30] + xspace + str(x) + yspace + str(y) + zspace + str(z) + atom[54:]
+                        output.append(atom)
+		        iatom+=1
+	else:
+		output.append(atom)
+
+    w = open("Test.pdb",'w')
+    for out in output:
+	w.write(out)
+    w.close()'''
+
     # Calculate deltaR
     delta_r = []
-    for j in range(len(alignedFull)):
-      full = alignedFull[j]
-      empty = target[j]
+    for j in range(len(alignedConf)):
+      empty = alignedConf[j]
+      full = target[j]
       rx = empty[0] - full[0]
       ry = empty[1] - full[1]
       rz = empty[2] - full[2]
@@ -319,7 +407,7 @@ if __name__ == "__main__":
     parser.add_argument("--pdbANM", help="")
     parser.add_argument("--vtMatrix", help="")  # note: change this from vtProtomer
     parser.add_argument("--output", help="Output file", default="ModesOfConformtionalChange.txt")
-    parser.add_argument("--atomType", help="Enter CA to select alpha carbons or CB to select beta carbons", default='CA')
+    parser.add_argument("--atomType", help="Enter CA to select alpha carbons or CB to select beta carbons", default='X')
 
     args = parser.parse_args()
 
