@@ -1,8 +1,6 @@
-| Linux/OSX | Windows |
-|----------:|--------:|
-|<img src="https://api.travis-ci.com/michaelglenister/NMA-TASK.svg?token=zTmqpAXFeCMTdzy6XBH7&branch=master" align="right">|WIP|
+Note this repo has moved to https://github.com/RUBi-ZA/MODE-TASK
 
-# NMA-TASK
+# MODE-TASK
 
 Collection of tools for analysing normal modes and performing principal component analysis
 
